@@ -73,17 +73,17 @@ namespace AXR
         /**
          *
          */
-        HSSSimpleSelection();
+        HSSSimpleSelection(AXRController * controller);
 
         /**
          *
          */
-        HSSSimpleSelection(iterator a, iterator b);
+        HSSSimpleSelection(iterator a, iterator b, AXRController * controller);
 
         /**
          *
          */
-        HSSSimpleSelection(const_iterator a, const_iterator b);
+        HSSSimpleSelection(const_iterator a, const_iterator b, AXRController * controller);
 
         /**
          *
@@ -94,7 +94,7 @@ namespace AXR
          * Creates a simple selection from a vector of weak pointers to display objects
          * @param weakVector     A std::vector holding weak pointers to HSSDisplayObject elements
          */
-        HSSSimpleSelection(const std::vector<QWeakPointer<HSSDisplayObject> > &weakVector);
+        HSSSimpleSelection(const std::vector<QWeakPointer<HSSDisplayObject> > &weakVector, AXRController * controller);
 
         /**
          *

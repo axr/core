@@ -394,7 +394,7 @@ void HSSDisplayObject::removeFromParent()
 
 QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getSiblings()
 {
-    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     QSharedPointer<HSSSimpleSelection> children = this->getParent()->getChildren();
     for (HSSSimpleSelection::const_iterator it = children->begin(); it != children->end(); ++it)
     {
@@ -409,7 +409,7 @@ QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getSiblings()
 
 QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getNextSiblings()
 {
-    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     QSharedPointer<HSSSimpleSelection> children = this->getParent()->getChildren();
     HSSSimpleSelection::iterator thisPos = std::find(children->begin(), children->end(), this->shared_from_this());
     ret->insert(ret->end(), thisPos+1, children->end());
@@ -418,7 +418,7 @@ QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getNextSiblings()
 
 QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getPreviousSiblings()
 {
-    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     QSharedPointer<HSSSimpleSelection> children = this->getParent()->getChildren();
     HSSSimpleSelection::iterator thisPos = std::find(children->begin(), children->end(), this->shared_from_this());
     ret->insert(ret->end(), children->begin(), thisPos);

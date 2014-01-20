@@ -64,22 +64,22 @@ public:
     std::vector<QSharedPointer<HSSSimpleSelection> > items;
 };
 
-HSSMultipleSelection::HSSMultipleSelection()
-: HSSSelection(HSSSelectionTypeMultipleSelection)
+HSSMultipleSelection::HSSMultipleSelection(AXRController * controller)
+: HSSSelection(HSSSelectionTypeMultipleSelection, controller)
 , d(new Data())
 {
 }
 
-HSSMultipleSelection::HSSMultipleSelection(iterator a, iterator b)
-: HSSSelection(HSSSelectionTypeMultipleSelection)
+HSSMultipleSelection::HSSMultipleSelection(iterator a, iterator b, AXRController * controller)
+: HSSSelection(HSSSelectionTypeMultipleSelection, controller)
 , d(new Data())
 {
     std::vector<QSharedPointer<HSSSimpleSelection> > newItems(a, b);
     this->d->items = newItems;
 }
 
-HSSMultipleSelection::HSSMultipleSelection(const_iterator a, const_iterator b)
-: HSSSelection(HSSSelectionTypeMultipleSelection)
+HSSMultipleSelection::HSSMultipleSelection(const_iterator a, const_iterator b, AXRController * controller)
+: HSSSelection(HSSSelectionTypeMultipleSelection, controller)
 , d(new Data())
 {
     std::vector<QSharedPointer<HSSSimpleSelection> > newItems(a, b);
@@ -191,7 +191,7 @@ std::vector< QSharedPointer<HSSSimpleSelection> > HSSMultipleSelection::getItems
 
 QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::joinAll() const
 {
-    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     for (const_iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
         QSharedPointer<HSSSimpleSelection> inner = *it;
         for (HSSSimpleSelection::const_iterator it2 = inner->begin(); it2 != inner->end(); ++it2) {
@@ -203,11 +203,11 @@ QSharedPointer<HSSSimpleSelection> HSSMultipleSelection::joinAll() const
 
 QSharedPointer<HSSMultipleSelection> HSSMultipleSelection::splitAll()
 {
-    QSharedPointer<HSSMultipleSelection> ret(new HSSMultipleSelection());
+    QSharedPointer<HSSMultipleSelection> ret(new HSSMultipleSelection(this->getController()));
     for (iterator it=this->d->items.begin(); it!=this->d->items.end(); it++) {
         const QSharedPointer<HSSSimpleSelection> & inner = *it;
         for (HSSSimpleSelection::iterator it2=inner->begin(); it2!=inner->end(); it2++) {
-            QSharedPointer<HSSSimpleSelection> newSel(new HSSSimpleSelection());
+            QSharedPointer<HSSSimpleSelection> newSel(new HSSSimpleSelection(this->getController()));
             newSel->add(*it2);
             ret->add(newSel);
         }

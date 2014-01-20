@@ -297,6 +297,9 @@ namespace AXR
 
         virtual bool isA(HSSGradientType otherType) const;
         virtual HSSGradientType getGradientType() const;
+        
+        virtual bool isA(HSSSelectionType otherType) const;
+        virtual HSSSelectionType getSelectionType() const;
 
         QSharedPointer<HSSObject> shared_from_this();
 

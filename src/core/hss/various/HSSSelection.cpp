@@ -63,14 +63,19 @@ AXRString HSSSelection::selectionTypeStringRepresentation(HSSSelectionType selec
     return types[selectionType];
 }
 
-HSSSelection::HSSSelection(HSSSelectionType type)
+HSSSelection::HSSSelection(HSSSelectionType type, AXRController * controller)
+: HSSObject(HSSObjectTypeSelection, controller)
 {
     this->selectionType = type;
+    std::vector<AXRString> shorthandProperties;
+    shorthandProperties.push_back("values");
+    this->setShorthandProperties(shorthandProperties);
 }
 
-HSSSelection::HSSSelection(const HSSSelection &other)
+HSSSelection::HSSSelection(const HSSSelection &orig)
+: HSSObject(orig)
 {
-    this->selectionType = other.selectionType;
+    this->selectionType = orig.selectionType;
 }
 
 HSSSelection::~HSSSelection()
@@ -99,12 +104,29 @@ std::string HSSSelection::toStdString()
     return tempstr.toStdString();
 }
 
-bool HSSSelection::equalTo(QSharedPointer<HSSSelection> otherObj)
+AXRString HSSSelection::defaultObjectType()
+{
+    return "selection";
+}
+
+AXRString HSSSelection::defaultObjectType(AXRString property)
+{
+    if (property == "values")
+    {
+        return "value";
+    }
+    else
+    {
+        return HSSObject::defaultObjectType(property);
+    }
+}
+
+bool HSSSelection::equalTo(QSharedPointer<HSSObject> otherObj)
 {
     //check wether pointers are the same
     if (this == otherObj.data()) return true;
     //check wether of same type
-    if (otherObj->selectionType != this->selectionType) return false;
+    if (otherObj->getSelectionType() != this->selectionType) return false;
     return true;
 }
 

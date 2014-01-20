@@ -799,6 +799,16 @@ HSSGradientType HSSObject::getGradientType() const
     return HSSGradientTypeNone;
 }
 
+bool HSSObject::isA(HSSSelectionType otherType) const
+{
+    return false;
+}
+
+HSSSelectionType HSSObject::getSelectionType() const
+{
+    return HSSSelectionTypeNone;
+}
+
 QSharedPointer<HSSObject> HSSObject::shared_from_this()
 {
     if (!ptr)
@@ -1135,7 +1145,7 @@ QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParser
         }
         else
         {
-            QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection());
+            QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this->getController()));
             rootScope->add(thisObj);
             scope = rootScope;
         }
@@ -1309,7 +1319,7 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
             }
             else
             {
-                QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection());
+                QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this->getController()));
                 rootScope->add(thisDO);
                 theObj->setScope(rootScope);
             }

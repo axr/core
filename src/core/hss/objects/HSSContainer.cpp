@@ -112,8 +112,8 @@ void HSSContainer::_initialize()
     this->distributeY = false;
     this->distributeYLinear = false;
 
-    this->children = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
-    this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection());
+    this->children = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection(this->getController()));
+    this->allChildren = QSharedPointer<HSSSimpleSelection>(new HSSSimpleSelection(this->getController()));
 
     this->addCallback("contentAlignX", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignX));
     this->addNotifyCallback("contentAlignX", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContentAlignX));
@@ -367,7 +367,7 @@ void HSSContainer::changeRulesNotifyAdd(QSharedPointer<HSSDisplayObject> theDO)
 {
     Q_FOREACH(const QSharedPointer<HSSRule> & theRule, this->_changeRules)
     {
-        QSharedPointer<HSSSimpleSelection> theScope(new HSSSimpleSelection());
+        QSharedPointer<HSSSimpleSelection> theScope(new HSSSimpleSelection(this->getController()));
         theScope->add(theDO);
         this->getController()->recursiveMatchRulesToDisplayObjects(theRule, theScope, this->shared_from_this(), true);
         this->getController()->recursiveSetRuleState(theRule, theScope, this->shared_from_this(), HSSRuleStateActivate);

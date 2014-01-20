@@ -62,17 +62,17 @@ namespace AXR
         /**
          *
          */
-        HSSMultipleSelection();
+        HSSMultipleSelection(AXRController * controller);
 
         /**
          *
          */
-        HSSMultipleSelection(iterator a, iterator b);
+        HSSMultipleSelection(iterator a, iterator b, AXRController * controller);
 
         /**
          *
          */
-        HSSMultipleSelection(const_iterator a, const_iterator b);
+        HSSMultipleSelection(const_iterator a, const_iterator b, AXRController * controller);
 
         /**
          *

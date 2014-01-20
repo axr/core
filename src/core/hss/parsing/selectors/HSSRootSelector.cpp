@@ -82,7 +82,7 @@ AXRString HSSRootSelector::getElementName()
 
 QSharedPointer<HSSSelection> HSSRootSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
 {
-    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     ret->add(this->getController()->root());
     return ret;
 }

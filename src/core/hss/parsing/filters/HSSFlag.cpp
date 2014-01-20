@@ -176,7 +176,7 @@ QSharedPointer<HSSSelection> HSSFlag::apply(QSharedPointer<HSSSelection> scope, 
     }
     else
     {
-        QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+        QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
         QSharedPointer<HSSSimpleSelection> inner = scope->joinAll();
         for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
         {

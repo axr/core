@@ -57,7 +57,7 @@ HSSLayoutLine::HSSLayoutLine(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height
 , direction(direction)
 , owner(owner)
 , complete(false)
-, objects(new HSSSimpleSelection())
+, objects(new HSSSimpleSelection(owner->getController()))
 {
 
 }
@@ -68,7 +68,7 @@ HSSLayoutLine::HSSLayoutLine(const QSharedPointer<HSSDisplayObject> & child, HSS
 , direction(direction)
 , owner(owner)
 , complete(false)
-, objects(new HSSSimpleSelection())
+, objects(new HSSSimpleSelection(owner->getController()))
 {
     this->objects->add(child);
     this->width = child->getOuterWidth();

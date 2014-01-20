@@ -76,7 +76,7 @@ AXRString HSSEvenFilter::stringRep()
 
 QSharedPointer<HSSSelection> HSSEvenFilter::apply(QSharedPointer<HSSSelection> scope, bool processing)
 {
-    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection());
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     if (scope->isA(HSSSelectionTypeMultipleSelection))
     {
         QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(scope);

@@ -45,6 +45,7 @@
 #define HSSSELECTION_H
 
 #include <QSharedPointer>
+#include "HSSObject.h"
 #include "HSSTypeEnums.h"
 
 namespace AXR
@@ -56,7 +57,7 @@ namespace AXR
     /**
      *  @brief
      */
-    class HSSSelection
+    class HSSSelection : public HSSObject
     {
     public:
         virtual ~HSSSelection();
@@ -103,17 +104,22 @@ namespace AXR
          *  @return A textual representation of the object, as a std string.
          */
         std::string toStdString();
+        
+        //see HSSObject.h for documentation on this method
+        virtual AXRString defaultObjectType();
+        //see HSSObject.h for documentation on this method
+        virtual AXRString defaultObjectType(AXRString property);
 
         /**
-         *  Each object overrides this method to compare against another node
+         *  Each object overrides this method to compare against another object
          *  @param otherObj     The other object to compare to
          *  @return Wether the object is equal to the given one.
          */
-        virtual bool equalTo(QSharedPointer<HSSSelection> otherObj);
+        virtual bool equalTo(QSharedPointer<HSSObject> otherObj);
 
     protected:
-        HSSSelection(HSSSelectionType type);
-        HSSSelection(const HSSSelection &other);
+        HSSSelection(HSSSelectionType type, AXRController * controller);
+        HSSSelection(const HSSSelection &orig);
 
     private:
         HSSSelectionType selectionType;
