@@ -143,6 +143,10 @@ AXRString AXRDocument::resourcesPath() const
     dir.cdUp();
 #endif
     dir.cd("Resources");
+#elif defined(Q_OS_UNIX)
+    dir.cdUp();
+    dir.cd("share");
+    dir.cd("axr");
 #endif
     dir.cd("resources");
     return dir.canonicalPath();
