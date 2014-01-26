@@ -577,7 +577,10 @@ void HSSObject::setShorthandIndex(size_t newValue)
 
 void HSSObject::setIsA(QSharedPointer<HSSObject> theObj)
 {
-    this->_setIsA(this->_setIsAPrepare(theObj));
+    QSharedPointer<HSSObject> preparedObj = this->_setIsAPrepare(theObj);
+    if(preparedObj){
+      this->_setIsA(preparedObj);
+    }
 }
 
 QSharedPointer<HSSObject> HSSObject::_setIsAPrepare(QSharedPointer<HSSObject> theObj)
