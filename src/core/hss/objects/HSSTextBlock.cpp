@@ -329,8 +329,7 @@ HSSTextAlignType HSSTextBlock::_getTextAlign(QSharedPointer<HSSObject> theObj) c
                             return this->_getTextAlign(remoteObj);
                         }
                     }
-                    
-                    return HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue());
+                    break;
                 }
                 default:
                     break;
