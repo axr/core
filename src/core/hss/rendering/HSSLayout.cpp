@@ -1093,8 +1093,14 @@ void HSSLayout::visit(HSSTextBlock &textBlock)
         AXRString text = textBlock.getText();
         QRect bounds = fontMetrics.boundingRect(0, 0, static_cast<int>(allowedWidth), std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, text);
 
-        textBlock.setWidth(bounds.width(), std::numeric_limits<int>::max());
-        textBlock.setHeight(bounds.height(), std::numeric_limits<int>::max());
+        if (textBlock.widthByContent)
+        {
+            textBlock.setWidth(bounds.width(), std::numeric_limits<int>::max());
+        }
+        if (textBlock.heightByContent)
+        {
+            textBlock.setHeight(bounds.height(), std::numeric_limits<int>::max());
+        }
         textBlock.setNeedsSurface(true);
 
         textBlock._needsLayout = false;

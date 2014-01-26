@@ -101,6 +101,7 @@ namespace AXR
         QFont getQFont() const;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        HSSTextAlignType _getTextAlign(QSharedPointer<HSSObject> theObj) const;
     };
 }
 

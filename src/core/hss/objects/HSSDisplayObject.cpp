@@ -305,7 +305,7 @@ bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
             return true;
         }
     }
-    else if (property == "width")
+    else if (property == "width" || property == "height")
     {
         if (value == "content")
         {

@@ -201,9 +201,8 @@ void HSSTextBlock::setDefaults()
 {
     HSSDisplayObject::setDefaults();
     //the 'text' property is intentionally left out here
-    this->setDefault("height", "content");
     this->setDefaultKw("font", "inherit");
-    this->setDefaultKw("textAlign", "left");
+    this->setDefaultKw("textAlign", "inherit");
     this->setDefaultKw("transform", "no");
     this->setDefaultKw("direction", "ltr");
     this->setDefaultKw("wrapDirection", "ttb");
@@ -303,13 +302,39 @@ HSSTextTransformType HSSTextBlock::getTransform() const
 
 HSSTextAlignType HSSTextBlock::getTextAlign() const
 {
-    QSharedPointer<HSSObject> value = this->getComputedValue("transform");
-    if (value && value->isA(HSSObjectTypeValue))
+    QSharedPointer<HSSObject> value = this->getComputedValue("textAlign");
+    return this->_getTextAlign(value);
+}
+
+HSSTextAlignType HSSTextBlock::_getTextAlign(QSharedPointer<HSSObject> theObj) const
+{
+    if (theObj && theObj->isA(HSSObjectTypeValue))
     {
-        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(value)->getValue();
-        if (parserNode && parserNode->isA(HSSParserNodeTypeKeywordConstant))
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+        if (parserNode)
         {
-            return HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue());
+            switch (parserNode->getType()) {
+                case HSSParserNodeTypeKeywordConstant:
+                {
+                    return HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue());
+                }
+                case HSSParserNodeTypeFunctionCall:
+                {
+                    if (parserNode->isA(HSSFunctionTypeRef))
+                    {
+                        QSharedPointer<HSSRefFunction> refFunction = qSharedPointerCast<HSSRefFunction>(parserNode);
+                        QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSRefFunction>(refFunction)->evaluate();
+                        if (remoteObj)
+                        {
+                            return this->_getTextAlign(remoteObj);
+                        }
+                    }
+                    
+                    return HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue());
+                }
+                default:
+                    break;
+            }
         }
     }
     return HSSTextAlignTypeNone;
