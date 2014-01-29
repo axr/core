@@ -89,7 +89,7 @@ if(WIN32)
     set(CPACK_NSIS_COMPRESSOR "lzma
 BrandingText '${AXR_VENDOR}'")
 
-    set(CPACK_WIX_PRODUCT_GUID "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX") # Change on each release
+    set(CPACK_WIX_PRODUCT_GUID "D28D3114-ED81-4146-B91C-C819FD74885E") # Change on each release
     set(CPACK_WIX_UPGRADE_GUID "AFBAE4BB-0F7B-495D-87BE-F7CB636C24DB") # Permanent, never change this
 
     set(CPACK_PACKAGE_ICON "${AXR_COMMON_SOURCE_DIR}\\\\nsis-header.bmp")
