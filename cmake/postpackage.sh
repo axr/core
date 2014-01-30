@@ -12,8 +12,13 @@ for component in "${components[@]}" ; do
         pkgname=libaxr-$component
     fi
 
+    archcode=@ARCH_CODE@
+    if [[ $component = 'doc' ]] ; then
+        archcode=all
+    fi
+
     olddeb=@CPACK_PACKAGE_FILE_NAME@-$component.deb
-    newdeb=${pkgname}_@AXR_VERSION_STRING@_@ARCH_CODE@.deb
+    newdeb=${pkgname}_@AXR_VERSION_STRING@_${archcode}.deb
 
     cd "@CMAKE_BINARY_DIR@/dist"
 
