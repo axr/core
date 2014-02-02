@@ -43,79 +43,84 @@
 
 #include "AXRController.h"
 #include "AXRLoggerManager.h"
-#include "AXRWarning.h"
 #include "HSSDisplayObject.h"
-#include "HSSFunction.h"
-#include "HSSLog.h"
+#include "HSSLogFunction.h"
 #include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSRefFunction.h"
+#include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
 #include "HSSStringConstant.h"
 #include "HSSValue.h"
 
 using namespace AXR;
 
-HSSLog::HSSLog(AXRController * controller)
-: HSSAction(HSSActionTypeLog, controller)
+HSSLogFunction::HSSLogFunction(AXRController * controller)
+: HSSFunction(HSSFunctionTypeLog, controller)
 {
-    axr_log(LoggerChannelGeneralSpecific, "HSSLog: creating log object");
-    std::vector<AXRString> shorthandProperties;
-    shorthandProperties.push_back("value");
-    this->setShorthandProperties(shorthandProperties);
+
 }
 
-HSSLog::HSSLog(const HSSLog & orig)
-: HSSAction(orig)
+HSSLogFunction::~HSSLogFunction()
 {
-}
-
-QSharedPointer<HSSLog> HSSLog::clone() const
-{
-    axr_log(LoggerChannelGeneralSpecific, "HSSLog: cloning log object");
-    return qSharedPointerCast<HSSLog> (this->cloneImpl());
-}
-
-QSharedPointer<HSSClonable> HSSLog::cloneImpl() const
-{
-    return QSharedPointer<HSSLog>(new HSSLog(*this));
-}
-
-HSSLog::~HSSLog()
-{
-    axr_log(LoggerChannelGeneralSpecific, "HSSLog: destructing log object");
+    axr_log(LoggerChannelGeneralSpecific, "HSSLogFunction: destructing log function");
     this->cleanTrackedObservers();
 }
 
-AXRString HSSLog::toString()
+HSSLogFunction::HSSLogFunction(const HSSLogFunction & orig)
+: HSSFunction(orig)
 {
-    return "HSSLog";
-}
-
-AXRString HSSLog::defaultObjectType()
-{
-    return "log";
-}
-
-void HSSLog::fire()
-{
-    QSharedPointer<HSSObject> valueObj = this->getValue();
-    if (valueObj)
+    Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, orig.values)
     {
-        if (valueObj->isA(HSSObjectTypeValue))
-        {
-            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(valueObj)->getValue();
-            this->_logParserNode(parserNode);
-        }
-        else
-        {
-            this->_logObject(valueObj);
-        }
+        this->add(parserNode);
     }
 }
 
-void HSSLog::_logParserNode(QSharedPointer<HSSParserNode> parserNode) const
+QSharedPointer<HSSFunction> HSSLogFunction::clone() const
+{
+    return qSharedPointerCast<HSSFunction> (this->cloneImpl());
+}
+
+AXRString HSSLogFunction::toString()
+{
+    AXRString tempstr = AXRString("HSSLogFunction\n");
+    return tempstr;
+}
+
+std::vector<QSharedPointer<HSSParserNode> > HSSLogFunction::getValues()
+{
+    return this->values;
+}
+
+void HSSLogFunction::setValues(std::vector<QSharedPointer<HSSParserNode> > newValues)
+{
+    this->values = newValues;
+}
+
+void HSSLogFunction::add(QSharedPointer<HSSParserNode> newValue)
+{
+    this->values.push_back(newValue);
+}
+
+bool HSSLogFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSFunction::equalTo(otherNode)) return false;
+    return true;
+}
+
+QSharedPointer<HSSObject> HSSLogFunction::_evaluate()
+{
+    Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, this->values){
+        this->_logParserNode(parserNode);
+    }
+    this->setDirty(true);
+    return this->_value;
+}
+
+void HSSLogFunction::_logParserNode(QSharedPointer<HSSParserNode> parserNode) const
 {
     switch (parserNode->getType())
     {
@@ -135,6 +140,10 @@ void HSSLog::_logParserNode(QSharedPointer<HSSParserNode> parserNode) const
                         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(remoteObj)->getValue();
                         this->_logParserNode(parserNode);
                     }
+                    else
+                    {
+                        this->_logObject(remoteObj);
+                    }
                 }
             }
             break;
@@ -143,7 +152,7 @@ void HSSLog::_logParserNode(QSharedPointer<HSSParserNode> parserNode) const
         case HSSParserNodeTypeStringConstant:
         {
             AXRString kwValue = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-            axr_log(LoggerChannelGeneral, kwValue);
+            axr_log(LoggerChannelLogFunction, kwValue);
             break;
         }
 
@@ -152,20 +161,20 @@ void HSSLog::_logParserNode(QSharedPointer<HSSParserNode> parserNode) const
             AXRString kwValue("`");
             kwValue.append(qSharedPointerCast<HSSStringConstant>(parserNode)->getValue());
             kwValue.append("`");
-            axr_log(LoggerChannelGeneral, kwValue);
+            axr_log(LoggerChannelLogFunction, kwValue);
             break;
         }
         case HSSParserNodeTypeNumberConstant:
         {
             AXRString kwValue = QString::number(qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue());
-            axr_log(LoggerChannelGeneral, kwValue);
+            axr_log(LoggerChannelLogFunction, kwValue);
             break;
         }
 
         case HSSParserNodeTypeObjectNameConstant:
         {
             AXRString kwValue = qSharedPointerCast<HSSObjectNameConstant > (parserNode)->getValue();
-            axr_log(LoggerChannelGeneral, kwValue);
+            axr_log(LoggerChannelLogFunction, kwValue);
         }
 
         default:
@@ -173,12 +182,14 @@ void HSSLog::_logParserNode(QSharedPointer<HSSParserNode> parserNode) const
     }
 }
 
-void HSSLog::_logObject(QSharedPointer<HSSObject> theObj) const
+void HSSLogFunction::_logObject(QSharedPointer<HSSObject> theObj) const
 {
     axr_log(LoggerChannelGeneral, "not implemented yet");
 }
 
-const QSharedPointer<HSSObject> HSSLog::getValue() const
+QSharedPointer<HSSClonable> HSSLogFunction::cloneImpl() const
 {
-    return this->getComputedValue("value");
+    QSharedPointer<HSSLogFunction> clone = QSharedPointer<HSSLogFunction>(new HSSLogFunction(*this));
+
+    return clone;
 }

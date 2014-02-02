@@ -54,7 +54,6 @@
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
 #include "HSSLinearGradient.h"
-#include "HSSLog.h"
 #include "HSSMargin.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
@@ -108,7 +107,6 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
         types["circle"] = HSSObjectTypeShape;
         types["polygon"] = HSSObjectTypeShape;
         types["request"] = HSSObjectTypeAction;
-        types["log"] = HSSObjectTypeAction;
     }
 
     HSSObjectType objectType = HSSObjectTypeNone;
@@ -194,10 +192,6 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
         if (type == "request")
         {
             return QSharedPointer<HSSRequest>(new HSSRequest(controller));
-        }
-        else if (type == "log")
-        {
-            return QSharedPointer<HSSLog>(new HSSLog(controller));
         }
     }
 
@@ -317,6 +311,7 @@ bool HSSObject::isFunction(AXRString value, AXRString property)
             || value == "toggleFlag"
             || value == "takeFlag"
             || value == "attr"
+            || value == "log"
             )
     {
         return true;

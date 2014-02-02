@@ -41,52 +41,81 @@
  *
  ********************************************************************/
 
-#ifndef HSSLOG_H
-#define HSSLOG_H
+#ifndef HSSLOGFUNCTION_H
+#define HSSLOGFUNCTION_H
 
-#include "HSSAction.h"
+#include "HSSFunction.h"
 
 namespace AXR
 {
     /**
-     *  @brief This action object type logs values to the console.
+     *  @brief Implementation of the log(<value>[, <value> ... ]) function in HSS.
      *
-     *  It can either log stuff directly
+     *  Log functions print the given value to the console
      */
-    class AXR_API HSSLog : public HSSAction
+    class AXR_API HSSLogFunction : public HSSFunction
     {
     public:
         /**
-         *  Creates a new instance of a log action object.
+         *  Creates a new instance of a log function.
          */
-        HSSLog(AXRController * controller);
+        HSSLogFunction(AXRController * controller);
 
         /**
-         *  Copy constructor for HSSLog objects. Don't call directly, use clone() instead.
+         *  Copy constructor for HSSLogFunction objects. Do not call directly, use clone() instead.
          */
-        HSSLog(const HSSLog & orig);
+        HSSLogFunction(const HSSLogFunction & orig);
 
         /**
-         *  Clones an instance of HSSLog and gives a shared pointer of the
+         *  Clones an instance of HSSLogFunction and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSLog.
+         *  @return A shared pointer to the new HSSLogFunction
          */
-        QSharedPointer<HSSLog> clone() const;
+        QSharedPointer<HSSFunction> clone() const;
 
         /**
          *  Destructor for this class.
          */
-        virtual ~HSSLog();
+        virtual ~HSSLogFunction();
 
         virtual AXRString toString();
-        virtual AXRString defaultObjectType();
-        virtual void fire();
 
         /**
-         *  Getter for the computed value of value.
-         *  @return A shared pointer to the value.
+         *  Getter for values.
+         *  @return A vector of shared pointers to parser nodes that are stored inside this
+         *  multiple value definition.
          */
-        const QSharedPointer<HSSObject> getValue() const;
+        std::vector<QSharedPointer<HSSParserNode> > getValues();
+
+        /**
+         *  Setter for values.
+         *  @param newValues    A vector of shared pointers to parser nodes that to store them inside this
+         *  multiple value definition.
+         */
+        void setValues(std::vector<QSharedPointer<HSSParserNode> > newValues);
+
+        /**
+         *  Adds a node to the values list.
+         *  @param newValue    A vector of shared pointers to parser nodes that to store them inside this
+         *  multiple value definition.
+         */
+        void add(QSharedPointer<HSSParserNode> newValue);
+
+        /**
+         *  Each node overrides this method to compare against another node
+         *  @param otherNode    The other object to compare to
+         *  @return Wether the node is equal to the given one.
+         */
+        bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        /**
+         *  This is the actual implementation of what the function does.
+         *  @return An empty pointer.
+         */
+        virtual QSharedPointer<HSSObject> _evaluate();
+
+    protected:
+        std::vector<QSharedPointer<HSSParserNode> > values;
 
     private:
         void _logParserNode(QSharedPointer<HSSParserNode> parserNode) const;

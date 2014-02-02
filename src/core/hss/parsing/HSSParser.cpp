@@ -59,6 +59,7 @@
 #include "HSSFlagFunction.h"
 #include "HSSInstruction.h"
 #include "HSSKeywordConstant.h"
+#include "HSSLogFunction.h"
 #include "HSSMultiplication.h"
 #include "HSSNegation.h"
 #include "HSSNumberConstant.h"
@@ -2622,6 +2623,10 @@ QSharedPointer<HSSParserNode> HSSParser::readFunction()
         {
             ret = this->readRoundFunction();
         }
+        else if (name == "log")
+        {
+            ret = this->readLogFunction();
+        }
         else if (controller->document()->isCustomFunction(name))
         {
             ret = this->readCustomFunction();
@@ -2927,6 +2932,39 @@ QSharedPointer<HSSParserNode> HSSParser::readRoundFunction()
 {
     AXRError("HSSParser", "the round() function is still unimplemented").raise();
     QSharedPointer<HSSParserNode> ret;
+    return ret;
+}
+
+QSharedPointer<HSSParserNode> HSSParser::readLogFunction()
+{
+    QSharedPointer<HSSParserNode> ret;
+    AXRString name = VALUE_TOKEN(this->currentToken)->getString();
+    QSharedPointer<HSSLogFunction> logFunction = QSharedPointer<HSSLogFunction>(new HSSLogFunction(controller));
+
+    this->readNextToken(true);
+    this->skip(HSSWhitespace, true);
+    this->skipExpected(HSSParenthesisOpen, true);
+    this->skip(HSSWhitespace, true);
+    //read the arguments
+    bool done = false;
+    while (!done)
+    {
+        done = true;
+        bool valueValid = false;
+        QSharedPointer<HSSParserNode> value = this->readValue("value", valueValid); //FIXME: don't know the property name here
+        if(valueValid){
+            logFunction->add(value);
+        }
+        this->skip(HSSWhitespace, true);
+        if (this->currentToken->isA(HSSComma))
+        {
+            done = false;
+            this->readNextToken(true);
+        }
+    }
+    this->skipExpected(HSSParenthesisClose, true);
+
+    ret = logFunction;
     return ret;
 }
 

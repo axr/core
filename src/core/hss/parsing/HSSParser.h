@@ -406,6 +406,12 @@ namespace AXR
         QSharedPointer<HSSParserNode> readRoundFunction();
 
         /**
+         *  Reads a function of type log(<value>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readLogFunction();
+
+        /**
          *  Reads a custom function.
          *  @return A shared pointer to the function node.
          */
