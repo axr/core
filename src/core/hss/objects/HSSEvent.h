@@ -49,7 +49,7 @@
 namespace AXR
 {
     class HSSAction;
-    class HSSFlagFunction;
+    class HSSParserNode;
 
     /**
      *  @brief Represents all event objects in HSS.
@@ -57,7 +57,7 @@ namespace AXR
      *  All event objects, such as \@click, \@keyDown, etc, have the same behavior, they
      *  fire their assigned action, so only one class is needed.
      */
-    class AXR_API HSSEvent : public HSSObject
+    class AXR_API HSSEvent
     {
     public:
         /**
@@ -70,60 +70,12 @@ namespace AXR
         static HSSEventType nameToEventType(AXRString name);
 
         /**
-         *  Constructor for HSSEvent objects.
-         *  @param  type    The event type that this event will respond to.
-         */
-        HSSEvent(HSSEventType type, AXRController * controller);
-        /**
-         *  Copy constructor for HSSEvent objects. Do not use directly, use clone() instead.
-         */
-        HSSEvent(const HSSEvent & orig);
-        /**
-         *  Clones an instance of HSSEvent and gives a shared pointer of the newly instanciated
-         *  object.
-         *  @return A shared pointer to the new HSSEvent.
-         */
-        QSharedPointer<HSSEvent> clone() const;
-
-        /**
-         *  Destructor for this class.
-         */
-        virtual ~HSSEvent();
-
-        virtual void setDefaults();
-        virtual AXRString toString();
-        virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
-
-        /**
-         *  Allows you to check if this event is of the given type.
-         *  @param  type    The event type to which to check against.
-         *  @return Wether it is of the given type or not.
-         */
-        bool isA(HSSEventType type) const;
-
-        /**
-         *  @return The event type of this instance.
-         */
-        HSSEventType getEventType() const;
-
-        /**
-         *  Getter for the computed value of action.
-         *  @return A shared pointer to the object.
-         */
-        const QSharedPointer<HSSObject> getAction() const;
-
-        /**
          *  Executes the action which is stored in this event object.
          */
-        virtual void fire();
-
-    protected:
-        HSSEventType eventType;
+        static void fire(QSharedPointer<HSSObject> theObj);
 
     private:
-        virtual QSharedPointer<HSSClonable> cloneImpl() const;
-        void _fireFlagFunction(QSharedPointer<HSSFlagFunction> flagFunction);
+        static void _fire(QSharedPointer<HSSParserNode> parserNode);
     };
 }
 

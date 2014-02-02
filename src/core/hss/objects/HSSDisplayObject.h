@@ -63,6 +63,7 @@ namespace AXR
     class HSSRule;
     class HSSRuleStatus;
     class HSSSimpleSelection;
+    class HSSValue;
 
     /**
      *  @brief Abstract superclass for any object that should be rendered on the screen.
@@ -427,7 +428,7 @@ namespace AXR
         unsigned int _rulesIndex;
 
         void _initialize();
-        bool _fireEvent(QSharedPointer<HSSEvent> theEvent, HSSEventType eventType);
+        bool _fireEvent(QSharedPointer<HSSValue> theValue, HSSEventType eventType);
     };
 }
 

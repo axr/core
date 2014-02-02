@@ -253,7 +253,7 @@ AXRString HSSDisplayObject::defaultObjectType(AXRString property)
     }
     else if (property == "on")
     {
-        return "click";
+        return "value";
     }
     else if (property == "mask")
     {
@@ -1249,19 +1249,19 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
     QSharedPointer<HSSObject> computed = this->getComputedValue("on");;
     if (computed)
     {
-        if (computed->isA(HSSObjectTypeEvent))
+        if (computed->isA(HSSObjectTypeValue))
         {
-            fired = this->_fireEvent(qSharedPointerCast<HSSEvent>(computed), type);
+            fired = this->_fireEvent(qSharedPointerCast<HSSValue>(computed), type);
         }
         else if(computed->isA(HSSObjectTypeMultipleValue))
         {
             bool allFired = true;
             Q_FOREACH(QSharedPointer<HSSObject> comp, qSharedPointerCast<HSSMultipleValue>(computed)->getValues())
             {
-                if (comp->isA(HSSObjectTypeEvent))
+                if (comp->isA(HSSObjectTypeValue))
                 {
-                    QSharedPointer<HSSEvent> theEvent = qSharedPointerCast<HSSEvent>(comp);
-                    if ( ! this->_fireEvent(qSharedPointerCast<HSSEvent>(computed), type))
+                    QSharedPointer<HSSValue> theValue = qSharedPointerCast<HSSValue>(comp);
+                    if ( ! this->_fireEvent(theValue, type))
                     {
                         allFired = false;
                     }
@@ -1274,13 +1274,15 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
     return fired;
 }
 
-bool HSSDisplayObject::_fireEvent(QSharedPointer<HSSEvent> theEvent, HSSEventType eventType)
+bool HSSDisplayObject::_fireEvent(QSharedPointer<HSSValue> theValue, HSSEventType eventType)
 {
     bool fired = false;
-    if (theEvent->isA(eventType))
+    const AXRString & eventStr = HSSEvent::eventTypeToName(eventType);
+    QSharedPointer<HSSObject> computed = theValue->getComputedValue(eventStr);
+    if (computed)
     {
-        axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + theEvent->toString());
-        theEvent->fire();
+        axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + computed->toString());
+        HSSEvent::fire(computed);
         fired = true;
     }
     return fired;

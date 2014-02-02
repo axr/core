@@ -51,7 +51,6 @@
 #include "HSSCircle.h"
 #include "HSSColorStop.h"
 #include "HSSContainer.h"
-#include "HSSEvent.h"
 #include "HSSFont.h"
 #include "HSSKeywordConstant.h"
 #include "HSSLinearGradient.h"
@@ -108,19 +107,6 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
         types["roundedRect"] = HSSObjectTypeShape;
         types["circle"] = HSSObjectTypeShape;
         types["polygon"] = HSSObjectTypeShape;
-        types["load"] = HSSObjectTypeEvent;
-        types["click"] = HSSObjectTypeEvent;
-        types["doubleClick"] = HSSObjectTypeEvent;
-        types["tripleClick"] = HSSObjectTypeEvent;
-        types["mouseDown"] = HSSObjectTypeEvent;
-        types["mouseUp"] = HSSObjectTypeEvent;
-        types["mouseOver"] = HSSObjectTypeEvent;
-        types["mouseOut"] = HSSObjectTypeEvent;
-        types["mouseHold"] = HSSObjectTypeEvent;
-        types["mouseMove"] = HSSObjectTypeEvent;
-        types["clickSecondary"] = HSSObjectTypeEvent;
-        types["clickTertiary"] = HSSObjectTypeEvent;
-        types["scroll"] = HSSObjectTypeEvent;
         types["request"] = HSSObjectTypeAction;
         types["log"] = HSSObjectTypeAction;
     }
@@ -201,34 +187,6 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
         {
             return QSharedPointer<HSSPolygon>(new HSSPolygon(controller));
         }
-    }
-
-    case HSSObjectTypeEvent:
-    {
-        static QMap<AXRString, HSSEventType> eventTypes;
-        if (eventTypes.empty())
-        {
-            eventTypes["load"] = HSSEventTypeLoad;
-            eventTypes["click"] = HSSEventTypeClick;
-            eventTypes["doubleClick"] = HSSEventTypeDoubleClick;
-            eventTypes["tripleClick"] = HSSEventTypeTripleClick;
-            eventTypes["mouseDown"] = HSSEventTypeMouseDown;
-            eventTypes["mouseUp"] = HSSEventTypeMouseUp;
-            eventTypes["mouseOver"] = HSSEventTypeMouseOver;
-            eventTypes["mouseOut"] = HSSEventTypeMouseOut;
-            eventTypes["mouseHold"] = HSSEventTypeMouseHold;
-            eventTypes["mouseMove"] = HSSEventTypeMouseMove;
-            eventTypes["clickSecondary"] = HSSEventTypeClickSecondary;
-            eventTypes["clickTertiary"] = HSSEventTypeClickTertiary;
-            eventTypes["scroll"] = HSSEventTypeScroll;
-        }
-
-        if (eventTypes.contains(type))
-        {
-            return QSharedPointer<HSSEvent>(new HSSEvent(eventTypes[type], controller));
-        }
-
-        //fall through
     }
 
     case HSSObjectTypeAction:

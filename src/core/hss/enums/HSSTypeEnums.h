@@ -316,7 +316,6 @@ namespace AXR
         HSSObjectTypeFont, /**< Not font files, but HSS \@font objects */
         HSSObjectTypeFunction, /**< All functions share this type */
         HSSObjectTypeShape, /**< All shapes share this type */
-        HSSObjectTypeEvent, /**< All events share this type */
         HSSObjectTypeAction, /**< All actions share this type */
         HSSObjectTypeColorStop, /**< Color stops are used inside gradients */
         HSSObjectTypeSelection /**< Selections hold references to other objects */
