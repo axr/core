@@ -216,11 +216,6 @@ QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
     return QSharedPointer<HSSObject>();
 }
 
-QSharedPointer<HSSObject> HSSFlagFunction::_evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
-{
-    return this->_evaluate();
-}
-
 void HSSFlagFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)
 {
     this->setDirty(true);

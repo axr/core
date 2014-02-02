@@ -159,11 +159,6 @@ namespace AXR
         virtual QSharedPointer<HSSObject> _evaluate();
 
         /**
-         *  @todo is this one even used?
-         */
-        virtual QSharedPointer<HSSObject> _evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
-
-        /**
          *  Method to be passed as callback when observing changes.
          *  @param source   The property which we are observing.
          *  @param data     A pointer to the data that is sent along the notification.
