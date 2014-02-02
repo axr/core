@@ -64,6 +64,7 @@
 #include "HSSMouseEvent.h"
 #include "HSSMultipleValue.h"
 #include "HSSMultipleValueDefinition.h"
+#include "HSSNameSelector.h"
 #include "HSSNumberConstant.h"
 #include "HSSObject.h"
 #include "HSSObjectDefinition.h"

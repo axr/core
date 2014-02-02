@@ -48,6 +48,8 @@
 
 namespace AXR
 {
+    class HSSSelectorChain;
+
     /**
      *  @brief Function type to manipulate the activation status of a flag.
      *  All of the flagging functions [flag(), unflag() and toggleFlag()] are handled by this class.

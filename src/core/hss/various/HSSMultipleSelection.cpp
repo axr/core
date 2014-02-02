@@ -232,7 +232,7 @@ AXRString HSSMultipleSelection::toString()
     return tempstr;
 }
 
-bool HSSMultipleSelection::equalTo(QSharedPointer<HSSSelection> otherObj)
+bool HSSMultipleSelection::equalTo(QSharedPointer<HSSObject> otherObj)
 {
     //check wether pointers are the same
     if (this == otherObj.data()) return true;

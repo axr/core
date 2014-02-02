@@ -272,7 +272,7 @@ AXRString HSSSimpleSelection::toString()
     return tempstr;
 }
 
-bool HSSSimpleSelection::equalTo(QSharedPointer<HSSSelection> otherObj)
+bool HSSSimpleSelection::equalTo(QSharedPointer<HSSObject> otherObj)
 {
     //check wether pointers are the same
     if (this == otherObj.data()) return true;

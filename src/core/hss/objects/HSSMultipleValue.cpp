@@ -46,6 +46,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSMultipleValue.h"
 #include "HSSParserNode.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

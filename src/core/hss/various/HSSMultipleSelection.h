@@ -114,7 +114,7 @@ namespace AXR
          *  @param otherObj     The other object to compare to
          *  @return Wether the object is equal to the given one.
          */
-        bool equalTo(QSharedPointer<HSSSelection> otherObj);
+        bool equalTo(QSharedPointer<HSSObject> otherObj);
 
     protected:
 

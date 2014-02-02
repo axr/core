@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "HSSDisplayObject.h"
 #include "HSSPropertyPathNode.h"
 
 using namespace AXR;

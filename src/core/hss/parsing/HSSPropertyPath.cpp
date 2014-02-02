@@ -43,6 +43,7 @@
 
 #include "AXRLoggerManager.h"
 #include "HSSCallback.h"
+#include "HSSDisplayObject.h"
 #include "HSSObject.h"
 #include "HSSObjectDefinition.h"
 #include "HSSPropertyDefinition.h"

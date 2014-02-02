@@ -51,6 +51,8 @@
 
 namespace AXR
 {
+    class HSSSimpleSelection;
+
     /**
      *  @brief Abstract base class for all function objects.
      */
