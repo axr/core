@@ -143,6 +143,10 @@ namespace AXR
          * Messages related to the document controller, more fine grained.
          */
         LoggerChannelControllerSpecific = 1 << 16,
+        /*!
+         * Values that were given to log() functions in hss or js.
+         */
+        LoggerChannelLogFunction = 1 << 17,
 
         /*!
          * \deprecated

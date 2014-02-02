@@ -168,6 +168,8 @@ namespace AXR
                 return QLatin1String("LoggerChannelController");
             case LoggerChannelControllerSpecific:
                 return QLatin1String("LoggerChannelControllerSpecific");
+            case LoggerChannelLogFunction:
+                return QLatin1String("LoggerChannelLogFunction");
 
             case LoggerChannelObsolete0:
                 return QLatin1String("LoggerChannelObsolete0");
@@ -219,6 +221,8 @@ namespace AXR
             return LoggerChannelController;
         else if (channelName == QLatin1String("LoggerChannelControllerSpecific"))
             return LoggerChannelControllerSpecific;
+        else if (channelName == QLatin1String("LoggerChannelLogFunction"))
+            return LoggerChannelLogFunction;
 
         else if (channelName == QLatin1String("LoggerChannelObsolete0"))
             return LoggerChannelObsolete0;
