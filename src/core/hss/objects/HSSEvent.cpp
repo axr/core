@@ -43,6 +43,7 @@
 
 #include <QMap>
 #include "HSSDisplayObject.h"
+#include "HSSFunction.h"
 #include "HSSEvent.h"
 #include "HSSMultipleValue.h"
 #include "HSSValue.h"
