@@ -215,7 +215,7 @@ void HSSParserNode::setThisObj(QSharedPointer<HSSDisplayObject> value)
     this->thisObj = value;
 }
 
-QSharedPointer<HSSDisplayObject> HSSParserNode::getThisObj()
+QSharedPointer<HSSDisplayObject> HSSParserNode::getThisObj() const
 {
     return thisObj;
 }

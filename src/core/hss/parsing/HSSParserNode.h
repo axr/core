@@ -183,7 +183,7 @@ namespace AXR
          *  (including itself).
          *  @return A shared pointer to the nearest display object.
          */
-        virtual QSharedPointer<HSSDisplayObject> getThisObj();
+        virtual QSharedPointer<HSSDisplayObject> getThisObj() const;
 
         //add all type isAs here
         virtual bool isA(HSSExpressionType otherType) const;
