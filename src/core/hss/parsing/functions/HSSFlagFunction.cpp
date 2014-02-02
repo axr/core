@@ -43,9 +43,11 @@
 
 #include "AXRController.h"
 #include "AXRLoggerManager.h"
+#include "AXRWarning.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlagFunction.h"
 #include "HSSSelectorChain.h"
+#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 
@@ -170,6 +172,47 @@ size_t HSSFlagFunction::selectorChainsSize() const
 
 QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
 {
+    QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
+    QSharedPointer<HSSSelection> selection = this->getController()->select(this->getSelectorChains(), this->scope, thisObj);
+    QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
+    HSSFlagFunctionType type = this->getFlagFunctionType();
+    const AXRString & flagName = this->getName();
+    if(type == HSSFlagFunctionTypeTakeFlag){
+        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+        {
+            QSharedPointer<HSSDisplayObject> container = *innerIt;
+            if(container != thisObj)
+            {
+                container->flagsDeactivate(flagName);
+            }
+        }
+        thisObj->flagsActivate(flagName);
+    }
+    else
+    {
+        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+        {
+            QSharedPointer<HSSDisplayObject> container = *innerIt;
+            switch (this->getFlagFunctionType())
+            {
+                case HSSFlagFunctionTypeFlag:
+                    container->flagsActivate(flagName);
+                    break;
+                case HSSFlagFunctionTypeUnflag:
+                    container->flagsDeactivate(flagName);
+                    break;
+                case HSSFlagFunctionTypeToggleFlag:
+                    container->flagsToggle(flagName);
+                    break;
+
+                default:
+                    throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
+                    break;
+            }
+        }
+    }
+    //reset dirty to always re evaluate
+    this->setDirty(true);
     return QSharedPointer<HSSObject>();
 }
 
