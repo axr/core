@@ -206,7 +206,7 @@ QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
                     break;
 
                 default:
-                    throw AXRWarning("HSSFlagAction", "Invalid flag function type for flag action");
+                    throw AXRWarning("HSSFlagFunction", "Invalid flag function type");
                     break;
             }
         }
