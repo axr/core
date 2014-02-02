@@ -554,10 +554,13 @@ bool HSSContainer::handleEvent(HSSInputEvent *event)
         }
     }
 
-    bool superHandled = HSSDisplayObject::handleEvent(event);
-    if (superHandled)
+    if(!handled)
     {
-        handled = true;
+        bool superHandled = HSSDisplayObject::handleEvent(event);
+        if (superHandled)
+        {
+            handled = true;
+        }
     }
 
     return handled;
