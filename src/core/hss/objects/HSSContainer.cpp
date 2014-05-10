@@ -119,7 +119,7 @@ void HSSContainer::_initialize()
     this->addNotifyCallback("contentAlignX", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContentAlignX));
     this->addCallback("contentAlignY", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignY));
     this->addNotifyCallback("contentAlignY", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContentAlignY));
-    this->addCallback("content", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContent));
+    this->addCallback("content", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::setContent));
     this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape));
     this->addNotifyCallback("shape", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
 }
@@ -853,14 +853,18 @@ AXRString HSSContainer::getContent() const
 {
     return this->getComputedString("content");
 }
-QSharedPointer<HSSObject> HSSContainer::computeContent(QSharedPointer<HSSParserNode> parserNode)
+void HSSContainer::setContent(QSharedPointer<HSSObject> theObj)
 {
-    if (parserNode->isA(HSSParserNodeTypeStringConstant))
+    if (theObj->isA(HSSObjectTypeValue))
     {
-        AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-        this->setContentText(text);
+        QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+        if (parserNode->isA(HSSParserNodeTypeStringConstant))
+        {
+            AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+            this->setContentText(text);
+        }
     }
-    return this->computeObject(parserNode, "content");
+    this->_simpleInsertComputed("content", theObj);
 }
 
 //shape

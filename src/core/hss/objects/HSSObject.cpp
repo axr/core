@@ -1322,7 +1322,7 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
         }
         else
         {
-            this->_computedValues.insert(propertyName, theObj);
+            this->_simpleInsertComputed(propertyName, theObj);
         }
         //notify
         if (this->_notifyCallbacks.contains(propertyName))
@@ -1335,6 +1335,11 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
             this->notifyObservers(propertyName, theObj);
         }
     }
+}
+
+void HSSObject::_simpleInsertComputed(AXRString propertyName, QSharedPointer<HSSObject> theObj)
+{
+    this->_computedValues.insert(propertyName, theObj);
 }
 
 QSharedPointer<HSSObject> HSSObject::getComputedValue(AXRString property) const

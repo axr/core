@@ -214,7 +214,7 @@ namespace AXR
         //content
         AXRString getContent() const;
 
-        QSharedPointer<HSSObject> computeContent(QSharedPointer<HSSParserNode> parserNode);
+        void setContent(QSharedPointer<HSSObject> theObj);
         //shape
         QSharedPointer<HSSObject> computeShape(QSharedPointer<HSSParserNode> parserNode);
         /**
