@@ -62,7 +62,7 @@ namespace AXR
         /**
          * Reduces the selection according its selector type
          */
-        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing) = 0;
+        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications) = 0;
 
         bool getNegating() const;
         void setNegating(bool value);
@@ -78,6 +78,9 @@ namespace AXR
          *  @return Wether the node is equal to the given one.
          */
         virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+
+        const void observeForContentTreeChanges(QSharedPointer<HSSSelection> scope, bool getParents);
+        void contentTreeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
     protected:
         /**

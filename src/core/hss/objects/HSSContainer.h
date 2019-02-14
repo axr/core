@@ -124,6 +124,18 @@ namespace AXR
          *  @param child    A shared pointer to the child display object.
          */
         void add(QSharedPointer<HSSDisplayObject> child);
+        
+        /**
+         *  Add a child to the offscreen list, to keep stuff around in memory.
+         *  @param child    A shared pointer to the child display object.
+         */
+        void addOffscreen(QSharedPointer<HSSDisplayObject> child);
+        
+        /**
+         *  Remove a child from the offscreen list
+         *  @param child    A shared pointer to the child display object.
+         */
+        void removeFromOffscreen(QSharedPointer<HSSDisplayObject> child);
 
         /**
          *  Removes a child by index.
@@ -242,6 +254,7 @@ namespace AXR
     protected:
         QSharedPointer<HSSSimpleSelection> children;
         QSharedPointer<HSSSimpleSelection> allChildren;
+        std::vector<QSharedPointer<HSSDisplayObject> > offscreenChildren;
         bool distributeX;
         bool distributeXLinear;
         bool distributeY;

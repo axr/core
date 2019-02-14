@@ -393,6 +393,22 @@ void HSSDisplayObject::removeFromParent()
     this->getParent()->remove(this->getIndex());
 }
 
+void HSSDisplayObject::moveToContentTree()
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    QSharedPointer<HSSDisplayObject> thisObj = this->shared_from_this();
+    parent->removeFromOffscreen(thisObj);
+    parent->add(thisObj);
+}
+
+void HSSDisplayObject::moveToOffscreen()
+{
+    QSharedPointer<HSSContainer> parent = this->getParent();
+    QSharedPointer<HSSDisplayObject> thisObj = this->shared_from_this();
+    parent->addOffscreen(thisObj);
+    this->removeFromParent();
+}
+
 QSharedPointer<HSSSimpleSelection> HSSDisplayObject::getSiblings()
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));

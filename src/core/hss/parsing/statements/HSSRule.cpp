@@ -59,6 +59,7 @@ HSSRule::HSSRule(AXRController * controller)
 : HSSStatement(HSSStatementTypeRule, controller)
 {
     this->_clonedFromRule = NULL;
+    this->_isConditional = false;
 }
 
 HSSRule::HSSRule(const HSSRule & orig)
@@ -66,6 +67,7 @@ HSSRule::HSSRule(const HSSRule & orig)
 {
     this->_originalScope = orig._originalScope;
     this->_clonedFromRule = &orig;
+    this->_isConditional = orig._isConditional;
     this->appliedTo = orig.appliedTo; //shallow copy
 }
 
@@ -374,6 +376,19 @@ void HSSRule::addOriginalScope(QSharedPointer<HSSSimpleSelection> scope)
     }
 }
 
+void HSSRule::contentTreeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    AXRController * theController = this->getController();
+    QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theObj);
+    QSharedPointer<HSSSimpleSelection> scope = this->getOriginalScope();
+    if (scope)
+    {
+        QSharedPointer<HSSRule> sharedThis = this->shared_from_this();
+        theController->recursiveMatchRulesToDisplayObjects(sharedThis, scope, theContainer, false);
+        theController->recursiveSetRuleState(sharedThis, scope, theContainer, HSSRuleStateOn);
+    }
+}
+
 bool HSSRule::hasParent()
 {
     return this->getParentNode() != NULL;
@@ -455,5 +470,40 @@ void HSSRule::setSpecificity(HSSUnit newValue)
     {
         const QSharedPointer<HSSRule> & childRule = *rIt;
         childRule->setSpecificity(newValue);
+    }
+}
+
+void HSSRule::setIsConditional(const bool newValue)
+{
+    this->_isConditional = newValue;
+}
+
+const bool HSSRule::isConditional()
+{
+    return this->_isConditional;
+}
+
+void HSSRule::recursiveSetIsConditional(const bool newValue)
+{
+    this->setIsConditional(newValue);
+    for (std::deque<QSharedPointer<HSSRule> >::const_iterator it = this->children.begin(); it != this->children.end(); ++it) {
+        const QSharedPointer<HSSRule> & childRule = *it;
+        childRule->recursiveSetIsConditional(newValue);
+    }
+}
+
+void HSSRule::fastForwardSelectorChain(AXR::HSSSelector *theSelector)
+{
+    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    {
+        selectorChain->fastForward(theSelector);
+    }
+}
+
+void HSSRule::resetFastForwardSelectorChain()
+{
+    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    {
+        selectorChain->resetFastForward();
     }
 }

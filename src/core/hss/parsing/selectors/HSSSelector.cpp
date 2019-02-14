@@ -41,8 +41,15 @@
  *
  ********************************************************************/
 
+#include "AXRController.h"
+#include "AXRLoggerManager.h"
+#include "HSSCallback.h"
+#include "HSSContainer.h"
 #include "HSSDisplayObject.h"
+#include "HSSRule.h"
 #include "HSSSelector.h"
+#include "HSSSimpleSelection.h"
+#include "HSSStatement.h"
 
 using namespace AXR;
 
@@ -55,7 +62,7 @@ HSSSelector::HSSSelector(HSSSelectorType type, AXRController * controller)
 
 HSSSelector::~HSSSelector()
 {
-
+    this->cleanTrackedObservers();
 }
 
 bool HSSSelector::getNegating() const
@@ -93,4 +100,49 @@ bool HSSSelector::equalTo(QSharedPointer<HSSParserNode> otherNode)
     if ( this->_selectorType != castedNode->_selectorType ) return false;
     if ( this->_negating != castedNode->_negating ) return false;
     return true;
+}
+
+const void HSSSelector::observeForContentTreeChanges(QSharedPointer<HSSSelection> scope, bool getParents)
+{
+    if (getParents)
+    {
+        const std::vector<QSharedPointer<HSSDisplayObject> > items = scope->getParents();
+        for (HSSSimpleSelection::const_iterator it = items.begin(); it != items.end(); ++it)
+        {
+            const QSharedPointer<HSSDisplayObject> & theDO = *it;
+            theDO->observe("__impl_private__contentTreeChanged", "__impl_private__simpleSelection", this, new HSSValueChangedCallback<HSSSelector > (this, &HSSSelector::contentTreeChanged));
+        }
+    }
+    else
+    {
+        if(!scope) return;
+        Q_FOREACH(const QSharedPointer<HSSDisplayObject> & theDO, *(scope->joinAll().data()))
+        {
+            theDO->observe("__impl_private__contentTreeChanged", "__impl_private__simpleSelection", this, new HSSValueChangedCallback<HSSSelector > (this, &HSSSelector::contentTreeChanged));
+        }
+    }
+}
+
+void HSSSelector::contentTreeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
+{
+    QSharedPointer<HSSParserNode> selectorChainNode = this->getParentNode();
+    QSharedPointer<HSSParserNode> ruleNode = selectorChainNode->getParentNode();
+    if (ruleNode->isA(HSSParserNodeTypeStatement))
+    {
+        QSharedPointer<HSSStatement> ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
+        if (ruleStatement->isA(HSSStatementTypeRule))
+        {
+            QSharedPointer<HSSRule> theRule = qSharedPointerCast<HSSRule > (ruleStatement);
+            AXRController * theController = this->getController();
+            QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theObj);
+            QSharedPointer<HSSSimpleSelection> scope = theContainer->getChildren();
+            if (scope)
+            {
+                theRule->fastForwardSelectorChain(this);
+                theController->recursiveMatchRulesToDisplayObjects(theRule, scope, theContainer, true);
+                theController->setRuleStateOnSelection(theRule, scope, HSSRuleStateOn);
+                theRule->resetFastForwardSelectorChain();
+            }
+        }
+    }
 }

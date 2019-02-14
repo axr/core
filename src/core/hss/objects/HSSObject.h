@@ -394,6 +394,7 @@ namespace AXR
 
         bool expectsIsAIncluded() const;
         void setExpectsIsAIncluded(bool value);
+        void unlinkPropertyPaths();
 
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;

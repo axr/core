@@ -86,6 +86,8 @@ namespace AXR
 
         AXRDocument* document() const;
 
+        void setUpTreeChangeObservers();
+        void recursiveSetUpTreeChangeObservers(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool subscribingToParent);
         void matchRulesToContentTree();
         void activateRules();
         void recursiveSetRuleState(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, HSSRuleState state);
@@ -159,6 +161,13 @@ namespace AXR
          *  @todo change name to better reflect the type of the object
          */
         void add(QSharedPointer<HSSDisplayObject> newContainer);
+
+        /**
+         *  Add a display object as an offscreen children of the current context.
+         *
+         *  @param newContainer A shared pointer to a display object.
+         */
+        void addOffscreen(QSharedPointer<HSSDisplayObject> newContainer);
 
         /**
          *  Append an object definition to the object tree.
@@ -310,26 +319,11 @@ namespace AXR
          *                          \@this in HSS.
          *  @param processing       The first time the rules are matched to the display objects, we want to
          *                          process stuff like flags, instead of just plain selecting.
+         *  @param subscribingToNotifications       We can disable subscribing to dom notifications with this argument.
          *  @return         A vector of selections of the elements that were selected, each of these
          *                  is a vector containing shared pointers to display objects.
          */
-        QSharedPointer<HSSSelection> select(std::vector<QSharedPointer<HSSSelectorChain> > selectorChains, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
-
-        /**
-         *  Shortand for selecting elements hierarchically from the content tree. See
-         *  selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj) for
-         *  documentation on how to use it.
-         *
-         *  Do not call directly, use select() instead.
-         *
-         *  @param scope    A reference to the current scope, a vector containing shared pointers
-         *                  to display objects.
-         *  @param thisObj  A shared pointer to the display object that will be selected when using
-         *                  \@this in HSS.
-         *  @return         A vector of selections of the elements that were selected, each of these
-         *                  is a vector containing shared pointers to display objects.
-         */
-        QSharedPointer<HSSSelection> selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj);
+        QSharedPointer<HSSSelection> select(std::vector<QSharedPointer<HSSSelectorChain> > selectorChains, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
 
         /**
          *  Selects elements hierarchically from the content tree.
@@ -342,10 +336,11 @@ namespace AXR
          *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
+         *  @param subscribingToNotifications       We can disable subscribing to dom notifications with this argument.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        QSharedPointer<HSSSelection> selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
 
         /**
          *  Selects descendants according to the current selector chain. It will call selectOnLevel()
@@ -359,10 +354,11 @@ namespace AXR
          *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
+         *  @param subscribingToNotifications       We can disable subscribing to dom notifications with this argument.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        QSharedPointer<HSSSelection> selectAllHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectAllHierarchical(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
 
         /**
          *  Selects siblings according to the current selector chain. It will call selectSimple()
@@ -376,10 +372,11 @@ namespace AXR
          *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
+         *  @param subscribingToNotifications       We can disable subscribing to dom notifications with this argument.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        QSharedPointer<HSSSelection> selectOnLevel(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectOnLevel(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
 
         /**
          *  Selects elements according to the current selector chain. It will automatically call
@@ -393,10 +390,11 @@ namespace AXR
          *                      \@this in HSS.
          *  @param processing   The first time the rules are matched to the display objects, we want to
          *                      process stuff like flags, instead of just plain selecting.
+         *  @param subscribingToNotifications       We can disable subscribing to dom notifications with this argument.
          *  @return             A vector of selections of the elements that were selected, each of these
          *                      is a vector containing shared pointers to display objects.
          */
-        QSharedPointer<HSSSelection> selectSimple(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> selectSimple(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
 
         /**
          *  Walks up the tree until it finds the top level rule, then selects downwards.
@@ -434,9 +432,10 @@ namespace AXR
 
     private:
         AXRControllerPrivate *const d;
+        inline void _setUpTreeChangeObservers(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> thisObj, bool subscribingToParent);
         inline void _matchRuleToSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection);
         inline void _recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
-        inline void _selectOnLevelSimple(QSharedPointer<HSSSimpleSelection> & ret, HSSCombinatorType combinatorType, QSharedPointer<HSSSimpleSelection> simpleSel, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        inline void _selectOnLevelSimple(QSharedPointer<HSSSimpleSelection> & ret, HSSCombinatorType combinatorType, QSharedPointer<HSSSimpleSelection> simpleSel, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
         void _recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> scope);
     };
 }

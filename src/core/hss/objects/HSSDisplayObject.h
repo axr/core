@@ -118,6 +118,16 @@ namespace AXR
          *  Removes itself from the parent in the content tree.
          */
         void removeFromParent();
+        
+        /**
+         *  Moves itself from the parent's offscreen list to the content tree.
+         */
+        void moveToContentTree();
+        
+        /**
+         *  Moves itself from the content tree to the parent's offscreen list.
+         */
+        void moveToOffscreen();
 
         /**
          *  Gives the sibling elements.

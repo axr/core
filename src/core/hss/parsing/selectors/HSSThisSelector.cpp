@@ -73,7 +73,7 @@ QSharedPointer<HSSClonable> HSSThisSelector::cloneImpl() const
     return QSharedPointer<HSSThisSelector>(new HSSThisSelector(*this));
 }
 
-QSharedPointer<HSSSelection> HSSThisSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSThisSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
     ret->add(thisObj);

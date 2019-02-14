@@ -95,7 +95,7 @@ namespace AXR
          */
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
-        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        virtual QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications);
 
     protected:
         AXRString elementName;

@@ -73,7 +73,7 @@ QSharedPointer<HSSClonable> HSSUniversalSelector::cloneImpl() const
     return QSharedPointer<HSSUniversalSelector>(new HSSUniversalSelector(*this));
 }
 
-QSharedPointer<HSSSelection> HSSUniversalSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSUniversalSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications)
 {
     return scope;
 }

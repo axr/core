@@ -55,13 +55,13 @@ using namespace AXR;
 HSSSelectorChain::HSSSelectorChain(AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeSelectorChain, controller)
 {
-
+    this->startingSelectorIndex = 0;
 }
 
 HSSSelectorChain::HSSSelectorChain(const HSSSelectorChain &orig)
 : HSSParserNode(orig)
 {
-
+    this->startingSelectorIndex = orig.startingSelectorIndex;
 }
 
 QSharedPointer<HSSSelectorChain> HSSSelectorChain::clone() const
@@ -199,6 +199,32 @@ void HSSSelectorChain::setThisObj(QSharedPointer<HSSDisplayObject> value)
     }
 
     HSSParserNode::setThisObj(value);
+}
+
+void HSSSelectorChain::fastForward(HSSSelector * theSelector)
+{
+    HSSParserNode * lastSelector = NULL;
+    size_t index = 0;
+    Q_FOREACH(QSharedPointer<HSSParserNode> theNode, this->nodeList)
+    {
+        if (theNode.data() == theSelector)
+        {
+            this->startingSelectorIndex = index;
+            break;
+        }
+        lastSelector = theNode.data();
+        ++index;
+    }
+}
+
+void HSSSelectorChain::resetFastForward()
+{
+    this->startingSelectorIndex = 0;
+}
+
+const size_t HSSSelectorChain::getStartingSelectorIndex() const
+{
+    return this->startingSelectorIndex;
 }
 
 QSharedPointer<HSSSelectorChain> HSSSelectorChain::shared_from_this()

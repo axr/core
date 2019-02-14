@@ -151,6 +151,7 @@ void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
             case HSSRuleStatePurge:
             {
                 ruleStatus->state = HSSRuleStateOff;
+                container.unlinkPropertyPaths();
                 break;
             }
 

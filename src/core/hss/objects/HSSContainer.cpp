@@ -313,12 +313,34 @@ void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
     child->setParent(sharedThis);
     axr_log(LoggerChannelGeneralSpecific, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
     child->setIndex(this->allChildren->size());
-    if (!child->isA(HSSObjectTypeTextBlock))
+    bool isTxtBlock = child->isA(HSSObjectTypeTextBlock);
+    if (!isTxtBlock)
     {
         this->children->add(child);
     }
     this->allChildren->add(child);
-    this->changeRulesNotifyAdd(child);
+//    this->changeRulesNotifyAdd(child);
+    if (!isTxtBlock)
+    {
+        this->notifyObservers("__impl_private__contentTreeChanged", sharedThis);
+    }
+}
+
+void HSSContainer::addOffscreen(QSharedPointer<HSSDisplayObject> child)
+{
+    QSharedPointer<HSSContainer> sharedThis = this->shared_from_this();
+    child->setParent(sharedThis);
+    axr_log(LoggerChannelGeneralSpecific, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName() + "'s offscreen list");
+    this->offscreenChildren.push_back(child);
+}
+
+void HSSContainer::removeFromOffscreen(QSharedPointer<HSSDisplayObject> child)
+{
+    std::vector<QSharedPointer<HSSDisplayObject> >::iterator it;
+    it = find (this->offscreenChildren.begin(), this->offscreenChildren.end(), child);
+    if (it != this->offscreenChildren.end()){
+        this->offscreenChildren.erase(it);
+    }
 }
 
 void HSSContainer::remove(size_t index)

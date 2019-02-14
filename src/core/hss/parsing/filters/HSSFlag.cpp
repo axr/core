@@ -154,25 +154,39 @@ QSharedPointer<HSSSelection> HSSFlag::apply(QSharedPointer<HSSSelection> scope, 
 {
     if (processing)
     {
-        QSharedPointer<HSSSimpleSelection> inner = scope->joinAll();
-        for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
+        //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
+        QSharedPointer<HSSParserNode> ruleNode = this->getParentNode()->getParentNode()->getParentNode();
+        if (ruleNode->isA(HSSParserNodeTypeStatement))
         {
-            const QSharedPointer<HSSDisplayObject> & theDO = *it;
-            //parent is simple selector, grandparent is selector chain, grandgrandparent is the rule
-            QSharedPointer<HSSParserNode> ruleNode = this->getParentNode()->getParentNode()->getParentNode();
-            if (ruleNode->isA(HSSParserNodeTypeStatement))
+            QSharedPointer<HSSStatement> ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
+            if (ruleStatement->isA(HSSStatementTypeRule))
             {
-                QSharedPointer<HSSStatement> ruleStatement = qSharedPointerCast<HSSStatement > (ruleNode);
-                if (ruleStatement->isA(HSSStatementTypeRule))
+                QSharedPointer<HSSSimpleSelection> inner = scope->joinAll();
+                for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
                 {
+                    const QSharedPointer<HSSDisplayObject> & theDO = *it;
                     QSharedPointer<HSSRule> theRule = qSharedPointerCast<HSSRule > (ruleStatement);
 
                     theDO->createFlag(this->shared_from_this(), HSSRuleStateOff);
+                    theRule->recursiveSetIsConditional(true);
                 }
             }
         }
-
-        return scope->splitAll();
+        else if(ruleNode->isA(HSSParserNodeTypeFunctionCall))
+        {
+            QSharedPointer<HSSFunction> functionNode = qSharedPointerCast<HSSFunction>(ruleNode);
+            if(functionNode->isA(HSSFunctionTypeRef))
+            {
+                QSharedPointer<HSSSimpleSelection> inner = scope->joinAll();
+                for (HSSSimpleSelection::const_iterator it = inner->begin(); it != inner->end(); ++it)
+                {
+                    const QSharedPointer<HSSDisplayObject> & theDO = *it;
+                    theDO->createFlag(this->shared_from_this(), HSSRuleStateOff);
+                }
+                QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
+                return ret;
+            }
+        }
     }
     else
     {
@@ -192,8 +206,9 @@ QSharedPointer<HSSSelection> HSSFlag::apply(QSharedPointer<HSSSelection> scope, 
             }
             else
             {
-                bool firstMatch = (theDO->flagState(this->getName()) == HSSRuleStateOn) && !this->getNegating();
-                bool secondMatch = (theDO->flagState(this->getName()) == HSSRuleStateOff) && this->getNegating();
+                HSSRuleState flagState = theDO->flagState(this->getName());
+                bool firstMatch = (flagState == HSSRuleStateOn || flagState == HSSRuleStateActivate) && !this->getNegating();
+                bool secondMatch = (flagState == HSSRuleStateOff) && this->getNegating();
                 if (firstMatch || secondMatch)
                 {
                     ret->add(theDO);

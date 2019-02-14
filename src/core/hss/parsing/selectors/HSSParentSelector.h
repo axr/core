@@ -77,7 +77,7 @@ namespace AXR
         //see HSSParserNode.h for the documentation of this method
         AXRString stringRep();
 
-        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications);
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

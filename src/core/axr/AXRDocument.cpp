@@ -194,6 +194,7 @@ void AXRDocument::run()
 
         axr_log(LoggerChannelOverview, "AXRDocument: matching rules to the content tree");
         //assign the rules to the objects
+        d->controller->setUpTreeChangeObservers();
         d->controller->matchRulesToContentTree();
         d->controller->activateRules();
         root->setNeedsRereadRules(true);

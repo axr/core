@@ -103,7 +103,7 @@ namespace AXR
          */
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
-        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications);
 
     protected:
         HSSCombinatorType combinatorType;

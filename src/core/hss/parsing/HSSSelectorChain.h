@@ -51,6 +51,7 @@
 namespace AXR
 {
     class HSSRule;
+    class HSSSelector;
     class HSSSimpleSelector;
 
     /**
@@ -161,6 +162,21 @@ namespace AXR
 
         //see HSSParserNode.h for documentation of this method
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
+        
+        /**
+         *  Make the selector chain start selecting at the given selector
+         */
+        void fastForward(HSSSelector * theSelector);
+
+        /**
+         *  Reset the selector chain to start selecting at the beginning
+         */
+        void resetFastForward();
+
+        /**
+         *  @return The index at which the selection should start
+         */
+        const size_t getStartingSelectorIndex() const;
 
     protected:
         QSharedPointer<HSSSelectorChain> shared_from_this();
@@ -170,6 +186,7 @@ namespace AXR
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        size_t startingSelectorIndex;
 
         pp rule;
     };

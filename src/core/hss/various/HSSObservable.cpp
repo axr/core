@@ -325,6 +325,10 @@ void HSSObservable::removeObserver(const AXRString target, const AXRString sourc
 {
     if (this->_propertyObservers.contains(target))
     {
+        if (object->tracksObserver(source))
+        {
+            object->untrackObserver(source);
+        }
         observed &theObserved = this->_propertyObservers[target];
         for (observed::iterator it = theObserved.begin(); it!= theObserved.end(); ++it) {
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
@@ -334,10 +338,6 @@ void HSSObservable::removeObserver(const AXRString target, const AXRString sourc
                 return;
             }
         }
-    }
-    if (object->tracksObserver(source))
-    {
-        object->untrackObserver(source);
     }
     axr_log(LoggerChannelObserving, AXRString("tried to remove non existent observer for target:").append(target).append(" and source: ").append(source));
 }

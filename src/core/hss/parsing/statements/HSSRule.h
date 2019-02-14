@@ -56,6 +56,7 @@ namespace AXR
     class HSSInstruction;
     class HSSPropertyDefinition;
     class HSSRule;
+    class HSSSelector;
     class HSSSelectorChain;
 
     /**
@@ -276,6 +277,8 @@ namespace AXR
         void setOriginalScope(QSharedPointer<HSSSimpleSelection> scope);
 
         void addOriginalScope(QSharedPointer<HSSSimpleSelection> scope);
+        
+        void contentTreeChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
         bool hasParent();
         QSharedPointer<HSSRule> getParent();
@@ -288,6 +291,14 @@ namespace AXR
         void removeFromDisplayObject(QSharedPointer<HSSDisplayObject> theDO);
 
         void setSpecificity(HSSUnit newValue);
+
+        void setIsConditional(const bool newValue);
+        const bool isConditional();
+        void recursiveSetIsConditional(const bool newValue);
+
+        void fastForwardSelectorChain(HSSSelector * theSelector);
+        void resetFastForwardSelectorChain();
+        
 
     protected:
         QSharedPointer<HSSRule> shared_from_this();
@@ -305,6 +316,7 @@ namespace AXR
 
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
         const HSSRule * _clonedFromRule;
+        bool _isConditional;
     };
 }
 

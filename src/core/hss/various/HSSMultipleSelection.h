@@ -106,6 +106,8 @@ namespace AXR
         std::vector< QSharedPointer<HSSSimpleSelection> > getItems() const;
         QSharedPointer<HSSSimpleSelection> joinAll() const;
         QSharedPointer<HSSMultipleSelection> splitAll();
+        //returns unique parents
+        virtual std::vector<QSharedPointer<HSSDisplayObject> > getParents() const;
 
         virtual AXRString toString();
 

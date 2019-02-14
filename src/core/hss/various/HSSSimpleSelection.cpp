@@ -41,8 +41,10 @@
  *
  ********************************************************************/
 
+#include <set>
 #include <QSharedData>
 #include "AXRError.h"
+#include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSMultipleSelection.h"
 #include "HSSSimpleSelection.h"
@@ -252,6 +254,21 @@ QSharedPointer<HSSMultipleSelection> HSSSimpleSelection::splitAll()
         newSel->add(*it);
         ret->add(newSel);
     }
+    return ret;
+}
+
+std::vector<QSharedPointer<HSSDisplayObject> > HSSSimpleSelection::getParents() const
+{
+    std::set<QSharedPointer<HSSDisplayObject> > parents;
+    for (const_iterator it=this->d->items.begin(); it!=this->d->items.end(); it++)
+    {
+        QSharedPointer<HSSDisplayObject> parent = (*it)->getParent();
+        if (parent)
+        {
+            parents.insert(parent);
+        }
+    }
+    std::vector<QSharedPointer<HSSDisplayObject> > ret(parents.begin(), parents.end());
     return ret;
 }
 

@@ -1567,3 +1567,20 @@ QVector<QSharedPointer<HSSPropertyDefinition> > HSSObject::modifierGet(AXRString
     }
     return QVector<QSharedPointer<HSSPropertyDefinition> >();
 }
+
+void HSSObject::unlinkPropertyPaths()
+{
+    Q_FOREACH(const QSharedPointer<HSSObject> &theObj, this->_computedValues)
+    {
+        const AXRString hostProperty = theObj->getHostProperty();
+        AXRString trackedProperty = this->getTrackedProperty(hostProperty);
+        if (trackedProperty == "__impl_private__replace")
+        {
+            HSSObservable * theObservable = this->getTrackedObserver(hostProperty);
+            if (theObservable != NULL)
+            {
+                theObservable->removeObserver("__impl_private__replace", hostProperty, this);
+            }
+        }
+    }
+}

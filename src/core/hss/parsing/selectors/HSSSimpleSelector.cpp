@@ -41,10 +41,13 @@
  *
  ********************************************************************/
 
+#include "AXRController.h"
+#include "HSSCallback.h"
 #include "HSSDisplayObject.h"
 #include "HSSFilter.h"
 #include "HSSNameSelector.h"
 #include "HSSSelection.h"
+#include "HSSSimpleSelection.h"
 #include "HSSSimpleSelector.h"
 
 using namespace AXR;
@@ -128,12 +131,17 @@ void HSSSimpleSelector::filtersAdd(QSharedPointer<HSSFilter> filter)
     filter->setParentNode(this->shared_from_this());
 }
 
-QSharedPointer<HSSSelection> HSSSimpleSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSSimpleSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications)
 {
+    if(subscribingToNotifications)
+    {
+        thisObj->observe("__impl_private__contentTreeChanged", "__impl_private__simpleSelector", this, new HSSValueChangedCallback<HSSSelector > (this, &HSSSelector::contentTreeChanged));
+        
+    }
     QSharedPointer<HSSSelection> selection;
     if (this->name)
     {
-        selection = this->name->filterSelection(scope, thisObj, processing);
+        selection = this->name->filterSelection(scope, thisObj, processing, subscribingToNotifications);
     }
 
     std::list<QSharedPointer<HSSFilter> >::const_iterator it = this->filters.begin();

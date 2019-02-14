@@ -129,7 +129,7 @@ QSharedPointer<HSSClonable> HSSCombinator::cloneImpl() const
 
 //does nothing yet
 
-QSharedPointer<HSSSelection> HSSCombinator::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing)
+QSharedPointer<HSSSelection> HSSCombinator::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications)
 {
     return scope;
 }

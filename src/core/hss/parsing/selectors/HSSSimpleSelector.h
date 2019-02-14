@@ -97,7 +97,7 @@ namespace AXR
         /**
          * Reduces the selection according to the selector nodes it has stored.
          */
-        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing);
+        QSharedPointer<HSSSelection> filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications);
 
         //see HSSParserNode.h for documentation of this method
         virtual void setThisObj(QSharedPointer<HSSDisplayObject> value);
