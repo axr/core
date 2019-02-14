@@ -67,6 +67,8 @@ namespace AXR
          *  Copy constructor for HSSSimpleSelector objects. Do not call directly, use clone() instead.
          */
         HSSSimpleSelector(const HSSSimpleSelector &orig);
+        
+        ~HSSSimpleSelector();
 
         /**
          *  Clones an instance of HSSSimpleSelector and gives a shared pointer of the

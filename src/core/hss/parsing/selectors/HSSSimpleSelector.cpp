@@ -64,6 +64,11 @@ HSSSimpleSelector::HSSSimpleSelector(const HSSSimpleSelector &orig)
 
 }
 
+HSSSimpleSelector::~HSSSimpleSelector()
+{
+    
+}
+
 QSharedPointer<HSSSimpleSelector> HSSSimpleSelector::clone() const
 {
     return qSharedPointerCast<HSSSimpleSelector> (this->cloneImpl());
