@@ -108,6 +108,11 @@ AXRString HSSInstruction::toString()
     return tempstr;
 }
 
+AXRString HSSInstruction::stringRep()
+{
+    return this->value;
+}
+
 AXRString HSSInstruction::instructionStringRepresentation(HSSInstructionType type)
 {
     AXRString types[20];

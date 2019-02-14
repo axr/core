@@ -73,6 +73,11 @@ AXRString HSSPropertyPathNode::toString()
     return this->_propertyName;
 }
 
+AXRString HSSPropertyPathNode::stringRep()
+{
+    return this->_propertyName;
+}
+
 bool HSSPropertyPathNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same

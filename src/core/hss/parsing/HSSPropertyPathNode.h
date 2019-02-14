@@ -78,6 +78,7 @@ namespace AXR
         virtual ~HSSPropertyPathNode();
 
         virtual AXRString toString();
+        virtual AXRString stringRep();
 
         /**
          *  Each node overrides this method to compare against another node.

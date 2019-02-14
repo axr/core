@@ -77,6 +77,11 @@ AXRString HSSObjectNameConstant::toString()
     return "HSSObjectNameConstant with value " + this->value;
 }
 
+AXRString HSSObjectNameConstant::stringRep()
+{
+    return this->value;
+}
+
 bool HSSObjectNameConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same

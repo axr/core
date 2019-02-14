@@ -88,6 +88,7 @@ namespace AXR
         HSSUnit getValue();
 
         AXRString toString();
+        AXRString stringRep();
 
         /**
          *  Each node overrides this method to compare against another node
