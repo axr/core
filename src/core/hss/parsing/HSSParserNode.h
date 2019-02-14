@@ -118,6 +118,12 @@ namespace AXR
         virtual AXRString stringRep();
 
         /**
+         *  Prints itself as a std string representation, calling this->stringRep().
+         *  @return A textual representation of the object, as a std string.
+         */
+        std::string stdStringRep();
+
+        /**
          *  Each node overrides this method to compare against another node
          *  @param otherNode    The other object to compare to
          *  @return Wether the node is equal to the given one.

@@ -141,6 +141,12 @@ AXRString HSSParserNode::stringRep()
     return "Generic parser node - you forgot to override toString in your subclass or somehow using HSSParserNode directly";
 }
 
+std::string HSSParserNode::stdStringRep()
+{
+    AXRString tempstr = this->stringRep();
+    return tempstr.toStdString();
+}
+
 bool HSSParserNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same
