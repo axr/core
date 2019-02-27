@@ -147,7 +147,7 @@ HSSMultipleSelection::const_iterator HSSMultipleSelection::end() const
 
 size_t HSSMultipleSelection::size() const
 {
-    return this->d->items.size();
+    return this->joinAll()->size();
 }
 
 void HSSMultipleSelection::clear()

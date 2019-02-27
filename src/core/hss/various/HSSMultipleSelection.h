@@ -95,7 +95,7 @@ namespace AXR
         const_iterator begin() const;
         iterator end();
         const_iterator end() const;
-        size_t size() const;
+        virtual size_t size() const;
         void clear();
         bool empty() const;
         QSharedPointer<HSSSimpleSelection> front() const;

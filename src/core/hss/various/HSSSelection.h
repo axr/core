@@ -92,6 +92,11 @@ namespace AXR
         virtual void addSelection(QSharedPointer<HSSSelection> item) =0;
         virtual QSharedPointer<HSSSimpleSelection> joinAll() const =0;
         virtual QSharedPointer<HSSMultipleSelection> splitAll() =0;
+        
+        /**
+         *  @return The size of the selection.
+         */
+        virtual size_t size() const =0;
 
         /**
          *  Prints itself as a textual representation. Each subclass should override this method.
