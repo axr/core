@@ -874,6 +874,8 @@ QSharedPointer<HSSSelection> AXRController::selectSimple(QSharedPointer<HSSSelec
     bool done = false;
     bool needsReadNext = true;
     QSharedPointer<HSSSelection> selection = scope;
+    
+    QSharedPointer<HSSDisplayObject> currentThisObj = thisObj;
 
     while (!done)
     {
@@ -882,7 +884,17 @@ QSharedPointer<HSSSelection> AXRController::selectSimple(QSharedPointer<HSSSelec
         case HSSSelectorTypeSimpleSelector:
         {
             QSharedPointer<HSSSimpleSelector> ss = qSharedPointerCast<HSSSimpleSelector>(d->currentSelectorNode);
-            selection = ss->filterSelection(selection, thisObj, processing, subscribingToNotifications);
+            selection = ss->filterSelection(selection, currentThisObj, processing, subscribingToNotifications);
+
+            QSharedPointer<HSSNameSelector> nameSel = ss->getName();
+            if (nameSel && nameSel->isA(HSSSelectorTypeParentSelector))
+            {
+                QSharedPointer<HSSSimpleSelection> joinedSel = selection->joinAll();
+                if (joinedSel->size() > 0)
+                {
+                    currentThisObj = joinedSel->itemAtIndex(0);
+                }
+            }
             break;
         }
 
