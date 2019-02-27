@@ -92,6 +92,11 @@ namespace AXR
          *  loads xml, loads hss, applies rules, etc
          */
         void run();
+
+        /**
+         *  Loads only one HSS file and runs it
+         */
+        void runHSS(const QUrl & url);
         /**
          *  Reset everything to default values, so that we can start
          *  from fresh.

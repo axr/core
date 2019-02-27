@@ -217,6 +217,36 @@ void AXRDocument::run()
     axr_log(LoggerChannelOverview, "AXRDocument: run complete, entering event loop\n\n\n");
 }
 
+void AXRDocument::runHSS(const QUrl & url)
+{
+    //needs reset on next load
+    d->hasLoadedFile = true;
+    
+    QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(d->controller->root());
+    
+    QSharedPointer<AXRBuffer> hssfile;
+    hssfile = this->createBufferFromUrl(url);
+    if (!d->parserHSS->loadFile(hssfile))
+    {
+        AXRError("AXRDocument", "Could not load the HSS file").raise();
+    }
+
+    axr_log(LoggerChannelOverview, "AXRDocument: matching rules to the content tree");
+    //assign the rules to the objects
+    d->controller->setUpTreeChangeObservers();
+    d->controller->matchRulesToContentTree();
+    d->controller->activateRules();
+    root->setNeedsRereadRules(true);
+    
+    if (root)
+    {
+        QSharedPointer<HSSVisitorManager> visitorManager = this->visitorManager();
+        visitorManager->runVisitors(HSSVisitorFilterCascading);
+        HSSInputEvent event(HSSEventTypeLoad);
+        root->handleEvent(&event);
+    }
+}
+
 void AXRDocument::reset()
 {
     d->controller->reset();
