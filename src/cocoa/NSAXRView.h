@@ -81,4 +81,6 @@ using namespace AXR;
  */
 - (BOOL)acceptsFirstResponder;
 
+- (NSString *)adjustEventChar:(NSString *)chars;
+
 @end

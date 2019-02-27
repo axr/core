@@ -203,6 +203,10 @@ using namespace AXR;
     }
 }
 
+- (void)mouseExited:(NSEvent *)theEvent {
+    [self mouseMoved:theEvent];
+}
+
 - (AXR::HSSPoint)pointFromNSEvent:(NSEvent *)theEvent
 {
     HSSPoint thePoint;
@@ -213,4 +217,40 @@ using namespace AXR;
     return thePoint;
 }
 
+- (void)keyDown:(NSEvent *)event
+{
+    if (!document)
+        return;
+    
+    NSString * chars = [self adjustEventChar:[event characters]];
+    HSSKeyboardEvent kbEvent(HSSEventTypeKeyDown, QString([chars UTF8String]));
+    [document documentObject]->handleEvent(&kbEvent);
+    if([document documentObject]->needsDisplay()){
+        [self setNeedsDisplay:TRUE];
+    }
+}
+
+- (NSString *)adjustEventChar:(NSString *)chars
+{
+    NSString * ret = @"";
+    if ([chars isEqualToString:@"\r"])
+    {
+        return @"\n";
+    }
+    ret = chars;
+    return ret;
+}
+
+- (void)keyUp:(NSEvent *)event
+{
+    if (!document)
+        return;
+    
+    NSString * chars = [self adjustEventChar:[event characters]];
+    HSSKeyboardEvent kbEvent(HSSEventTypeKeyUp, QString([chars UTF8String]));
+    [document documentObject]->handleEvent(&kbEvent);
+    if([document documentObject]->needsDisplay()){
+        [self setNeedsDisplay:TRUE];
+    }
+}
 @end
