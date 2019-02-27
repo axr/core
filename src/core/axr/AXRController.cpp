@@ -136,11 +136,13 @@ void AXRController::setDocument(AXRDocument * document) const
 void AXRController::setUpTreeChangeObservers()
 {
     axr_log(LoggerChannelController, "AXRController: setting up observers for content tree changes");
-    QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this));
-    rootScope->add(this->root());
     Q_FOREACH (const QSharedPointer<HSSRule> &rule, rules())
     {
-        this->recursiveSetUpTreeChangeObservers(rule, rootScope, this->root(), true);
+        for (size_t k = 0; k < rule->childrenSize(); ++k)
+        {
+            const QSharedPointer<HSSRule> childRule = rule->childrenGet(k);
+            this->recursiveSetUpTreeChangeObservers(childRule, this->root()->getChildren(), this->root(), true);
+        }
     }
 }
 
