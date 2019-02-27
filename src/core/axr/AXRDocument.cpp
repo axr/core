@@ -648,6 +648,84 @@ bool AXRDocument::loadHssFile(const QUrl &url)
     return true;
 }
 
+bool AXRDocument::loadHssFile(QSharedPointer<AXRBuffer> buffer)
+{
+    d->controller->enterElement("document");
+    d->controller->exitElement();
+    QSharedPointer<HSSContainer> root = d->controller->root();
+    
+    //needs reset on next load
+    d->hasLoadedFile = true;
+    
+    d->isHSSOnly = true;
+    d->showLayoutSteps = false;
+    d->currentLayoutStep = 0;
+    d->currentLayoutTick = 0;
+    d->currentLayoutChild = 0;
+    if (!d->parserHSS->loadFile(buffer))
+    {
+        AXRError("AXRDocument", "Could not load the HSS file").raise();
+    }
+    axr_log(LoggerChannelOverview, "AXRDocument: matching rules to the content tree");
+    //assign the rules to the objects
+    d->controller->setUpTreeChangeObservers();
+    d->controller->matchRulesToContentTree();
+    d->controller->activateRules();
+    
+    root->setNeedsRereadRules(true);
+    QSharedPointer<HSSVisitorManager> visitorManager = this->visitorManager();
+    visitorManager->runVisitors(HSSVisitorFilterCascading);
+    HSSInputEvent event(HSSEventTypeLoad);
+    root->handleEvent(&event);
+    return true;
+}
+
+void AXRDocument::receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HSSParserNode> node)
+{
+    switch (node->getType()) {
+        case HSSParserNodeTypeStatement:
+        {
+            QSharedPointer<HSSStatement> statementNode = qSharedPointerCast<HSSStatement>(node);
+            switch (statementNode->getStatementType()) {
+                case HSSStatementTypeRule:
+                {
+                    QSharedPointer<HSSRule> ruleNode = qSharedPointerCast<HSSRule>(node);
+                    d->controller->addRule(ruleNode);
+                    break;
+                }
+                case HSSStatementTypeInstruction:
+                {
+                    d->controller->addParserTreeNode(node);
+                    break;
+                }
+                case HSSStatementTypeObjectDefinition:
+                {
+                    QSharedPointer<HSSObjectDefinition> objDefNode = qSharedPointerCast<HSSObjectDefinition>(node);
+                    d->controller->addObjectTreeNode(objDefNode);
+                    break;
+                }
+                    
+                default:
+                {
+                    d->controller->addParserTreeNode(node);
+                    break;
+                }
+            }
+            break;
+        }
+            
+        case HSSParserNodeTypeWhitespaceNode:
+        {
+            d->controller->addParserTreeNode(node);
+            break;
+        }
+            
+        default:
+            d->controller->addParserTreeNode(node);
+            break;
+    }
+}
+
 void AXRDocument::setShowLayoutSteps(bool value)
 {
     d->showLayoutSteps = value;
