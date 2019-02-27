@@ -86,6 +86,9 @@ namespace AXR
          *  @return The message in this error.
          */
         AXRString getMessage() const;
+        
+        qint64 getLine() const;
+        qint64 getColumn() const;
 
         AXRError& operator=(const AXRError &other);
 

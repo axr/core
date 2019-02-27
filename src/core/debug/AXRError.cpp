@@ -133,6 +133,15 @@ AXRString AXRError::toProblemString(const AXRString &label) const
     return parts.join(" ");
 }
 
+qint64 AXRError::getLine() const
+{
+    return d->line;
+}
+qint64 AXRError::getColumn() const
+{
+    return d->column;
+}
+
 AXRString AXRError::getMessage() const
 {
     return d->message;
