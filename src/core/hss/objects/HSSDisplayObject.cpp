@@ -2035,6 +2035,14 @@ void HSSDisplayObject::setHasOwnHeight(bool newValue)
     this->_hasOwnHeight = newValue;
 }
 
+HSSUnit HSSDisplayObject::getGlobalX() const
+{
+    return this->globalX;
+}
+HSSUnit HSSDisplayObject::getGlobalY() const
+{
+    return this->globalY;
+}
 QSharedPointer<HSSDisplayObject> HSSDisplayObject::shared_from_this()
 {
     return qSharedPointerCast<HSSDisplayObject > (HSSObject::shared_from_this());

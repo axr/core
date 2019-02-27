@@ -332,6 +332,8 @@ namespace AXR
         void setHasOwnWidth(bool newValue);
         bool hasOwnHeight() const;
         void setHasOwnHeight(bool newValue);
+        HSSUnit getGlobalX() const;
+        HSSUnit getGlobalY() const;
 
         /**
          *  @todo make private and add accessors
