@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,45 +41,27 @@
  *
  ********************************************************************/
 
-#ifndef HSSEVENT_H
-#define HSSEVENT_H
+#ifndef HSSKEYBOARDEVENT_H
+#define HSSKEYBOARDEVENT_H
 
-#include "HSSDisplayObject.h"
+#include "HSSInputEvent.h"
+#include "HSSTypeEnums.h"
 
 namespace AXR
 {
-    class HSSAction;
-    class HSSParserNode;
-
-    /**
-     *  @brief Represents the @event object.
-     *
-     */
-    class AXR_API HSSEvent : public HSSDisplayObject
+    class HSSKeyboardEventPrivate;
+    class HSSPoint;
+    
+    class AXR_API HSSKeyboardEvent : public HSSInputEvent
     {
     public:
-        /**
-         *  Print the type as a string, useful for logging.
-         *  @param  eventType   The event type that will be printed as a string.
-         */
-        static AXRString eventTypeStringRepresentation(HSSEventType eventType);
-
-        static AXRString eventTypeToName(HSSEventType eventType);
-        static HSSEventType nameToEventType(AXRString name);
-        static QSharedPointer<HSSEvent> createEvent(AXRController * cntl, HSSInputEvent *event);
+        HSSKeyboardEvent(HSSEventType type, const AXRString &keyCode);
+        virtual ~HSSKeyboardEvent();
         
-        HSSEvent(AXRController * controller);
-        HSSEvent(const HSSEvent & orig);
-        QSharedPointer<HSSEvent> clone() const;
-        QSharedPointer<HSSClonable> cloneImpl() const;
-        virtual ~HSSEvent();
-        void setDefaults();
-        AXRString defaultObjectType();
-        bool isKeyword(AXRString value, AXRString property);
-        AXRString toString();
-
+        const AXRString& keyCode() const;
+        
     private:
-        
+        HSSKeyboardEventPrivate *const d;
     };
 }
 

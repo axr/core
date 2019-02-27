@@ -42,9 +42,13 @@
  ********************************************************************/
 
 #include <QMap>
+#include "AXRLoggerManager.h"
 #include "HSSDisplayObject.h"
 #include "HSSFunction.h"
 #include "HSSEvent.h"
+#include "HSSInputEvent.h"
+#include "HSSKeyboardEvent.h"
+#include "HSSMouseEvent.h"
 #include "HSSMultipleValue.h"
 #include "HSSValue.h"
 
@@ -70,6 +74,8 @@ AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
         types[HSSEventTypeClickTertiary] = "HSSEventTypeClickTertiary";
         types[HSSEventTypeScroll] = "HSSEventTypeScroll";
         types[HSSEventTypeExitedWindow] = "HSSEventTypeExitedWindow";
+        types[HSSEventTypeKeyDown] = "HSSEventTypeKeyDown";
+        types[HSSEventTypeKeyUp] = "HSSEventTypeKeyUp";
     }
 
     return types[eventType];
@@ -82,6 +88,8 @@ AXRString HSSEvent::eventTypeToName(HSSEventType eventType)
     {
         types[HSSEventTypeNone] = "";
         types[HSSEventTypeLoad] = "load";
+        types[HSSEventTypeFlag] = "flag";
+        types[HSSEventTypeUnflag] = "unflag";
         types[HSSEventTypeClick] = "click";
         types[HSSEventTypeDoubleClick] = "doubleClick";
         types[HSSEventTypeTripleClick] = "tripleClick";
@@ -95,6 +103,8 @@ AXRString HSSEvent::eventTypeToName(HSSEventType eventType)
         types[HSSEventTypeClickTertiary] = "clickTertiary";
         types[HSSEventTypeScroll] = "scroll";
         types[HSSEventTypeExitedWindow] = "exitedWindow";
+        types[HSSEventTypeKeyDown] = "keyDown";
+        types[HSSEventTypeKeyUp] = "keyUp";
     }
 
     return types[eventType];
@@ -106,6 +116,8 @@ HSSEventType HSSEvent::nameToEventType(AXRString name)
     if (types.isEmpty())
     {
         types["load"] = HSSEventTypeLoad;
+        types["flag"] = HSSEventTypeFlag;
+        types["unflag"] = HSSEventTypeUnflag;
         types["click"] = HSSEventTypeClick;
         types["doubleClick"] = HSSEventTypeDoubleClick;
         types["tripleClick"] = HSSEventTypeTripleClick;
@@ -124,34 +136,72 @@ HSSEventType HSSEvent::nameToEventType(AXRString name)
     return types[name];
 }
 
-void HSSEvent::fire(QSharedPointer<HSSObject> theObj)
+QSharedPointer<HSSEvent> HSSEvent::createEvent(AXRController * cntl, HSSInputEvent *event)
 {
-    if (theObj)
+    QSharedPointer<HSSEvent> ret;
+    switch (event->type())
     {
-        if (theObj->isA(HSSObjectTypeValue))
+        case HSSEventTypeKeyUp:
+        case HSSEventTypeKeyDown:
         {
-            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
-            HSSEvent::_fire(parserNode);
+            ret = QSharedPointer<HSSEvent>(new HSSEvent(cntl));
+            HSSKeyboardEvent * kbEvent = static_cast<HSSKeyboardEvent *>(event);
+            ret->setComputedValue("key", AXRString("\"")+kbEvent->keyCode()+AXRString("\""), 1);
+            break;
         }
-        else if (theObj->isA(HSSObjectTypeMultipleValue))
-        {
-            Q_FOREACH(const QSharedPointer<HSSObject> & aObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues())
-            {
-                if (aObj->isA(HSSObjectTypeValue))
-                {
-                    QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(aObj)->getValue();
-                    HSSEvent::_fire(parserNode);
-                }
-            }
-        }
+        default:
+            break;
     }
+    return ret;
 }
 
-void HSSEvent::_fire(QSharedPointer<HSSParserNode> parserNode)
+HSSEvent::HSSEvent(AXRController * controller)
+: HSSDisplayObject(HSSObjectTypeEvent, controller)
 {
-    if (parserNode->isA(HSSParserNodeTypeFunctionCall))
-    {
-        QSharedPointer<HSSFunction> theFunction = qSharedPointerCast<HSSFunction>(parserNode);
-        theFunction->evaluate();
-    }
+    axr_log(LoggerChannelGeneralSpecific, "HSSEvent: creating event object");
+    
+}
+
+HSSEvent::HSSEvent(const HSSEvent & orig)
+: HSSDisplayObject(orig)
+{
+    
+}
+
+QSharedPointer<HSSEvent> HSSEvent::clone() const
+{
+    axr_log(LoggerChannelGeneralSpecific, "HSSEvent: cloning event object");
+    return qSharedPointerCast<HSSEvent> (this->cloneImpl());
+}
+
+QSharedPointer<HSSClonable> HSSEvent::cloneImpl() const
+{
+    return QSharedPointer<HSSEvent>(new HSSEvent(*this));
+}
+
+HSSEvent::~HSSEvent()
+{
+    axr_log(LoggerChannelGeneralSpecific, "HSSEvent: destructing event object");
+    this->cleanTrackedObservers();
+}
+
+void HSSEvent::setDefaults()
+{
+    HSSDisplayObject::setDefaults();
+}
+
+AXRString HSSEvent::defaultObjectType()
+{
+    return "event";
+}
+
+bool HSSEvent::isKeyword(AXRString value, AXRString property)
+{
+    //if we reached this far, let the superclass handle it
+    return HSSDisplayObject::isKeyword(value, property);
+}
+
+AXRString HSSEvent::toString()
+{
+    return "@event";
 }

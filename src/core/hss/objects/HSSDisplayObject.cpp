@@ -133,6 +133,8 @@ void HSSDisplayObject::_initialize()
     this->_layoutFlagLockBottom = false;
     this->_layoutLockBottomPosition = 0.;
 
+    this->_needsFlagEvent = false;
+
     this->addCallback("width", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenWidth), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyWidth));
     this->addCallback("height", new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::listenHeight), new HSSObserveCallback<HSSDisplayObject>(this, &HSSDisplayObject::notifyHeight));
     this->addCallback("anchorX", new HSSComputeCallback<HSSDisplayObject>(this, &HSSDisplayObject::computeAnchorX));
@@ -168,6 +170,8 @@ HSSDisplayObject::HSSDisplayObject(const HSSDisplayObject & orig)
 
     this->_isHover = orig._isHover;
     this->_isPress = orig._isPress;
+
+    this->_needsFlagEvent = orig._needsFlagEvent;
 }
 
 HSSDisplayObject::~HSSDisplayObject()
@@ -1739,6 +1743,7 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
         switch (event->type())
         {
             case HSSEventTypeLoad:
+            case HSSEventTypeFlag:
             {
                 return this->fireEvent(event->type());
             }
@@ -1750,6 +1755,12 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
                     this->setHover(false);
                 }
 
+                return this->fireEvent(event->type());
+            }
+
+            case HSSEventTypeKeyDown:
+            case HSSEventTypeKeyUp:
+            {
                 return this->fireEvent(event->type());
             }
 
@@ -1979,6 +1990,7 @@ void HSSDisplayObject::flagsActivate(AXRString name)
             theFlag->flagChanged(newValue);
         }
         this->_flagsStatus[name] = HSSRuleStateOn;
+        this->_needsFlagEvent = true;
     }
     else
     {
@@ -2004,6 +2016,8 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
                 theFlag->flagChanged(newValue);
             }
         }
+        HSSInputEvent event(HSSEventTypeUnflag);
+        this->handleEvent(&event);
     }
     else if (this->hasFlag(name))
     {
@@ -2019,6 +2033,8 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
         }
 
         this->_flagsStatus[name] = HSSRuleStateOff;
+        HSSInputEvent event(HSSEventTypeUnflag);
+        this->handleEvent(&event);
     }
     else
     {
@@ -2087,6 +2103,17 @@ HSSUnit HSSDisplayObject::getGlobalY() const
 {
     return this->globalY;
 }
+
+void HSSDisplayObject::raiseFlagEventIfNeeded()
+{
+    if (_needsFlagEvent)
+    {
+        _needsFlagEvent = false;
+        HSSInputEvent event(HSSEventTypeFlag);
+        this->handleEvent(&event);
+    }
+}
+
 QSharedPointer<HSSDisplayObject> HSSDisplayObject::shared_from_this()
 {
     return qSharedPointerCast<HSSDisplayObject > (HSSObject::shared_from_this());

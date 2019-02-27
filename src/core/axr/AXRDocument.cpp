@@ -641,7 +641,10 @@ bool AXRDocument::handleEvent(HSSInputEvent *event)
 {
     QSharedPointer<HSSContainer> root = controller()->root();
     if (root)
+    {
+        controller()->setCurrentEvent(HSSEvent::createEvent(controller().data(), event));
         return root->handleEvent(event);
+    }
 
     return false;
 }

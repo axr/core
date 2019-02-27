@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,46 +41,49 @@
  *
  ********************************************************************/
 
-#ifndef HSSEVENT_H
-#define HSSEVENT_H
+#include "AXRController.h"
+#include "AXRDocument.h"
+#include "HSSContainer.h"
+#include "HSSEvent.h"
+#include "HSSEventSelector.h"
+#include "HSSSimpleSelection.h"
 
-#include "HSSDisplayObject.h"
+using namespace AXR;
 
-namespace AXR
+HSSEventSelector::HSSEventSelector(AXRController * controller)
+: HSSNameSelector("@event", controller)
 {
-    class HSSAction;
-    class HSSParserNode;
-
-    /**
-     *  @brief Represents the @event object.
-     *
-     */
-    class AXR_API HSSEvent : public HSSDisplayObject
-    {
-    public:
-        /**
-         *  Print the type as a string, useful for logging.
-         *  @param  eventType   The event type that will be printed as a string.
-         */
-        static AXRString eventTypeStringRepresentation(HSSEventType eventType);
-
-        static AXRString eventTypeToName(HSSEventType eventType);
-        static HSSEventType nameToEventType(AXRString name);
-        static QSharedPointer<HSSEvent> createEvent(AXRController * cntl, HSSInputEvent *event);
-        
-        HSSEvent(AXRController * controller);
-        HSSEvent(const HSSEvent & orig);
-        QSharedPointer<HSSEvent> clone() const;
-        QSharedPointer<HSSClonable> cloneImpl() const;
-        virtual ~HSSEvent();
-        void setDefaults();
-        AXRString defaultObjectType();
-        bool isKeyword(AXRString value, AXRString property);
-        AXRString toString();
-
-    private:
-        
-    };
+    
 }
 
-#endif
+QSharedPointer<HSSEventSelector> HSSEventSelector::clone() const
+{
+    return qSharedPointerCast<HSSEventSelector> (this->cloneImpl());
+}
+
+AXRString HSSEventSelector::toString()
+{
+    return "@event selector";
+}
+
+AXRString HSSEventSelector::stringRep()
+{
+    return "@event";
+}
+
+QSharedPointer<HSSClonable> HSSEventSelector::cloneImpl() const
+{
+    return QSharedPointer<HSSEventSelector>(new HSSEventSelector(*this));
+}
+
+AXRString HSSEventSelector::getElementName()
+{
+    return "event";
+}
+
+QSharedPointer<HSSSelection> HSSEventSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications)
+{
+    QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
+    ret->add(this->getController()->getCurrentEvent());
+    return ret;
+}

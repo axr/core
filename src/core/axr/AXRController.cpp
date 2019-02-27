@@ -50,6 +50,7 @@
 #include "HSSCodeParser.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
+#include "HSSEvent.h"
 #include "HSSFlag.h"
 #include "HSSInstruction.h"
 #include "HSSMultipleSelection.h"
@@ -88,6 +89,7 @@ namespace AXR
         AXRDocument *document;
         bool _logsSelections;
         QSharedPointer<HSSSimpleSelection> lastSelection;
+        QSharedPointer<HSSEvent> currentEvent;
     };
 }
 
@@ -1251,4 +1253,14 @@ const bool AXRController::logsSelections() const
 const QSharedPointer<HSSSimpleSelection> AXRController::getLastSelection() const
 {
     return d->lastSelection;
+}
+
+void AXRController::setCurrentEvent(QSharedPointer<HSSEvent> newEvent) const
+{
+    d->currentEvent = newEvent;
+}
+
+const QSharedPointer<HSSEvent> AXRController::getCurrentEvent() const
+{
+    return d->currentEvent;
 }

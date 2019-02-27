@@ -58,6 +58,7 @@ namespace AXR
     class AXRDocument;
     class HSSContainer;
     class HSSDisplayObject;
+    class HSSEvent;
     class HSSInstruction;
     class HSSObjectDefinition;
     class HSSParserNode;
@@ -439,6 +440,8 @@ namespace AXR
         void setLogsSelections(bool newValue);
         const bool logsSelections() const;
         const QSharedPointer<HSSSimpleSelection> getLastSelection() const;
+        void setCurrentEvent(QSharedPointer<HSSEvent> newEvent) const;
+        const QSharedPointer<HSSEvent> getCurrentEvent() const;
 
     protected:
         void readNextSelectorNode();

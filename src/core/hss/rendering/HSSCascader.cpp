@@ -104,6 +104,7 @@ void HSSCascader::visit(HSSContainer &container)
         }
         container.fillWithDefaults();
     }
+    container.raiseFlagEventIfNeeded();
 }
 
 void HSSCascader::applyOverrides(HSSContainer & container, HSSUnit & specificity)

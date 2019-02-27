@@ -217,6 +217,10 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
         QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
         AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
         QSharedPointer<HSSDisplayObject> container = selection->front();
+        if (container->isA(HSSObjectTypeEvent))
+        {
+            this->setDirty(true);
+        }
         QSharedPointer<HSSObject> ret;
         this->_value = this->_getValueByPath(container, ppath);
 

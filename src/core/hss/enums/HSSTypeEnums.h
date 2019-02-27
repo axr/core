@@ -326,7 +326,8 @@ namespace AXR
         HSSObjectTypeShape, /**< All shapes share this type */
         HSSObjectTypeAction, /**< All actions share this type */
         HSSObjectTypeColorStop, /**< Color stops are used inside gradients */
-        HSSObjectTypeSelection /**< Selections hold references to other objects */
+        HSSObjectTypeSelection, /**< Selections hold references to other objects */
+        HSSObjectTypeEvent /**< Special objects that hold information about events */
     };
     /** @} */
 
@@ -376,6 +377,8 @@ namespace AXR
     {
         HSSEventTypeNone = 0, /**< Error state. */
         HSSEventTypeLoad, /**< Fires when everything has loaded. */
+        HSSEventTypeFlag, /**< Fires when a flag activates. */
+        HSSEventTypeUnflag, /**< Fires when a flag is deactivated. */
         HSSEventTypeClick, /**< Fires when a mouse down and mouse up happen in fast succession. */
         HSSEventTypeDoubleClick, /**< Fires when clicked two times in fast succession. */
         HSSEventTypeTripleClick, /**< Fires when clicked three times in fast succession. */
@@ -388,7 +391,9 @@ namespace AXR
         HSSEventTypeClickSecondary, /**< Fires when clicking with the secondary mouse button. */
         HSSEventTypeClickTertiary, /**< Fires when clicking with the third (if there) mouse button. */
         HSSEventTypeScroll, /**< Fires when the sroll mechanism is activated on the mouse (e.g. scroll wheel). */
-        HSSEventTypeExitedWindow /**< Fires when the mouse pointer leaves the window. */
+        HSSEventTypeExitedWindow, /**< Fires when the mouse pointer leaves the window. */
+        HSSEventTypeKeyDown, /**< Fires when a key on the keyboard has been pressed. */
+        HSSEventTypeKeyUp /**< Fires when a key on the keyboard has been released. */
     };
     /** @} */
 

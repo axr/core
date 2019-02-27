@@ -340,6 +340,8 @@ namespace AXR
         void setHasOwnHeight(bool newValue);
         HSSUnit getGlobalX() const;
         HSSUnit getGlobalY() const;
+        
+        void raiseFlagEventIfNeeded();
 
         /**
          *  @todo make private and add accessors
@@ -448,6 +450,8 @@ namespace AXR
 
         void _initialize();
         bool _fireEvent(QSharedPointer<HSSValue> theValue, HSSEventType eventType);
+        
+        bool _needsFlagEvent;
     };
 }
 
