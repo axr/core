@@ -174,33 +174,36 @@ QSharedPointer<HSSRgb> HSSGradient::getColorAfterFirst()
     //first, look into the color stops to see if we find a suitable color
     QSharedPointer<HSSRgb> ret;
     const QSharedPointer<HSSObject> colorStops = this->getColorStops();
-    if (colorStops->isA(HSSObjectTypeColorStop))
+    if (colorStops)
     {
-        QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
-        QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
-        if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
-            ret = qSharedPointerCast<HSSRgb>(stopColorObj);
-        }
-    }
-    else if (colorStops->isA(HSSObjectTypeMultipleValue))
-    {
-        QSharedPointer<HSSMultipleValue> multiValue = qSharedPointerCast<HSSMultipleValue>(colorStops);
-        const QList<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
-        Q_FOREACH(QSharedPointer<HSSObject> stopObj, stopsList)
+        if (colorStops->isA(HSSObjectTypeColorStop))
         {
-            if (stopObj->isA(HSSObjectTypeColorStop))
+            QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
+            QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
+            if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
+                ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+            }
+        }
+        else if (colorStops->isA(HSSObjectTypeMultipleValue))
+        {
+            QSharedPointer<HSSMultipleValue> multiValue = qSharedPointerCast<HSSMultipleValue>(colorStops);
+            const QList<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
+            Q_FOREACH(QSharedPointer<HSSObject> stopObj, stopsList)
             {
-                QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
-                QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
-                if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
-                    ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+                if (stopObj->isA(HSSObjectTypeColorStop))
+                {
+                    QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
+                    QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
+                    if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
+                        ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+                        break;
+                    }
+                }
+                else if (stopObj->isA(HSSObjectTypeRgb))
+                {
+                    ret = qSharedPointerCast<HSSRgb>(stopObj);
                     break;
                 }
-            }
-            else if (stopObj->isA(HSSObjectTypeRgb))
-            {
-                ret = qSharedPointerCast<HSSRgb>(stopObj);
-                break;
             }
         }
     }
@@ -229,38 +232,41 @@ QSharedPointer<HSSRgb> HSSGradient::getColorBeforeLast()
     QSharedPointer<HSSRgb> ret;
 
     const QSharedPointer<HSSObject> colorStops = this->getColorStops();
-    if (colorStops->isA(HSSObjectTypeColorStop))
-    {
-        QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
-        QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
-        if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
-            ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+    if(colorStops){
+        if (colorStops->isA(HSSObjectTypeColorStop))
+        {
+            QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
+            QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
+            if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
+                ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+            }
         }
-    }
-    else if (colorStops->isA(HSSObjectTypeMultipleValue))
-    {
-        QSharedPointer<HSSMultipleValue> multiValue = qSharedPointerCast<HSSMultipleValue>(colorStops);
-        const QList<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
-        QListIterator<QSharedPointer<HSSObject> > i(stopsList);
-        i.toBack();
-        while (i.hasPrevious()){
-            QSharedPointer<HSSObject> stopObj = i.previous();
-            if (stopObj->isA(HSSObjectTypeColorStop))
-            {
-                QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
-                QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
-                if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
-                    ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+        else if (colorStops->isA(HSSObjectTypeMultipleValue))
+        {
+            QSharedPointer<HSSMultipleValue> multiValue = qSharedPointerCast<HSSMultipleValue>(colorStops);
+            const QList<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
+            QListIterator<QSharedPointer<HSSObject> > i(stopsList);
+            i.toBack();
+            while (i.hasPrevious()){
+                QSharedPointer<HSSObject> stopObj = i.previous();
+                if (stopObj->isA(HSSObjectTypeColorStop))
+                {
+                    QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
+                    QSharedPointer<HSSObject> stopColorObj = theStop->getColor();
+                    if(stopColorObj && stopColorObj->isA(HSSObjectTypeRgb)){
+                        ret = qSharedPointerCast<HSSRgb>(stopColorObj);
+                        break;
+                    }
+                }
+                else if (stopObj->isA(HSSObjectTypeRgb))
+                {
+                    ret = qSharedPointerCast<HSSRgb>(stopObj);
                     break;
                 }
             }
-            else if (stopObj->isA(HSSObjectTypeRgb))
-            {
-                ret = qSharedPointerCast<HSSRgb>(stopObj);
-                break;
-            }
         }
     }
+    
     //not found yet? we'll use the startColor
     if (!ret){
         const QSharedPointer<HSSObject> startColorObj = this->getStartColor();
