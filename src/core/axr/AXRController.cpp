@@ -411,19 +411,19 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                 QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(selection);
                 for (HSSMultipleSelection::iterator it = multiSel->begin(); it != multiSel->end(); ++it)
                 {
-                    this->_recursiveMatchRulesToDisplayObjects(rule, *it, container, applyingInstructions);
+                    this->recursiveApplyRulesToDisplayObjects(rule, *it, container, applyingInstructions);
                 }
             }
             else if (selection->isA(HSSSelectionTypeSimpleSelection))
             {
                 QSharedPointer<HSSSimpleSelection> simpleSel = qSharedPointerCast<HSSSimpleSelection>(selection);
-                this->_recursiveMatchRulesToDisplayObjects(rule, simpleSel, container, applyingInstructions);
+                this->recursiveApplyRulesToDisplayObjects(rule, simpleSel, container, applyingInstructions);
             }
         }
     }
 }
 
-inline void AXRController::_recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions)
+inline void AXRController::recursiveApplyRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions)
 {
     for (HSSSimpleSelection::const_iterator it = scope->begin(); it != scope->end(); ++it)
     {

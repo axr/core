@@ -426,6 +426,7 @@ namespace AXR
          *  @param applyingInstructions   Wether to apply instruction rules
          */
         void recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
+        void recursiveApplyRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
 
         std::vector<QSharedPointer<HSSContainer> > addContainerFromNewInstruction(const QSharedPointer<HSSInstruction> & instruction, const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool activeByDefault);
 
@@ -447,7 +448,6 @@ namespace AXR
         AXRControllerPrivate *const d;
         inline void _setUpTreeChangeObservers(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> thisObj, bool subscribingToParent);
         inline void _matchRuleToSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection);
-        inline void _recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSimpleSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
         inline void _selectOnLevelSimple(QSharedPointer<HSSSimpleSelection> & ret, HSSCombinatorType combinatorType, QSharedPointer<HSSSimpleSelection> simpleSel, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications, bool subscribingToParent);
         void _recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> scope);
     };
