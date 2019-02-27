@@ -99,9 +99,38 @@ void HSSCascader::visit(HSSContainer &container)
         {
             container._needsRereadRules = false;
             this->applyStack(container, specificity);
+            this->applyOverrides(container, specificity);
             container.commitStackValues();
         }
         container.fillWithDefaults();
+    }
+}
+
+void HSSCascader::applyOverrides(HSSContainer & container, HSSUnit & specificity)
+{
+    Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, container.getOverrides())
+    {
+        specificity += 1.0;
+        QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+        Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
+            QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
+            if (clonedNode->getSpecificity() == 0.0)
+            {
+                clonedNode->setSpecificity(specificity);
+            }
+            else
+            {
+                clonedNode->setSpecificity(clonedNode->getSpecificity() + (specificity * 0.000001));
+            }
+            if (path->size() == 1)
+            {
+                container.setStackNode(path->front()->getPropertyName(), clonedNode);
+            }
+            else
+            {
+                path->setStackNode(container.shared_from_this(), clonedNode);
+            }
+        }
     }
 }
 

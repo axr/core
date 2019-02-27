@@ -407,6 +407,10 @@ namespace AXR
         void setExpectsIsAIncluded(bool value);
         void unlinkPropertyPaths();
 
+        void setOverrides(std::vector<QSharedPointer<HSSPropertyDefinition> > overrides);
+        void addOverride(QSharedPointer<HSSPropertyDefinition> item);
+        std::vector<QSharedPointer<HSSPropertyDefinition> > getOverrides() const;
+
     protected:
         QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
         QMap<AXRString, HSSAbstractComputeCallback*> _computeCallbacks;
@@ -416,6 +420,7 @@ namespace AXR
         QMap<AXRString, QSharedPointer<HSSObject> > _defaultValues;
         QMap<AXRString, QSharedPointer<HSSObject> > _computedValues;
         QMap<AXRString, QSharedPointer<HSSObject> > _stackValues;
+        std::vector<QSharedPointer<HSSPropertyDefinition> > _overrides;
         std::vector<AXRString> shorthandProperties;
         QMap<AXRString, bool> skipShorthand;
         size_t shorthandIndex;

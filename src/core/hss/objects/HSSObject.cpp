@@ -308,6 +308,12 @@ HSSObject::HSSObject(const HSSObject & orig)
         stackIt.next();
         this->_stackValues.insert(stackIt.key(), stackIt.value()->clone());
     }
+    //copy the overrides
+    for (HSSPropertyDefinition::const_it pIt = orig._overrides.begin(); pIt != orig._overrides.end(); ++pIt)
+    {
+        QSharedPointer<HSSPropertyDefinition> clonedPropDef = (*pIt)->clone();
+        this->_overrides.push_back(clonedPropDef);
+    }
     //copy the computed values
     QMapIterator<AXRString, QSharedPointer<HSSObject> > computedIt(orig._computedValues);
     while (computedIt.hasNext())
@@ -1687,4 +1693,23 @@ void HSSObject::unlinkPropertyPaths()
             }
         }
     }
+}
+
+void HSSObject::setOverrides(std::vector<QSharedPointer<HSSPropertyDefinition> > overrides)
+{
+    std::vector<QSharedPointer<HSSPropertyDefinition> >::iterator it;
+    for (it = overrides.begin(); it != overrides.end(); ++it) {
+        QSharedPointer<HSSPropertyDefinition> item = *it;
+        this->addOverride(item);
+    }
+}
+
+void HSSObject::addOverride(QSharedPointer<HSSPropertyDefinition> item)
+{
+    this->_overrides.push_back(item);
+}
+
+std::vector<QSharedPointer<HSSPropertyDefinition> > HSSObject::getOverrides() const
+{
+    return this->_overrides;
 }
