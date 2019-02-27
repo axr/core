@@ -124,6 +124,7 @@ void HSSDisplayObject::_initialize()
 
     this->_isHover = false;
     this->_isPress = false;
+    this->_isActive = false;
     this->_layoutFlagIsInSecondaryGroup = false;
     this->_layoutFlagIsInSecondaryLine = false;
     this->_layoutFlagVerticallyAligned = false;
@@ -1865,6 +1866,49 @@ void HSSDisplayObject::setPress(bool newValue)
 bool HSSDisplayObject::isPress()
 {
     return this->_isPress;
+}
+
+void HSSDisplayObject::setActive(bool newValue)
+{
+    if (this->_isActive != newValue)
+    {
+        this->_isActive = newValue;
+        if (newValue)
+        {
+            this->flagsActivate("active");
+        }
+        else
+        {
+            this->flagsDeactivate("active");
+        }
+    }
+}
+
+bool HSSDisplayObject::isActive()
+{
+    return this->_isActive;
+}
+
+void HSSDisplayObject::unsetAllActive()
+{
+    this->setActive(false);
+}
+
+bool HSSDisplayObject::handleSelection(HSSPoint thePoint)
+{
+    if (!this->getVisible())
+    {
+        return false;
+    }
+    const HSSRect containerBounds(this->globalX, this->globalY, this->getWidth(), this->getHeight());
+    if (containerBounds.contains(thePoint))
+    {
+        this->getController()->root()->unsetAllActive();
+        this->setActive(true);
+        this->getController()->document()->selectionChanged(shared_from_this());
+        return true;
+    }
+    return false;
 }
 
 void HSSDisplayObject::ruleChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)

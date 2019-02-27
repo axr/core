@@ -149,6 +149,10 @@ using namespace AXR;
     HSSMouseEvent clickMouseEvent(HSSEventTypeClick, thePoint);
     [document documentObject]->handleEvent(&upMouseEvent);
     [document documentObject]->handleEvent(&clickMouseEvent);
+    [document documentObject]->handleSelection(thePoint);
+    if([document documentObject]->needsDisplay()){
+        [self setNeedsDisplay:TRUE];
+    }
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent

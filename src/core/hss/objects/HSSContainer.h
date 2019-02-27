@@ -244,6 +244,9 @@ namespace AXR
          *  @return Whether it has been handled or not.
          */
         virtual bool handleEvent(HSSInputEvent *event);
+        
+        void unsetAllActive();
+        bool handleSelection(HSSPoint thePoint);
 
         /**
          *  Stores the pointer to the controller and propagates it to all children.

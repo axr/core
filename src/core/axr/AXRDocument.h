@@ -54,13 +54,14 @@ namespace AXR
 {
     class AXRBuffer;
     class AXRController;
+    class HSSDisplayObject;
     class AXRDocumentDelegate;
     class AXRDocumentPrivate;
     class HSSAbstractValueChangedCallback;
     class HSSCodeParser;
     class HSSInputEvent;
     class HSSObject;
-    class HSSRect;
+    class HSSPoint;
     class HSSRenderer;
     class HSSVisitorManager;
     class XMLParser;
@@ -253,6 +254,8 @@ namespace AXR
         bool reload();
 
         bool handleEvent(HSSInputEvent *event);
+        void handleSelection(HSSPoint thePoint);
+        void selectionChanged(QSharedPointer<HSSDisplayObject> theDO);
 
         // Layout stuff from AXRWrapper
     public:

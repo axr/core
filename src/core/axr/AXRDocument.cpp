@@ -58,6 +58,7 @@
 #include "HSSMouseEvent.h"
 #include "HSSObjectDefinition.h"
 #include "HSSParserNode.h"
+#include "HSSPoint.h"
 #include "HSSRenderer.h"
 #include "HSSRule.h"
 #include "HSSStatement.h"
@@ -643,6 +644,20 @@ bool AXRDocument::handleEvent(HSSInputEvent *event)
     return false;
 }
 
+void AXRDocument::handleSelection(HSSPoint thePoint)
+{
+    QSharedPointer<HSSContainer> root = controller()->root();
+    if (root)
+        root->handleSelection(thePoint);
+}
+
+void AXRDocument::selectionChanged(QSharedPointer<HSSDisplayObject> theDO)
+{
+    if (d->delegate != NULL)
+    {
+        d->delegate->selectionChanged(theDO);
+    }
+}
 bool AXRDocument::loadHssFile(const QUrl &url)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));

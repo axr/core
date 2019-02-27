@@ -61,6 +61,7 @@
 #include "HSSObjectDefinition.h"
 #include "HSSObjectNameConstant.h"
 #include "HSSPercentageConstant.h"
+#include "HSSPoint.h"
 #include "HSSRectangle.h"
 #include "HSSRoundedRect.h"
 #include "HSSRule.h"
@@ -589,6 +590,38 @@ bool HSSContainer::handleEvent(HSSInputEvent *event)
     }
 
     return handled;
+}
+
+void HSSContainer::unsetAllActive()
+{
+    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it < this->allChildren->end(); ++it)
+    {
+        QSharedPointer<HSSDisplayObject> child = *it;
+        child->unsetAllActive();
+    }
+    HSSDisplayObject::unsetAllActive();
+}
+
+bool HSSContainer::handleSelection(HSSPoint thePoint)
+{
+    bool hasBeenHandled = false;
+    if (this->allChildren->size() > 0)
+    {
+        for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it < this->allChildren->end(); ++it)
+        {
+            QSharedPointer<HSSDisplayObject> child = *it;
+            bool childHandled = child->handleSelection(thePoint);
+            if (childHandled) {
+                hasBeenHandled = true;
+                break;
+            }
+        }
+    }
+    if (!hasBeenHandled)
+    {
+        hasBeenHandled = HSSDisplayObject::handleSelection(thePoint);
+    }
+    return hasBeenHandled;
 }
 
 void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)

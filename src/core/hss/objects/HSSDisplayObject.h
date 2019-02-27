@@ -59,6 +59,7 @@ namespace AXR
     class HSSInputEvent;
     class HSSMargin;
     class HSSMouseEvent;
+    class HSSPoint;
     class HSSPropertyDefinition;
     class HSSRule;
     class HSSRuleStatus;
@@ -314,6 +315,11 @@ namespace AXR
 
         void setPress(bool newValue);
         bool isPress();
+        
+        void setActive(bool newValue);
+        bool isActive();
+        virtual void unsetAllActive();
+        virtual bool handleSelection(HSSPoint thePoint);
 
         void ruleChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
@@ -426,6 +432,7 @@ namespace AXR
     private:
         bool _isHover;
         bool _isPress;
+        bool _isActive;
         bool _isRoot;
         bool _hasOwnWidth;
         bool _hasOwnHeight;
