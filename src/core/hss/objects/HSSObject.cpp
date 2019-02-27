@@ -1192,6 +1192,7 @@ QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(HSSUnit number,
     selectorChain->add(target);
     selectorChains.push_back(selectorChain);
     refFunc->setSelectorChains(selectorChains);
+    refFunc->setLogsSelections(false);
 
     //right
     QSharedPointer<HSSNumberConstant> right = this->numberToConstant(number);
@@ -1441,6 +1442,7 @@ QSharedPointer<HSSParserNode> HSSObject::_inheritProperty(AXRString propertyName
     selectorChain->add(simpleSelector);
     selectorChains.push_back(selectorChain);
     refFunc->setSelectorChains(selectorChains);
+    refFunc->setLogsSelections(false);
     return refFunc;
 }
 

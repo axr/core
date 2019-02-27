@@ -425,6 +425,9 @@ namespace AXR
 
         void currentContextPush(QSharedPointer<HSSContainer> container);
         const QSharedPointer<HSSContainer> currentContextPop() const;
+        void setLogsSelections(bool newValue);
+        const bool logsSelections() const;
+        const QSharedPointer<HSSSimpleSelection> getLastSelection() const;
 
     protected:
         void readNextSelectorNode();

@@ -56,6 +56,7 @@
 #include "HSSRefFunction.h"
 #include "HSSSelectorChain.h"
 #include "HSSSimpleSelection.h"
+#include "HSSSimpleSelector.h"
 #include "HSSValue.h"
 
 using namespace AXR;
@@ -63,6 +64,9 @@ using namespace AXR;
 HSSRefFunction::HSSRefFunction(AXRController * controller)
 : HSSFunction(HSSFunctionTypeRef, controller)
 {
+    this->_isAttached = false;
+    this->_logsSelections = true;
+
 }
 
 HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
@@ -70,6 +74,8 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
 {
     this->modifier = orig.modifier;
     this->propertyPath = orig.propertyPath;
+    this->_isAttached = orig._isAttached;
+    this->_logsSelections = orig._logsSelections;
 }
 
 QSharedPointer<HSSFunction> HSSRefFunction::clone() const
@@ -182,7 +188,17 @@ size_t HSSRefFunction::selectorChainsSize() const
 
 QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
 {
-    QSharedPointer<HSSSimpleSelection> selection = this->getController()->select(this->selectorChains, this->scope, this->getThisObj())->joinAll();
+    AXRController * theController = this->getController();
+    if (!this->logsSelections())
+    {
+        theController->setLogsSelections(false);
+    }
+    QSharedPointer<HSSSimpleSelection> selection = theController->select(this->selectorChains, this->scope, this->getThisObj(), !this->_isAttached, false, false)->joinAll();
+    if (!this->logsSelections())
+    {
+        theController->setLogsSelections(true);
+    }
+    this->_isAttached = true;
     if (selection->empty())
     {
         // ignore
@@ -389,4 +405,14 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
         }
     }
     return ret;
+}
+
+void HSSRefFunction::setLogsSelections(bool newValue)
+{
+    this->_logsSelections = newValue;
+}
+
+const bool HSSRefFunction::logsSelections() const
+{
+    return this->_logsSelections;
 }

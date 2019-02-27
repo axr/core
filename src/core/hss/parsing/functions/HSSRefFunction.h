@@ -193,14 +193,18 @@ namespace AXR
          *  @param data     A pointer to the data that is sent along the notification.
          */
         void replaceChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> remoteObj);
+        void setLogsSelections(bool newValue);
+        const bool logsSelections() const;
 
     private:
         AXRString modifier;
         QSharedPointer<HSSPropertyPath> propertyPath;
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
+        bool _isAttached;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         QSharedPointer<HSSObject> _getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path);
+        bool _logsSelections;
     };
 }
 

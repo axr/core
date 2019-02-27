@@ -86,6 +86,8 @@ namespace AXR
         size_t currentChainSize;
 
         AXRDocument *document;
+        bool _logsSelections;
+        QSharedPointer<HSSSimpleSelection> lastSelection;
     };
 }
 
@@ -95,6 +97,8 @@ AXRController::AXRController(AXRDocument *document)
     axr_log(LoggerChannelGeneralSpecific, "AXRController: creating controller");
     d->document = document;
     d->currentContext = QStack<QSharedPointer<HSSContainer> > ();
+    d->_logsSelections = true;
+    d->lastSelection = QSharedPointer<HSSSimpleSelection>();
 }
 
 AXRController::~AXRController()
@@ -105,6 +109,7 @@ AXRController::~AXRController()
     d->styleSheetUrls.clear();
     d->rules.clear();
     d->parserTree.clear();
+    d->lastSelection.clear();
     delete d;
 }
 
@@ -611,14 +616,19 @@ QSharedPointer<HSSSelection> AXRController::select(std::vector<QSharedPointer<HS
             ret->addSelection(sel);
         }
     }
+    d->lastSelection.clear();
     if (ret->size() == 1){
-        for (HSSMultipleSelection::iterator it = ret->begin(); it!=ret->end(); ++it) {
-            QSharedPointer<HSSSimpleSelection> simpleSel = *it;
+        QSharedPointer<HSSSimpleSelection> simpleSel = *(ret->begin());
+        if (this->logsSelections())
+        {
             axr_log(LoggerChannelController, AXRString("AXRController:").append(HSSSelection::logSelection(simpleSel.data(), selectorChains)));
-            return simpleSel;
         }
+        return simpleSel;
     }
-    axr_log(LoggerChannelController, AXRString("AXRController:").append(HSSSelection::logSelection(ret.data(), selectorChains)));
+    if (this->logsSelections())
+    {
+        axr_log(LoggerChannelController, AXRString("AXRController:").append(HSSSelection::logSelection(ret.data(), selectorChains)));
+    }
     return ret;
 }
 
@@ -638,6 +648,7 @@ QSharedPointer<HSSSelection> AXRController::selectHierarchical(QSharedPointer<HS
             QSharedPointer<HSSSimpleSelection> newScope(new HSSSimpleSelection(this));
             this->readNextSelectorNode();
             QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
+            d->lastSelection = inner;
 
             Q_FOREACH (QSharedPointer<HSSDisplayObject> theDO, *inner.data())
             {
@@ -973,6 +984,7 @@ void AXRController::reset()
     d->currentSelectorNode.clear();
     d->currentChainCount = 0;
     d->currentChainSize = 0;
+    d->lastSelection.clear();
 }
 
 QSharedPointer<HSSContainer> & AXRController::root() const
@@ -1176,4 +1188,19 @@ void AXRController::_recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> 
             this->_recursiveGetDescendants(ret, cont->getChildren());
         }
     }
+}
+
+void AXRController::setLogsSelections(bool newValue)
+{
+    d->_logsSelections = newValue;
+}
+
+const bool AXRController::logsSelections() const
+{
+    return d->_logsSelections;
+}
+
+const QSharedPointer<HSSSimpleSelection> AXRController::getLastSelection() const
+{
+    return d->lastSelection;
 }
