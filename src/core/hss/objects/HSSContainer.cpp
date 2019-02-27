@@ -121,6 +121,7 @@ void HSSContainer::_initialize()
     this->addCallback("contentAlignY", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeContentAlignY));
     this->addNotifyCallback("contentAlignY", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContentAlignY));
     this->addCallback("content", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::setContent));
+    this->addNotifyCallback("content", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyContent));
     this->addCallback("shape", new HSSComputeCallback<HSSContainer>(this, &HSSContainer::computeShape));
     this->addNotifyCallback("shape", new HSSObserveCallback<HSSContainer>(this, &HSSContainer::notifyShape));
 }
@@ -327,6 +328,25 @@ void HSSContainer::add(QSharedPointer<HSSDisplayObject> child)
     }
 }
 
+void HSSContainer::insert(QSharedPointer<HSSDisplayObject> child, int index)
+{
+    QSharedPointer<HSSContainer> sharedThis = this->shared_from_this();
+    child->setParent(sharedThis);
+    axr_log(LoggerChannelGeneralSpecific, "HSSContainer: added child " + child->getElementName() + " to " + this->getElementName());
+    child->setIndex(index);
+    bool isTxtBlock = child->isA(HSSObjectTypeTextBlock);
+    if (!isTxtBlock)
+    {
+        this->children->insert(child, index);
+    }
+    this->allChildren->insert(child, index);
+    //    this->changeRulesNotifyAdd(child);
+    if (!isTxtBlock)
+    {
+        this->notifyObservers("__impl_private__contentTreeChanged", sharedThis);
+    }
+}
+
 void HSSContainer::addOffscreen(QSharedPointer<HSSDisplayObject> child)
 {
     QSharedPointer<HSSContainer> sharedThis = this->shared_from_this();
@@ -450,33 +470,62 @@ void HSSContainer::setContentText(const AXRString &contentText)
 
 void HSSContainer::appendContentText(const AXRString &contentText)
 {
-    AXRString text = contentText.trimmed();
+    AXRString text = contentText;
 
     AXRController * controller = this->getController();
 
-    if (!text.isEmpty())
+    if (text == "\x7f")
     {
-        if (this->allChildren->empty())
-        {
-            QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
-            txtBlck->setText(text, std::numeric_limits<int>::max());
-            this->add(txtBlck);
-        }
-        else
+        if (!this->allChildren->empty())
         {
             QSharedPointer<HSSDisplayObject> lastChild = this->allChildren->back();
             if (lastChild->isA(HSSObjectTypeTextBlock))
             {
                 QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
-                text = textBlock->getText() + " " + text;
-                textBlock->setText(text, std::numeric_limits<int>::max());
+                AXRString currentText = textBlock->getText();
+                currentText.truncate(currentText.length()-1);
+                textBlock->setText(currentText, std::numeric_limits<int>::max());
             }
-            else
+        }
+    }
+    else
+    {
+        if (!text.isEmpty())
+        {
+            if (this->allChildren->empty())
             {
                 QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
                 txtBlck->setText(text, std::numeric_limits<int>::max());
                 this->add(txtBlck);
             }
+            else
+            {
+                QSharedPointer<HSSDisplayObject> lastChild = this->allChildren->back();
+                if (lastChild->isA(HSSObjectTypeTextBlock))
+                {
+                    QSharedPointer<HSSTextBlock> textBlock = qSharedPointerCast<HSSTextBlock > (lastChild);
+                    text = textBlock->getText() + text;
+                    textBlock->setText(text, std::numeric_limits<int>::max());
+                }
+                else
+                {
+                    QSharedPointer<HSSTextBlock> txtBlck = QSharedPointer<HSSTextBlock>(new HSSTextBlock(controller));
+                    txtBlck->setText(text, std::numeric_limits<int>::max());
+                    this->add(txtBlck);
+                }
+            }
+        }
+    }
+}
+
+void HSSContainer::removeContentText()
+{
+    std::vector<QSharedPointer<HSSDisplayObject> > items = this->allChildren->getItems();
+    for (std::vector<QSharedPointer<HSSDisplayObject> >::const_iterator it = items.begin(); it!= items.end(); ++it) {
+        const QSharedPointer<HSSDisplayObject> & theDO = *it;
+        if (theDO->isA(HSSObjectTypeTextBlock))
+        {
+            theDO->removeFromParent();
         }
     }
 }
@@ -918,11 +967,48 @@ void HSSContainer::setContent(QSharedPointer<HSSObject> theObj)
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
         if (parserNode->isA(HSSParserNodeTypeStringConstant))
         {
-            AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-            this->setContentText(text);
+//            AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+//            this->setContentText(text);
+        } else if (parserNode->isA(HSSParserNodeTypeFunctionCall))
+        {
+            QSharedPointer<HSSFunction> function = qSharedPointerCast<HSSFunction>(parserNode);
+            QSharedPointer<HSSObject> remoteObj = function->evaluate();
+            if(remoteObj && remoteObj->isA(HSSObjectTypeValue)){
+                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
+                AXRString text = valueObj->getString();
+                this->setContentText(HSSObject::stripQuotes(text));
+            }
         }
     }
     this->_simpleInsertComputed("content", theObj);
+}
+
+void HSSContainer::notifyContent(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj)
+    {
+        if (theObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+            if (parserNode->isA(HSSParserNodeTypeStringConstant))
+            {
+                AXRString textWithQuotes = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+                this->setContentText(HSSObject::stripQuotes(textWithQuotes));
+                this->setNeedsLayout(true);
+                this->setDirty(true);
+                this->getController()->document()->setNeedsDisplay(true);
+            }
+        }
+    }
+    else
+    {
+        this->removeContentText();
+        this->setNeedsLayout(true);
+        this->setDirty(true);
+        this->getController()->document()->setNeedsDisplay(true);
+    }
+
+    this->notifyObservers("content", theObj);
 }
 
 //shape

@@ -126,6 +126,13 @@ namespace AXR
         void add(QSharedPointer<HSSDisplayObject> child);
         
         /**
+         *  Add a child to the content tree at given index.
+         *  @param child    A shared pointer to the child display object.
+         *  @param index    The index at which to insert
+         */
+        void insert(QSharedPointer<HSSDisplayObject> child, int index);
+        
+        /**
          *  Add a child to the offscreen list, to keep stuff around in memory.
          *  @param child    A shared pointer to the child display object.
          */
@@ -173,6 +180,11 @@ namespace AXR
          *  @param text     A string containing the new content text.
          */
         void appendContentText(const AXRString &contentText);
+        
+        /**
+         *  Removes all the content text of the container.
+         */
+        void removeContentText();
 
         /**
          *  Accepts a visitor to traverse and process the HSSObject tree.
@@ -227,6 +239,7 @@ namespace AXR
         AXRString getContent() const;
 
         void setContent(QSharedPointer<HSSObject> theObj);
+        void notifyContent(QSharedPointer<HSSObject> theObj);
         //shape
         QSharedPointer<HSSObject> computeShape(QSharedPointer<HSSParserNode> parserNode);
         /**

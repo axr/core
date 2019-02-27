@@ -246,6 +246,7 @@ namespace AXR
         HSSFunctionTypeStartTimer, /**< Adds a timer of repeating execution. */
         HSSFunctionTypeStopTimer, /**< Removes a timer of repeating execution. */
         HSSFunctionTypeToggleTimer, /**< Adds or removes a timer of repeating execution. */
+        HSSFunctionTypeInsert /**< Inserts text into a container. */
     };
     /** @} */
 
