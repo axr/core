@@ -92,6 +92,7 @@ namespace AXR
         virtual void addSelection(QSharedPointer<HSSSelection> item) =0;
         virtual QSharedPointer<HSSSimpleSelection> joinAll() const =0;
         virtual QSharedPointer<HSSMultipleSelection> splitAll() =0;
+        virtual std::vector<QSharedPointer<HSSDisplayObject> > getParents() const =0;
         
         /**
          *  @return The size of the selection.
