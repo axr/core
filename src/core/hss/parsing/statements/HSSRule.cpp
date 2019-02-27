@@ -289,10 +289,10 @@ void HSSRule::setThisObj(QSharedPointer<HSSDisplayObject> value)
         (*sIt)->setThisObj(value);
     }
 
-    for (std::vector<QSharedPointer<HSSPropertyDefinition> >::iterator it = this->properties.begin(); it != this->properties.end(); ++it)
-    {
-        (*it)->setThisObj(value);
-    }
+//    for (std::vector<QSharedPointer<HSSPropertyDefinition> >::iterator it = this->properties.begin(); it != this->properties.end(); ++it)
+//    {
+//        (*it)->setThisObj(value);
+//    }
 
     //    for (std::vector<QSharedPointer<HSSRule>>::iterator it2 = this->children.begin(); it2 != this->children.end(); ++it2) {
     //        (*it2)->setThisObj(value);
