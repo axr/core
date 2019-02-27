@@ -73,15 +73,24 @@ using namespace AXR;
     if (self)
     {
         document = NULL;
-        renderVisitor = new HSSRenderer();
     }
 
     return self;
 }
 
+- (void)awakeFromNib
+{
+    document = NULL;
+    NSTrackingAreaOptions trackingAreaOptions = (NSTrackingActiveAlways | NSTrackingInVisibleRect | NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved);
+    NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:[self bounds]
+                                                                options:trackingAreaOptions
+                                                                  owner:self
+                                                               userInfo:nil];
+    [self addTrackingArea:trackingArea];
+}
+
 - (void)dealloc
 {
-    delete renderVisitor;
     [super dealloc];
 }
 
@@ -101,20 +110,44 @@ using namespace AXR;
     NSRect paintRect = [self bounds];
     [document documentObject]->setWindowSize(self.bounds.size.width, self.bounds.size.height);
 
-    // Fill the view with our background color...
-    [[NSColor whiteColor] set];
-    NSRectFill(paintRect);
-
     // Render the AXR document
-    QSharedPointer<HSSVisitorManager> visitorManager = [document documentObject]->visitorManager();
-    if (visitorManager)
-    {
-        // Render the final image to the screen
-        renderVisitor->setDirtyRect([self bounds]);
-        visitorManager->runVisitors(HSSVisitorFilterAll);
+//    QSharedPointer<HSSVisitorManager> visitorManager = [document documentObject]->visitorManager();
 
-        CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, renderVisitor->getFinalFrameAsCGImageRef());
-    }
+    AXRDocument * doc = [document documentObject];
+
+    // Resize and composite the AXR document if necessary
+//    if (doc->needsDisplay())
+//    {
+        // Fill the view with our background color...
+        [[NSColor whiteColor] set];
+        NSRectFill(paintRect);
+
+        doc->setWindowSize(self.bounds.size.width, self.bounds.size.height);
+
+        // Render the AXR document
+        QSharedPointer<HSSVisitorManager> visitorManager = doc->visitorManager();
+        if (visitorManager)
+        {
+            //force values
+            QSharedPointer<AXRController> controller = doc->controller();
+            QSharedPointer<HSSDisplayObject> root = controller->root();
+            root->setComputedBool("visible", true, std::numeric_limits<int>::max());
+            root->setComputedValue("width", doc->windowWidth(), std::numeric_limits<int>::max());
+            root->setComputedValue("height", doc->windowHeight(), std::numeric_limits<int>::max());
+
+            // Render the final image to the screen
+            doc->getRenderVisitor()->setDirtyRect(dirtyRect);
+            visitorManager->runVisitors();
+
+            CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, doc->getRenderVisitor()->getFinalFrameAsCGImageRef());
+        }
+        else
+        {
+
+        }
+//    }
+    //done drawing
+    doc->setNeedsDisplay(false);
 }
 
 - (BOOL)acceptsFirstResponder
@@ -137,6 +170,9 @@ using namespace AXR;
 
     HSSMouseEvent mouseEvent(HSSEventTypeMouseDown, [self pointFromNSEvent:theEvent]);
     [document documentObject]->handleEvent(&mouseEvent);
+    if([document documentObject]->needsDisplay()){
+        [self setNeedsDisplay:TRUE];
+    }
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
@@ -162,6 +198,9 @@ using namespace AXR;
 
     HSSMouseEvent mouseEvent(HSSEventTypeMouseMove, [self pointFromNSEvent:theEvent]);
     [document documentObject]->handleEvent(&mouseEvent);
+    if([document documentObject]->needsDisplay()){
+        [self setNeedsDisplay:TRUE];
+    }
 }
 
 - (AXR::HSSPoint)pointFromNSEvent:(NSEvent *)theEvent

@@ -46,10 +46,8 @@
 @class NSAXRDocument;
 
 #ifdef __cplusplus
-namespace AXR { class HSSRenderer; }
+namespace AXR { }
 using namespace AXR;
-#else
-struct HSSRenderer; typedef struct HSSRenderer HSSRenderer;
 #endif
 
 /**
@@ -60,7 +58,6 @@ struct HSSRenderer; typedef struct HSSRenderer HSSRenderer;
 {
 @private
     NSAXRDocument *document;
-    HSSRenderer *renderVisitor;
 }
 
 /**
