@@ -609,6 +609,57 @@ QImage HSSRenderer::getFinalFrame() const
 
 CGImageRef HSSRenderer::getFinalFrameAsCGImageRef() const
 {
-    return QPixmap::fromImage(getFinalFrame()).toMacCGImageRef();
+    QImage canvas = getFinalFrame();
+    return qt_mac_toCGImage(canvas);
 }
+
+static void qt_mac_deleteImage(void *image, const void *, size_t)
+{
+    delete static_cast<QImage *>(image);
+}
+
+// Creates a CGDataProvider with the data from the given image.
+// The data provider retains a copy of the image.
+CGDataProviderRef HSSRenderer::qt_mac_CGDataProvider(const QImage &image) const
+{
+    return CGDataProviderCreateWithData(new QImage(image), image.bits(),
+                                        image.byteCount(), qt_mac_deleteImage);
+}
+
+CGImageRef HSSRenderer::qt_mac_toCGImage(const QImage &inImage) const
+{
+    if (inImage.isNull())
+        return 0;
+    
+    QImage image = inImage;
+    
+    uint cgflags = kCGImageAlphaNone;
+    switch (image.format()) {
+        case QImage::Format_ARGB32:
+            cgflags = kCGImageAlphaFirst | kCGBitmapByteOrder32Host;
+            break;
+        case QImage::Format_RGB32:
+            cgflags = kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrder32Host;
+            break;
+        case QImage::Format_RGB888:
+            cgflags = kCGImageAlphaNone | kCGBitmapByteOrder32Big;
+            break;
+
+        default:
+            // Everything not recognized explicitly is converted to ARGB32_Premultiplied.
+            image = inImage.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            // no break;
+        case QImage::Format_ARGB32_Premultiplied:
+            cgflags = kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Host;
+            break;
+    }
+    
+    CGDataProviderRef dataProvider = qt_mac_CGDataProvider(image);
+    return CGImageCreate(image.width(), image.height(), 8, 32,
+                         image.bytesPerLine(),
+                         CGColorSpaceCreateDeviceRGB(),
+                         cgflags, dataProvider, 0, false, kCGRenderingIntentDefault);
+}
+
+
 #endif

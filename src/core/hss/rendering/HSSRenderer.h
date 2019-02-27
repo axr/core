@@ -51,6 +51,7 @@ template <class T> class QSharedPointer;
 
 #ifdef __APPLE__
 typedef struct CGImage *CGImageRef;
+#import <CoreGraphics/CoreGraphics.h>
 #endif
 class QLinearGradient;
 
@@ -80,6 +81,8 @@ namespace AXR
 #ifdef __APPLE__
         // TODO: Temporary
         CGImageRef getFinalFrameAsCGImageRef() const;
+        CGDataProviderRef qt_mac_CGDataProvider(const QImage &image) const;
+        CGImageRef qt_mac_toCGImage(const QImage &inImage) const;
 #endif
 
         void setDirtyRect(const HSSRect &dirtyRect);
