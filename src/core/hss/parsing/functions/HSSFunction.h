@@ -111,6 +111,13 @@ namespace AXR
          *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
         virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+        
+        /**
+         *  Setter for the "this object", which is a shared pointer to the nearest display object
+         *  (including itself).
+         *  @param value        A shared pointer to the nearest display object.
+         */
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> newThis);
 
         /**
          *  Whenever a function needs to recalculate its value, it should be set to true.

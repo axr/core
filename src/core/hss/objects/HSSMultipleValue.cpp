@@ -178,6 +178,7 @@ void HSSMultipleValue::setThisObj(QSharedPointer<HSSDisplayObject> value)
         QSharedPointer<HSSObject> item = it.next();
         item->setThisObj(value);
     }
+    HSSObject::setThisObj(value);
 }
 
 void HSSMultipleValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
@@ -188,4 +189,5 @@ void HSSMultipleValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
         QSharedPointer<HSSObject> item = it.next();
         item->setScope(newScope);
     }
+    HSSObject::setScope(newScope);
 }

@@ -186,6 +186,17 @@ void HSSFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)
     }
 }
 
+void HSSFunction::setThisObj(QSharedPointer<HSSDisplayObject> newThis)
+{
+    HSSParserNode::setThisObj(newThis);
+    std::deque<QSharedPointer<HSSParserNode> >::const_iterator it;
+    for (it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
+    {
+        const QSharedPointer<HSSParserNode> node = (*it);
+        node->setThisObj(newThis);
+    }
+}
+
 void HSSFunction::setDirty(bool value)
 {
     this->_isDirty = value;

@@ -1276,6 +1276,30 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
     if (currentValue && currentValue->equalTo(theObj))
     {
         currentValue->setSpecificity(theObj->getSpecificity());
+        
+        //set this object and scope
+        ///@todo this should target any subclass of display object
+        if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
+        {
+            QSharedPointer<HSSDisplayObject> thisDO = qSharedPointerCast<HSSDisplayObject>(this->shared_from_this());
+            theObj->setThisObj(thisDO);
+            QSharedPointer<HSSContainer> parent = thisDO->getParent();
+            if (parent)
+            {
+                currentValue->setScope(parent->getChildren());
+            }
+            else
+            {
+                QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this->getController()));
+                rootScope->add(thisDO);
+                currentValue->setScope(rootScope);
+            }
+        }
+        else
+        {
+            currentValue->setThisObj(this->getThisObj());
+            currentValue->setScope(this->getScope());
+        }
         return;
     }
     if (!currentValue || (currentValue->getSpecificity() <= theObj->getSpecificity()))

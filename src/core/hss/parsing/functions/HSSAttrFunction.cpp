@@ -115,6 +115,10 @@ void HSSAttrFunction::setSelectorChains(std::vector<QSharedPointer<HSSSelectorCh
 {
     this->selectorChains = newValues;
     this->setDirty(true);
+    for (HSSSelectorChain::it it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
+    {
+        (*it)->setParentNode(this->shared_from_this());
+    }
 }
 
 void HSSAttrFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain)
