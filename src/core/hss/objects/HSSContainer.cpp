@@ -495,9 +495,11 @@ void HSSContainer::accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags fil
     if (!(filterFlags & HSSVisitorFilterTraverse))
         return;
 
-    for (HSSSimpleSelection::iterator child = this->allChildren->begin(); child != this->allChildren->end(); ++child)
+    unsigned i;
+    for (i = 0; i < this->allChildren->size(); ++i)
     {
-        (*child)->accept(visitor, filterFlags);
+        QSharedPointer<HSSDisplayObject> child = this->allChildren->itemAtIndex(i);
+        child->accept(visitor, filterFlags);
     }
 }
 
@@ -566,13 +568,14 @@ QSharedPointer<HSSSimpleSelection> HSSContainer::getChildren(bool includeTextBlo
 bool HSSContainer::handleEvent(HSSInputEvent *event)
 {
     bool handled = false;
-    for (HSSSimpleSelection::iterator it = this->allChildren->begin(); it < this->allChildren->end(); ++it)
+    for (size_t i = 0, j = this->allChildren->size(); i<j; i+=1)
     {
-        QSharedPointer<HSSDisplayObject> child = *it;
+        QSharedPointer<HSSDisplayObject> child = this->allChildren->itemAtIndex((int)i);
         bool childHandled = child->handleEvent(event);
         if (childHandled)
         {
             handled = true;
+            break;
         }
     }
 

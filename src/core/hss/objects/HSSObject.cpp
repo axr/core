@@ -542,6 +542,10 @@ QSharedPointer<HSSObject> HSSObject::_setIsAPrepare(QSharedPointer<HSSObject> th
     if (theObj->isA(HSSObjectTypeValue))
     {
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+        if (!parserNode)
+        {
+            return ret;
+        }
         switch (parserNode->getType())
         {
             case HSSParserNodeTypeObjectNameConstant:
@@ -632,7 +636,11 @@ void HSSObject::listenIsA(QSharedPointer<HSSObject> theObj)
 {
     if (theObj->isA(HSSObjectTypeValue))
     {
-        switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
+        QSharedPointer<HSSParserNode> theValue = qSharedPointerCast<HSSValue>(theObj)->getValue();
+        if (!theValue) {
+            return;
+        }
+        switch (theValue->getType())
         {
             case HSSParserNodeTypeFunctionCall:
             {
@@ -983,6 +991,7 @@ void HSSObject::setStackValue(AXRString propertyName, QSharedPointer<HSSObject> 
 
 void HSSObject::appendStackValue(AXRString propertyName, QSharedPointer<HSSObject> theObject)
 {
+    if (!theObject) return;
     if (!this->_stackValues.contains(propertyName))
     {
         this->setStackValue(propertyName, theObject);
@@ -1027,16 +1036,19 @@ QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QShare
 
     if (parserNode->isA(HSSParserNodeTypeObjectNameConstant))
     {
-        try
+        QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
+        HSSUnit specificity = parserNode->getSpecificity();
+        AXRString namestring = objname->getValue();
+        QSharedPointer<HSSObjectDefinition> searchResult = this->getController()->objectTreeNodeNamed(namestring);
+        if (searchResult)
         {
-            QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
-            HSSUnit specificity = parserNode->getSpecificity();
-            parserNode = this->getController()->objectTreeNodeNamed(objname->getValue())->clone();
+            parserNode = searchResult->clone();
             parserNode->setSpecificity(specificity);
         }
-        catch (const AXRError &e)
+        else
         {
-            e.raise();
+            AXRError("HSSObject", AXRString("Object with name ") + namestring + " was not found").raise();
+            return errorState;
         }
     }
 
@@ -1210,8 +1222,11 @@ QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(HSSUnit number,
 void HSSObject::setComputedValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode, HSSUnit specificity)
 {
     QSharedPointer<HSSObject> theObj = this->computeValue(propertyName, parserNode);
-    theObj->setSpecificity(specificity);
-    this->setComputed(propertyName, theObj);
+    if (theObj)
+    {
+        theObj->setSpecificity(specificity);
+        this->setComputed(propertyName, theObj);
+    }
 }
 
 void HSSObject::setComputedValue(AXRString propertyName, HSSUnit value, HSSUnit specificity)

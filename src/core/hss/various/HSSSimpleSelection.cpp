@@ -237,6 +237,11 @@ std::vector< QSharedPointer<HSSDisplayObject> > HSSSimpleSelection::getItems() c
     return this->d->items;
 }
 
+QSharedPointer<HSSDisplayObject> HSSSimpleSelection::itemAtIndex(const int index)
+{
+    return this->d->items[index];
+}
+
 QSharedPointer<HSSSimpleSelection> HSSSimpleSelection::joinAll() const
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));

@@ -432,7 +432,7 @@ void HSSRule::removeFromDisplayObjects()
 
 void HSSRule::removeFromDisplayObject(QSharedPointer<HSSDisplayObject> theDO)
 {
-    for (int i = 0, size = theDO->rulesSize(); i<size; ++i)
+    for (int i = 0, size = (int)theDO->rulesSize(); i<size; ++i)
     {
         QSharedPointer<HSSRule> remoteRule = theDO->rulesGet(i);
         if (this->clonedFromSameRule(remoteRule))

@@ -195,7 +195,7 @@ QSharedPointer<HSSFilter> HSSFilter::newFilterWithType(HSSFilterType filterType,
         //        }
 
     default:
-        throw AXRError("HSSFilter", "Unknown filter type.");
+        return ret;
     }
 
     return ret;

@@ -116,7 +116,7 @@ namespace AXR
         const_reverse_iterator rbegin() const;
         reverse_iterator rend();
         const_reverse_iterator rend() const;
-        size_t size() const;
+        virtual size_t size() const;
         void clear();
         bool empty() const;
         QSharedPointer<HSSDisplayObject> front() const;
@@ -125,6 +125,7 @@ namespace AXR
         iterator erase(iterator position);
         iterator erase (iterator first, iterator last);
         std::vector< QSharedPointer<HSSDisplayObject> > getItems() const;
+        QSharedPointer<HSSDisplayObject> itemAtIndex(const int index);
         QSharedPointer<HSSSimpleSelection> joinAll() const;
         QSharedPointer<HSSMultipleSelection> splitAll();
         //returns unique parents

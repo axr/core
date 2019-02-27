@@ -126,7 +126,11 @@ void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
                     specificity += 1.0;
                     QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
                     Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
-                        QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
+                        QSharedPointer<HSSParserNode> node = propertyDefinition->getValue();
+                        if (!node) {
+                            continue;
+                        }
+                        QSharedPointer<HSSParserNode> clonedNode = node->clone();
                         if (clonedNode->getSpecificity() == 0.0)
                         {
                             clonedNode->setSpecificity(specificity);
