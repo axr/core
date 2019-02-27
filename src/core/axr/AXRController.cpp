@@ -101,6 +101,16 @@ AXRController::AXRController(AXRDocument *document)
     d->lastSelection = QSharedPointer<HSSSimpleSelection>();
 }
 
+AXRController::AXRController()
+: d(new AXRControllerPrivate)
+{
+    axr_log(LoggerChannelGeneralSpecific, "AXRController: creating controller");
+    d->document = NULL;
+    d->currentContext = QStack<QSharedPointer<HSSContainer> > ();
+    d->_logsSelections = true;
+    d->lastSelection = QSharedPointer<HSSSimpleSelection>();
+}
+
 AXRController::~AXRController()
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRController: destructing controller");
@@ -116,6 +126,11 @@ AXRController::~AXRController()
 AXRDocument* AXRController::document() const
 {
     return d->document;
+}
+
+void AXRController::setDocument(AXRDocument * document) const
+{
+    d->document = document;
 }
 
 void AXRController::setUpTreeChangeObservers()

@@ -80,11 +80,18 @@ namespace AXR
         AXRController(AXRDocument *document);
 
         /**
+         *  Creates a new instance of a controller, without a document
+         *
+         */
+        AXRController();
+
+        /**
          *  Destructs the controller and clears all the trees.
          */
         virtual ~AXRController();
 
         AXRDocument* document() const;
+        void setDocument(AXRDocument * document) const;
 
         void setUpTreeChangeObservers();
         void recursiveSetUpTreeChangeObservers(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool subscribingToParent);
