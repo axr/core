@@ -255,6 +255,8 @@ namespace AXR
          */
         HSSUnit getSpecificity() const;
 
+        virtual void addValue(QSharedPointer<HSSParserNode> value);
+
     protected:
         /**
          *  Creates a new instance of a parser node. This class shouldn't be called directly,

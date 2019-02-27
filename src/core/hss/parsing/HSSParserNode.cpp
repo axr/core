@@ -343,3 +343,8 @@ void HSSParserNode::setSpecificity(HSSUnit newValue)
 {
     this->_specificity = newValue;
 }
+
+void HSSParserNode::addValue(QSharedPointer<AXR::HSSParserNode> value)
+{
+    //override this if needed
+}
