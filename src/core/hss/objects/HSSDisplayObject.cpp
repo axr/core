@@ -1310,10 +1310,42 @@ bool HSSDisplayObject::_fireEvent(QSharedPointer<HSSValue> theValue, HSSEventTyp
     if (computed)
     {
         axr_log(LoggerChannelEvents, "HSSDisplayObject: firing event: " + computed->toString());
-        HSSEvent::fire(computed);
+        this->_fireEventObject(computed);
         fired = true;
     }
     return fired;
+}
+
+void HSSDisplayObject::_fireEventObject(QSharedPointer<HSSObject> theObj)
+{
+    if (theObj)
+    {
+        if (theObj->isA(HSSObjectTypeValue))
+        {
+            QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
+            this->_fireEventNode(parserNode);
+        }
+        else if (theObj->isA(HSSObjectTypeMultipleValue))
+        {
+            Q_FOREACH(const QSharedPointer<HSSObject> & aObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues())
+            {
+                if (aObj->isA(HSSObjectTypeValue))
+                {
+                    QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(aObj)->getValue();
+                    this->_fireEventNode(parserNode);
+                }
+            }
+        }
+    }
+}
+
+void HSSDisplayObject::_fireEventNode(QSharedPointer<HSSParserNode> parserNode)
+{
+    if (parserNode->isA(HSSParserNodeTypeFunctionCall))
+    {
+        QSharedPointer<HSSFunction> theFunction = qSharedPointerCast<HSSFunction>(parserNode);
+        theFunction->evaluate();
+    }
 }
 
 //margin

@@ -450,6 +450,8 @@ namespace AXR
 
         void _initialize();
         bool _fireEvent(QSharedPointer<HSSValue> theValue, HSSEventType eventType);
+        void _fireEventObject(QSharedPointer<HSSObject> theObj);
+        void _fireEventNode(QSharedPointer<HSSParserNode> parserNode);
         
         bool _needsFlagEvent;
     };
