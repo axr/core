@@ -92,7 +92,7 @@ AXRString HSSMultipleValue::toString()
         tempstr.append(" with the following values: \n");
         for (size_t j = 0; j < vcount; ++j)
         {
-            tempstr.append("   ").append(this->valueList[j]->toString()).append("\n");
+            tempstr.append("   ").append(this->valueList[(int)j]->toString()).append("\n");
         }
     }
 

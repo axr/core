@@ -176,8 +176,8 @@ namespace AXR
          *  @param defaultState The default state in which the rule will be in (activated or not, etc).
          */
         void rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState defaultState);
-        QSharedPointer<HSSRule> rulesGet(unsigned index) const;
-        void rulesRemove(unsigned index);
+        QSharedPointer<HSSRule> rulesGet(size_t index) const;
+        void rulesRemove(size_t index);
         void rulesRemoveLast();
         size_t rulesSize() const;
         void setRuleStatus(QSharedPointer<HSSRule> rule, HSSRuleState newValue);

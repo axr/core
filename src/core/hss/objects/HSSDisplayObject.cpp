@@ -490,12 +490,12 @@ void HSSDisplayObject::rulesAdd(QSharedPointer<HSSRule> newRule, HSSRuleState de
     }
 }
 
-QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(unsigned index) const
+QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(size_t index) const
 {
     return this->rules[index]->rule;
 }
 
-void HSSDisplayObject::rulesRemove(unsigned index)
+void HSSDisplayObject::rulesRemove(size_t index)
 {
     QSharedPointer<HSSRule> rule = this->rules[index]->rule;
     Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, rule->getSelectorChains())
