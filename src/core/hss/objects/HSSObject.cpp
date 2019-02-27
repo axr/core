@@ -375,6 +375,7 @@ bool HSSObject::isFunction(AXRString value, AXRString property)
             || value == "replaceFlag"
             || value == "attr"
             || value == "log"
+            || value == "override"
             )
     {
         return true;

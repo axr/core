@@ -241,7 +241,11 @@ namespace AXR
         HSSFunctionTypeFlag, /**< Toggles the given flag on the selected elements. */
         HSSFunctionTypeCustom, /**< A function whose name has been registered on the core with a callback. */
         HSSFunctionTypeAttr, /**< Returns a value from an attribute of an XML element. */
-        HSSFunctionTypeLog /**< Prints values to the console. */
+        HSSFunctionTypeLog, /**< Prints values to the console. */
+        HSSFunctionTypeOverride, /**< Sets properties to override cascade ones. */
+        HSSFunctionTypeStartTimer, /**< Adds a timer of repeating execution. */
+        HSSFunctionTypeStopTimer, /**< Removes a timer of repeating execution. */
+        HSSFunctionTypeToggleTimer, /**< Adds or removes a timer of repeating execution. */
     };
     /** @} */
 
