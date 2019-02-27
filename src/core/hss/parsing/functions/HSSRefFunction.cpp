@@ -206,7 +206,10 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
     this->_isAttached = true;
     if (selection->empty())
     {
-        // ignore
+        if (this->_value)
+        {
+            this->_value.clear();
+        }
     }
     else if (selection->size() == 1)
     {
