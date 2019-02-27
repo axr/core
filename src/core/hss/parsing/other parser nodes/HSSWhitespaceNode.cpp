@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,64 +41,64 @@
  *
  ********************************************************************/
 
+#include "HSSWhitespaceNode.h"
 #include "HSSDisplayObject.h"
-#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::createConstant(AXRString value, AXRController * controller)
+QSharedPointer<HSSWhitespaceNode> HSSWhitespaceNode::createWhitespace(AXRString value, AXRController * controller)
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(value, controller));
+    return QSharedPointer<HSSWhitespaceNode>(new HSSWhitespaceNode(value, controller));
 }
 
-HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * controller)
-: HSSParserNode(HSSParserNodeTypeObjectNameConstant, controller)
+HSSWhitespaceNode::HSSWhitespaceNode(AXRString value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeWhitespaceNode, controller)
 {
     this->value = value;
 }
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::clone() const
+QSharedPointer<HSSWhitespaceNode> HSSWhitespaceNode::clone() const
 {
-    return qSharedPointerCast<HSSObjectNameConstant> (this->cloneImpl());
+    return qSharedPointerCast<HSSWhitespaceNode> (this->cloneImpl());
 }
 
-HSSObjectNameConstant::~HSSObjectNameConstant()
+HSSWhitespaceNode::~HSSWhitespaceNode()
 {
-
+    
 }
 
-void HSSObjectNameConstant::setValue(AXRString newValue)
+void HSSWhitespaceNode::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-AXRString HSSObjectNameConstant::getValue()
+AXRString HSSWhitespaceNode::getValue()
 {
     return this->value;
 }
 
-AXRString HSSObjectNameConstant::toString()
-{
-    return "HSSObjectNameConstant with value " + this->value;
-}
-
-AXRString HSSObjectNameConstant::stringRep()
+AXRString HSSWhitespaceNode::toString()
 {
     return this->value;
 }
 
-bool HSSObjectNameConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+AXRString HSSWhitespaceNode::stringRep()
+{
+    return this->value;
+}
+
+bool HSSWhitespaceNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same
     if (this == otherNode.data()) return true;
     //other checks
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
-    QSharedPointer<HSSObjectNameConstant> castedNode = qSharedPointerCast<HSSObjectNameConstant>(otherNode);
+    QSharedPointer<HSSWhitespaceNode> castedNode = qSharedPointerCast<HSSWhitespaceNode>(otherNode);
     if ( this->value != castedNode->value ) return false;
     return true;
 }
 
-QSharedPointer<HSSClonable> HSSObjectNameConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSWhitespaceNode::cloneImpl() const
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(*this));
+    return QSharedPointer<HSSWhitespaceNode>(new HSSWhitespaceNode(*this));
 }

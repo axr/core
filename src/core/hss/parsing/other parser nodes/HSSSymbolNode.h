@@ -41,71 +41,63 @@
  *
  ********************************************************************/
 
-#ifndef HSSOBJECTNAMECONSTANT_H
-#define HSSOBJECTNAMECONSTANT_H
+#ifndef HSSSYMBOLNODE_H
+#define HSSSYMBOLNODE_H
 
 #include "HSSParserNode.h"
 
 namespace AXR
 {
     /**
-     *  @brief Parser node that represents an object name constant.
-     *
-     *  When using object names in HSS, the system will look up the object with the name
-     *  encapsulated in this class from the object tree on AXRController.
+     *  @brief Parser node that holds whitespace.
      */
-    class AXR_API HSSObjectNameConstant : public HSSParserNode
+    class AXR_API HSSSymbolNode : public HSSParserNode
     {
     public:
-        static QSharedPointer<HSSObjectNameConstant> createConstant(AXRString value, AXRController * controller);
+        static QSharedPointer<HSSSymbolNode> createSymbol(AXRString value, AXRController * controller);
+        
         /**
-         *  Creates a new instance of a object name constant, with given name.
-         *  @param  value   A string containing the object name.
+         *  Creates a new instance of a symbol node which holds the given string.
+         *  @param value    A string containing the value for the symbol node.
          */
-        HSSObjectNameConstant(AXRString value, AXRController * controller);
-
+        HSSSymbolNode(AXRString value, AXRController * controller);
+        
         /**
-         *  Clones an instance of HSSObjectNameConstant and gives a shared pointer of the
+         *  Clones an instance of HSSSymbolNode and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSObjectNameConstant.
+         *  @return A shared pointer to the new HSSSymbolNode
          */
-        QSharedPointer<HSSObjectNameConstant> clone() const;
-
+        QSharedPointer<HSSSymbolNode> clone() const;
+        
         /**
          *  Destructor for this class.
          */
-        virtual ~HSSObjectNameConstant();
-
+        virtual ~HSSSymbolNode();
+        
         /**
-         *  Setter for the value of the object name constant.
-         *  @param newValue     A string containing the new object name.
+         *  Setter for the value.
+         *  @param newValue     A string containing the new value for this constant.
          */
         void setValue(AXRString newValue);
-
+        
         /**
-         *  Getter for the value of the object name constant.
-         *  @return A string containing the object name.
+         *  Getter for the value.
          */
         AXRString getValue();
-
-        /**
-         *  Prints itself as a textual representation, useful for loggin or introspection.
-         *  @return A string containing a textual representation of the keyword constant.
-         */
+        
         AXRString toString();
-
         AXRString stringRep();
-
+        
         /**
          *  Each node overrides this method to compare against another node
          *  @param otherNode    The other object to compare to
          *  @return Wether the node is equal to the given one.
          */
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
-
+        
     protected:
         AXRString value;
-
+        
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };

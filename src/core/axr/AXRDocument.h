@@ -45,6 +45,7 @@
 #define AXRDOCUMENT_H
 
 #include "AXRGlobal.h"
+#include "HSSParserReceiver.h"
 
 class QDir;
 template <class T> class QSharedPointer;
@@ -55,9 +56,9 @@ namespace AXR
     class AXRController;
     class AXRDocumentPrivate;
     class HSSAbstractValueChangedCallback;
+    class HSSCodeParser;
     class HSSInputEvent;
     class HSSObject;
-    class HSSParser;
     class HSSRect;
     class HSSRenderer;
     class HSSVisitorManager;
@@ -67,7 +68,7 @@ namespace AXR
      * @brief Represents a single AXR document that can be rendered. A document
      * may be composed of one or more files.
      */
-    class AXR_API AXRDocument
+    class AXR_API AXRDocument : public HSSParserReceiver
     {
         Q_DISABLE_COPY(AXRDocument)
     public:
@@ -152,12 +153,12 @@ namespace AXR
          *  Getter for the shared pointer to the HSS parser.
          *  @return A shared pointer to the HSS parser.
          */
-        QSharedPointer<HSSParser> hssParser() const;
+        QSharedPointer<HSSCodeParser> hssParser() const;
         /**
          *  Setter for the XMLParser that will be used to parse HSS files.
          *  @param parser   A shared pointer to the HSS parser.
          */
-        void setHssParser(QSharedPointer<HSSParser> parser);
+        void setHssParser(QSharedPointer<HSSCodeParser> parser);
 
         /**
          *  When a function name in HSS is checked for existence, this tells wether
@@ -225,6 +226,10 @@ namespace AXR
          *  @return Wether it has been loaded successfully or not.
          */
         bool loadHssFile(const QUrl &url);
+
+        bool loadHssFile(QSharedPointer<AXRBuffer> buffer);
+        void receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HSSParserNode> node);
+
         /**
          *  Reloads the file that is currently loaded.
          *  @return Wether it has been reloaded successfully or not.

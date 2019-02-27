@@ -51,11 +51,15 @@
 #include "AXRWarning.h"
 #include "HSSCascader.h"
 #include "HSSCallback.h"
+#include "HSSCodeParser.h"
 #include "HSSContainer.h"
 #include "HSSLayout.h"
 #include "HSSMouseEvent.h"
-#include "HSSParser.h"
+#include "HSSObjectDefinition.h"
+#include "HSSParserNode.h"
 #include "HSSRenderer.h"
+#include "HSSRule.h"
+#include "HSSStatement.h"
 #include "HSSVisitorManager.h"
 #include "XMLParser.h"
 
@@ -94,7 +98,7 @@ namespace AXR
         QDir directory;
 
         QSharedPointer<XMLParser> parserXML;
-        QSharedPointer<HSSParser> parserHSS;
+        QSharedPointer<HSSCodeParser> parserHSS;
 
         QMap<AXRString, HSSAbstractValueChangedCallback*> customFunctions;
 
@@ -112,7 +116,9 @@ AXRDocument::AXRDocument()
     QSharedPointer<AXRController> ctrlr = QSharedPointer<AXRController>(new AXRController(this));
     this->setController(ctrlr);
     this->setXmlParser(QSharedPointer<XMLParser>(new XMLParser(ctrlr.data())));
-    this->setHssParser(QSharedPointer<HSSParser>(new HSSParser(ctrlr.data())));
+    QSharedPointer<HSSCodeParser> hssParser = QSharedPointer<HSSCodeParser>(new HSSCodeParser(this));
+    hssParser->setController(ctrlr.data());
+    this->setHssParser(hssParser);
     QSharedPointer<HSSVisitorManager>vm(new HSSVisitorManager(ctrlr.data()));
     this->setVisitorManager(vm);
     d->cascadeVisitor->setDocument(this);
@@ -274,12 +280,12 @@ void AXRDocument::setXmlParser(QSharedPointer<XMLParser> parser)
     d->parserXML = parser;
 }
 
-QSharedPointer<HSSParser> AXRDocument::hssParser() const
+QSharedPointer<HSSCodeParser> AXRDocument::hssParser() const
 {
     return d->parserHSS;
 }
 
-void AXRDocument::setHssParser(QSharedPointer<HSSParser> parser)
+void AXRDocument::setHssParser(QSharedPointer<HSSCodeParser> parser)
 {
     d->parserHSS = parser;
 }

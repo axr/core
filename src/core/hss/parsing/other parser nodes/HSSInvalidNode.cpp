@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,64 +41,64 @@
  *
  ********************************************************************/
 
+#include "HSSInvalidNode.h"
 #include "HSSDisplayObject.h"
-#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::createConstant(AXRString value, AXRController * controller)
+QSharedPointer<HSSInvalidNode> HSSInvalidNode::createInvalidNode(AXRString value, AXRController * controller)
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(value, controller));
+    return QSharedPointer<HSSInvalidNode>(new HSSInvalidNode(value, controller));
 }
 
-HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * controller)
-: HSSParserNode(HSSParserNodeTypeObjectNameConstant, controller)
+HSSInvalidNode::HSSInvalidNode(AXRString value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeInvalidNode, controller)
 {
     this->value = value;
 }
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::clone() const
+QSharedPointer<HSSInvalidNode> HSSInvalidNode::clone() const
 {
-    return qSharedPointerCast<HSSObjectNameConstant> (this->cloneImpl());
+    return qSharedPointerCast<HSSInvalidNode> (this->cloneImpl());
 }
 
-HSSObjectNameConstant::~HSSObjectNameConstant()
+HSSInvalidNode::~HSSInvalidNode()
 {
-
+    
 }
 
-void HSSObjectNameConstant::setValue(AXRString newValue)
+void HSSInvalidNode::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-AXRString HSSObjectNameConstant::getValue()
+AXRString HSSInvalidNode::getValue()
 {
     return this->value;
 }
 
-AXRString HSSObjectNameConstant::toString()
-{
-    return "HSSObjectNameConstant with value " + this->value;
-}
-
-AXRString HSSObjectNameConstant::stringRep()
+AXRString HSSInvalidNode::toString()
 {
     return this->value;
 }
 
-bool HSSObjectNameConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+AXRString HSSInvalidNode::stringRep()
+{
+    return this->value;
+}
+
+bool HSSInvalidNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same
     if (this == otherNode.data()) return true;
     //other checks
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
-    QSharedPointer<HSSObjectNameConstant> castedNode = qSharedPointerCast<HSSObjectNameConstant>(otherNode);
+    QSharedPointer<HSSInvalidNode> castedNode = qSharedPointerCast<HSSInvalidNode>(otherNode);
     if ( this->value != castedNode->value ) return false;
     return true;
 }
 
-QSharedPointer<HSSClonable> HSSObjectNameConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSInvalidNode::cloneImpl() const
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(*this));
+    return QSharedPointer<HSSInvalidNode>(new HSSInvalidNode(*this));
 }

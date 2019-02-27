@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,64 +41,64 @@
  *
  ********************************************************************/
 
+#include "HSSSymbolNode.h"
 #include "HSSDisplayObject.h"
-#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::createConstant(AXRString value, AXRController * controller)
+QSharedPointer<HSSSymbolNode> HSSSymbolNode::createSymbol(AXRString value, AXRController * controller)
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(value, controller));
+    return QSharedPointer<HSSSymbolNode>(new HSSSymbolNode(value, controller));
 }
 
-HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * controller)
-: HSSParserNode(HSSParserNodeTypeObjectNameConstant, controller)
+HSSSymbolNode::HSSSymbolNode(AXRString value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeSymbolNode, controller)
 {
     this->value = value;
 }
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::clone() const
+QSharedPointer<HSSSymbolNode> HSSSymbolNode::clone() const
 {
-    return qSharedPointerCast<HSSObjectNameConstant> (this->cloneImpl());
+    return qSharedPointerCast<HSSSymbolNode> (this->cloneImpl());
 }
 
-HSSObjectNameConstant::~HSSObjectNameConstant()
+HSSSymbolNode::~HSSSymbolNode()
 {
-
+    
 }
 
-void HSSObjectNameConstant::setValue(AXRString newValue)
+void HSSSymbolNode::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-AXRString HSSObjectNameConstant::getValue()
+AXRString HSSSymbolNode::getValue()
 {
     return this->value;
 }
 
-AXRString HSSObjectNameConstant::toString()
-{
-    return "HSSObjectNameConstant with value " + this->value;
-}
-
-AXRString HSSObjectNameConstant::stringRep()
+AXRString HSSSymbolNode::toString()
 {
     return this->value;
 }
 
-bool HSSObjectNameConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+AXRString HSSSymbolNode::stringRep()
+{
+    return this->value;
+}
+
+bool HSSSymbolNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same
     if (this == otherNode.data()) return true;
     //other checks
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
-    QSharedPointer<HSSObjectNameConstant> castedNode = qSharedPointerCast<HSSObjectNameConstant>(otherNode);
+    QSharedPointer<HSSSymbolNode> castedNode = qSharedPointerCast<HSSSymbolNode>(otherNode);
     if ( this->value != castedNode->value ) return false;
     return true;
 }
 
-QSharedPointer<HSSClonable> HSSObjectNameConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSSymbolNode::cloneImpl() const
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(*this));
+    return QSharedPointer<HSSSymbolNode>(new HSSSymbolNode(*this));
 }

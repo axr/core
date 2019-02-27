@@ -41,14 +41,14 @@
  *
  ********************************************************************/
 
-#ifndef HSSPARSER_H
-#define HSSPARSER_H
+#ifndef HSSCODEPARSER_H
+#define HSSCODEPARSER_H
 
-#include <stack>
 #include <vector>
-#include <QSharedPointer>
-#include <QList>
+#include "AXRGlobal.h"
 #include "HSSTokenType.h"
+
+template <class T> class QSharedPointer;
 
 namespace AXR
 {
@@ -70,81 +70,148 @@ namespace AXR
     };
     /** @} */
 
+    class AXRBuffer;
     class AXRController;
+    class HSSCodeParserPrivate;
+    class HSSParserReceiver;
     class HSSCombinator;
     class HSSFilter;
     class HSSInstruction;
     class HSSNameSelector;
     class HSSObject;
+    class HSSObjectDefinition;
+    class HSSParserNode;
     class HSSPropertyDefinition;
     class HSSPropertyPath;
+    class HSSRule;
+    class HSSSelectorChain;
     class HSSSimpleSelector;
     class HSSToken;
-    class HSSTokenizer;
-    class HSSValue;
 
-    /**
-     *  @brief This class reads an HSS file and, with the help of HSSTokenizer, converts
-     *  the code into a tree of parser nodes.
-     *
-     *  This is one of the fundamental pieces of the system. When loadFile() is called it
-     *  places the tokenizer at the beginning of the file and then reads through it calling
-     *  readNextStatement() until done, processing each statement as needed, depending on
-     *  what type it is (e.g. adds the rule to the controller).
-     */
-    class AXR_API HSSParser
+    class AXR_API HSSCodeParser
     {
-        Q_DISABLE_COPY(HSSParser)
+        Q_DISABLE_COPY(HSSCodeParser)
     public:
-
         /**
-         *  @todo remove this friend and fix access control
+         *  Creates a new HSSCodeParser object.
+         *  @param receiver     The object which will receive the notifications
          */
-        friend class AXRController;
-
+        HSSCodeParser(HSSParserReceiver * receiver);
+        
         /**
-         *  Creates a new instance of a parser object, linking it to the given controller.
-         *  It will create a new instance of a HSSTokenizer automatically, and set the current context to root.
-         *
-         *  @param theController    A regular pointer to the controller associated to this parser.
+         *  Destroys the object
          */
-        HSSParser(AXRController * theController);
-
+        virtual ~HSSCodeParser();
+        
         /**
-         *  Destructor for this class. Clears the currentObjectContext stack and the loaded files.
-         */
-        virtual ~HSSParser();
-
-        /**
-         *  Reset the parser to initial values, for example when reloading a file.
+         *  Reset everything to default values, so that we can start
+         *  from fresh.
          */
         void reset();
-
+        
         /**
-         *  If a file is not already loaded, this will set the file on the tokenizer, initialize it
-         *  to the beginning of the file and then, until done, loop over all statements found
-         *  in the document.
-         *
-         *  @param  file    A shared pointer to the AXRBuffer representing the HSS file.
+         *  @return tells wether a file has been loaded or not
          */
+        bool isFileLoaded() const;
+        
+        /**
+         *  @return returns the current AXRBuffer that is opened. This can be either
+         *  an XML or an HSS file.
+         */
+        QSharedPointer<AXRBuffer> file() const;
+        
+        /**
+         *  Sets the current AXRBuffer to be used as the base document.
+         *  @param file     The AXRBuffer to store for later use.
+         */
+        void setFile(QSharedPointer<AXRBuffer> file);
+
+        AXRController * controller();
+        void setController(AXRController * controller);
+        
         bool loadFile(QSharedPointer<AXRBuffer> file);
+        
+        /**
+         *  Parses the file and builds up the document tree
+         *  @param parser   A shared pointer to the HSS parser.
+         */
+        bool parseHssFile(QSharedPointer<AXRBuffer> buffer);
+        
+        bool readNextStatement();
+        void readNextToken();
+        bool atEndOfSource();
+        void skip(HSSTokenType type);
 
         /**
-         *  Reads the next statement in the document. This is called over and over again by loadFile().
-         *  At this stage, we look at the current token and determine what kind of statement to create
-         *  based on that. For color instructions, it creates a new object definition on the fly; for
-         *  object signs, it reads the object definition; for identifiers, * and combinator symbols,
-         *  it reads a rule; and comments are encapsulated and returned.
-         *
-         *  For a rule, it adds it to the rules list on the controller; for an object defnition it
-         *  recursively adds it  to the object tree on the controller as well as copying all the property
-         *  definitions from the parent to the child rule; comments are added to the parser node tree, but
-         *  skipped otherwise; and for instructions, the only allowed statement instruction is \#import which
-         *  will be executed immediately.
-         *
-         *  @return Wether we arrived at the end of file or not
+         *  This will read the next token until a semicolon or a closing block are found. It will recursively
+         *  call itself when reading an opening block, to balance them out.
          */
-        bool readNextStatement();
+        void skipUntilEndOfStatement();
+
+        /**
+         *  Shorthand for readPropertyDefinition(bool shorhandChecked, bool isShorthand), passing
+         *  false to both parameters.
+         *
+         *  @return The property definition that was read.
+         */
+        QSharedPointer<HSSPropertyDefinition> readPropertyDefinition();
+
+        /**
+         *  Reads the property definition. If it is a shorthand, it gets the property name from the
+         *  current object context. It also reads the value directly in the same function.
+         *  @param shorthandChecked     For performance reasons, if we already checked the shorthand
+         *                              we can avoid it to be checked again passing false to this parameter.
+         *  @param isShorthand          If shorthand was checked, pass the value here.
+         *
+         *  @todo should reading values go into a separate function, maybe called readValue()?
+         */
+        QSharedPointer<HSSPropertyDefinition> readPropertyDefinition(bool shorthandChecked, bool isShorthand);
+
+        /**
+         *  Reads one or more values, separated by comma.
+         *
+         *  @return Wether an error was found.
+         */
+        bool readValues(const QSharedPointer<HSSParserNode> &target, AXRString propertyName);
+
+        /**
+         *  Reads a property path, with all its nodes.
+         *
+         *  @return The property path that was read.
+         */
+        QSharedPointer<HSSPropertyPath> readPropertyPath();
+
+        /**
+         *  Shorthand for readInstruction(bool preferHex), passing true to the parameter.
+         *
+         *  @return A shared pointer to the instruction that was read.
+         */
+        QSharedPointer<HSSInstruction> readInstruction();
+        
+        /**
+         *  Reads the instruction, passing preferHex to the tokenizer. If it is a hex number, it
+         *  reads a color instruction, and if it is a identifier it looks for the name and creates
+         *  the corresponding one.
+         *
+         *  @param preferHex    If we give preference to hexadecimal values when reading numbers.
+         *  @return A shared pointer to the instruction that was read.
+         */
+        QSharedPointer<HSSInstruction> readInstruction(bool preferHex);
+
+        /**
+         *  Converts the given instruction to an object definition, depending on the type. Right now
+         *  only does color instructions.
+         *
+         *  @return A shared pointer to the object definition.
+         */
+        QSharedPointer<HSSObjectDefinition> getObjectFromInstruction(QSharedPointer<HSSInstruction> instruction);
+
+        /**
+         *  Reads the instruction, then the rule and then sets the instruction on the rule.
+         *
+         *  @return A shared pointer to the rule that was read.
+         */
+        QSharedPointer<HSSRule> readInstructionRule();
 
         /**
          *  Reads the selector chain and then the block, looping until the block is closed.
@@ -245,76 +312,18 @@ namespace AXR
         void recursiveAddObjectDefinition(QSharedPointer<HSSObjectDefinition> objDef);
 
         /**
-         *  Shorthand for readPropertyDefinition(bool shorhandChecked, bool isShorthand), passing
-         *  false to both parameters.
-         *
-         *  @return The property definition that was read.
-         */
-        QSharedPointer<HSSPropertyDefinition> readPropertyDefinition();
-
-        /**
-         *  Reads the property definition. If it is a shorthand, it gets the property name from the
-         *  current object context. It also reads the value directly in the same function.
-         *  @param shorthandChecked     For performance reasons, if we already checked the shorthand
-         *                              we can avoid it to be checked again passing false to this parameter.
-         *  @param isShorthand          If shorthand was checked, pass the value here.
-         *
-         *  @todo should reading values go into a separate function, maybe called readValue()?
-         */
-        QSharedPointer<HSSPropertyDefinition> readPropertyDefinition(bool shorthandChecked, bool isShorthand);
-
-        /**
-         *  Reads a property path, with all its nodes.
-         *
-         *  @return The property path that was read.
-         */
-        QSharedPointer<HSSPropertyPath> readPropertyPath();
-
-        /**
-         *  Shorthand for readInstruction(bool preferHex), passing true to the parameter.
-         *
-         *  @return A shared pointer to the instruction that was read.
-         */
-        QSharedPointer<HSSInstruction> readInstruction();
-
-        /**
-         *  Reads the instruction, passing preferHex to the tokenizer. If it is a hex number, it
-         *  reads a color instruction, and if it is a identifier it looks for the name and creates
-         *  the corresponding one.
-         *
-         *  @param preferHex    If we give preference to hexadecimal values when reading numbers.
-         *  @return A shared pointer to the instruction that was read.
-         */
-        QSharedPointer<HSSInstruction> readInstruction(bool preferHex);
-
-        /**
-         *  Converts the given instruction to an object definition, depending on the type. Right now
-         *  only does color instructions.
-         *
-         *  @return A shared pointer to the object definition.
-         */
-        QSharedPointer<HSSObjectDefinition> getObjectFromInstruction(QSharedPointer<HSSInstruction> instruction);
-
-        /**
-         *  Reads the instruction, then the rule and then sets the instruction on the rule.
-         *
-         *  @return A shared pointer to the rule that was read.
-         */
-        QSharedPointer<HSSRule> readInstructionRule();
-
-        /**
          *  Reads an expression, or the value if it isn't one. If it contains parentheses it will recursively
          *  @return A shared pointer to the parser node that was read.
          */
         QSharedPointer<HSSParserNode> readExpression();
-
+        
         /**
          *  The part that reads sums and subtractions. Do not call directly, use readExpression() instead.
          *  It will call readMultiplicativeExpression() for each member.
          *  @return A shared pointer to the parser node that was read.
          */
         QSharedPointer<HSSParserNode> readAdditiveExpression();
-
+        
         /**
          *  The part that reads multiplications and divisions. Do not call directly, use readExpression() instead.
          *  It will call readBaseExpression() for each member.
@@ -328,12 +337,7 @@ namespace AXR
          */
         QSharedPointer<HSSParserNode> readBaseExpression();
 
-        /**
-         *  Creates a filter and sets its name with the value of the current token.
-         *  @return A shared pointer to the filter that was read.
-         *  @warning This method assumes the current token to be an identifier
-         */
-        //QSharedPointer<HSSParserNode> readFilter();
+        QSharedPointer<HSSParserNode> readValue(AXRString propertyName, bool &valid);
 
         /**
          *  Creates a flag and sets its name with the value of the current token.
@@ -341,7 +345,7 @@ namespace AXR
          *  @warning This method assumes the current token to be an identifier
          */
         QSharedPointer<HSSParserNode> readFlag();
-
+        
         /**
          *  If an identifier is read, and depending on the name in the current token, it creates the corresponding
          *  function, along with the parentheses and parameters.
@@ -350,149 +354,103 @@ namespace AXR
          *  @todo why does this not return a HSSFunction pointer?
          */
         QSharedPointer<HSSParserNode> readFunction();
-
+        
         /**
          *  Reads a function of type ref([<property> ]of <selector-chain>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readRefFunction();
-
+        
         /**
          *  Reads a function of type sel(<selector-chain>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readSelFunction();
-
+        
         /**
-         *  Reads a function of type flag|unflag|toggleFlag|takeFlag(<flag name>[ of <selector-chain>]).
+         *  Reads a function of type flag|unflag|addFlag| takeFlag(<flag name>[ of
+         *  <selector-chain>]) | replaceFlag(<flag name>, <flag name2>[ of <selector-chain>]).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readFlagFunction();
-
+        
         /**
          *  Reads a function of type attr(<attribute name>[ of <selector-chain>]).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readAttrFunction();
-
+        
         /**
          *  Reads a function of type min(<minimum value>, <otherwise>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readMinFunction();
-
+        
         /**
          *  Reads a function of type max(<maximum value>, <otherwise>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readMaxFunction();
-
+        
         /**
          *  Reads a function of type ceil(<value>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readCeilFunction();
-
+        
         /**
          *  Reads a function of type floor(<value>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readFloorFunction();
-
+        
         /**
          *  Reads a function of type round(<value>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readRoundFunction();
-
+        
         /**
          *  Reads a function of type log(<value>).
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readLogFunction();
+        
+        /**
+         *  Reads a function of type override(<selector>) { <property defs> }.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readOverrideFunction();
+
+        /**
+         *  Reads a function of type startTimer(<id>, <function>, <ms>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readStartTimerFunction();
+
+        /**
+         *  Reads a function of type stopTimer(<id>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readStopTimerFunction();
+
+        /**
+         *  Reads a function of type toggleTimer(<id>, <function>, <ms>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readToggleTimerFunction();
+
+        /**
+         *  Read a function of type insert(<text>).
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readInsertFunction();
 
         /**
          *  Reads a custom function.
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readCustomFunction();
-
-        /**
-         *  Shorthand for readNextToken(bool checkForUnexpectedEndOfSource) passing false to the parameter.
-         */
-        void readNextToken();
-
-        /**
-         *  Get the next token from the tokenizer. It will also update the line and columns we are at.
-         *  @param checkForUnexpectedEndOfSource    Wether to check and throw an error on unexpected end of file.
-         */
-        void readNextToken(bool checkForUnexpectedEndOfSource);
-
-        /**
-         *  @return Wether we are at the end of the file or not.
-         */
-        bool atEndOfSource();
-
-        /**
-         *  Check if we are at the end of source and if so, throw an error.
-         */
-        void checkForUnexpectedEndOfSource();
-
-        /**
-         *  Shorthand for skipExpected(HSSTokenType, bool) passing false to the last parameter.
-         *  @param type     The token type to expect.
-         */
-        void skipExpected(HSSTokenType type);
-
-        /**
-         *  Checks if the type of the current token is of the given type, and if not, throws an error,
-         *  otherwise reads the next token.
-         *  @param type                             The token type to check against.
-         *  @param checkForUnexpectedEndOfSource    Wether to check and throw an error on unexpected end of file.
-         */
-        void skipExpected(HSSTokenType type, bool checkForUnexpectedEndOfSource);
-
-        /**
-         *  Shorthand for skipExpected(HSSTokenType, AXRString, false) passing false to the last parameter.
-         *  @param type     The token type to expect.
-         *  @param value    The string value to expect.
-         */
-        void skipExpected(HSSTokenType type, AXRString value);
-
-        /**
-         *  Check if the current token matches the given type and value.
-         *  @param type                             The token type to expect (not used).
-         *  @param value                            The string value to expect.
-         *  @param checkForUnexpectedEndOfSource    Wether to check and throw an error on unexpected end of file.
-         *
-         *  @warning this method assumes the current token to be a value token.
-         */
-        void skipExpected(HSSTokenType type, AXRString value, bool checkForUnexpectedEndOfSource);
-
-        /**
-         *  Shorthand for skip(HSSTokenType, bool), passing false as the last parameter.
-         *  @param type The token type to skip.
-         */
-        void skip(HSSTokenType type);
-
-        /**
-         *  If the current token is of given type, read the next token.
-         *  @param type                             The token type to skip.
-         *  @param checkForUnexpectedEndOfSource    Wether to check and throw an error on unexpected end of file.
-         */
-        void skip(HSSTokenType type, bool checkForUnexpectedEndOfSource);
-
-        /**
-         *  This will read the next token until a semicolon or a closing block are found. It will recursively
-         *  call itself when reading an opening block, to balance them out.
-         */
-        void skipUntilEndOfStatement();
-
-        /**
-         *  Throws an error if the current token is not of the given type.
-         *  @param type     The token type to compare against.
-         */
-        void expect(HSSTokenType type);
 
         /**
          *  Removes the last element from the current object context.
@@ -509,43 +467,9 @@ namespace AXR
          *  @param theObject        A shared pointer to the object that should be made the new object context.
          */
         void currentObjectContextAdd(QSharedPointer<HSSObject> theObject);
-
-        QSharedPointer<HSSParserNode> readValue(AXRString propertyName, bool &valid);
-
-        /**
-         *  Setter for the controller. The controller needs to be propagated across all
-         *  HSSParserNode subclasses, so they get access to the DOM and such.
-         *  @param controller       A pointer to the AXRController that owns this object
-         */
-        virtual void setController(AXRController *controller);
-        /**
-         *  Getter for the controller.
-         *  @return A pointer to the AXRController that owns this object
-         */
-        virtual AXRController* getController();
-
+        
     private:
-        QSharedPointer<HSSTokenizer> tokenizer;
-        //weak pointer
-        AXRController * controller;
-
-        QSharedPointer<HSSToken> currentToken;
-        std::vector<HSSParserContext> currentContext;
-        std::stack<QSharedPointer<HSSObject> > currentObjectContext;
-
-        qint64 line;
-        qint64 column;
-
-        AXRString basepath;
-        QSharedPointer<AXRBuffer> currentFile;
-
-        QList<QSharedPointer<AXRBuffer> > loadedFiles;
-
-        QSharedPointer<HSSValue> _valueContextObj;
-        QSharedPointer<HSSContainer> _containerContextObj;
-        AXRString _lastObjectType;
-
+        HSSCodeParserPrivate *const d;
     };
 }
-
-#endif
+#endif /* HSSCODEPARSER_H */

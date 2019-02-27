@@ -47,6 +47,7 @@
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCallback.h"
+#include "HSSCodeParser.h"
 #include "HSSContainer.h"
 #include "HSSDisplayObject.h"
 #include "HSSFlag.h"
@@ -56,7 +57,6 @@
 #include "HSSNameSelector.h"
 #include "HSSNumberConstant.h"
 #include "HSSObjectDefinition.h"
-#include "HSSParser.h"
 #include "HSSRule.h"
 #include "HSSSelection.h"
 #include "HSSSelectorChain.h"
@@ -995,7 +995,7 @@ QSharedPointer<HSSContainer> & AXRController::root() const
 void AXRController::setRoot(QSharedPointer<HSSContainer> newRoot)
 {
     d->root = newRoot;
-    QSharedPointer<HSSParser> hssparser = this->document()->hssParser();
+    QSharedPointer<HSSCodeParser> hssparser = this->document()->hssParser();
     if (hssparser->currentObjectContextSize() == 0)
     {
         hssparser->currentObjectContextAdd(newRoot);

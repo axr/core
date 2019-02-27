@@ -59,7 +59,7 @@ namespace AXR
     class AXR_API HSSFunction : public HSSParserNode
     {
     public:
-        friend class HSSParser;
+        friend class HSSCodeParser;
 
         /**
          *  Clones an instance of HSSFunction and gives a shared pointer of the

@@ -77,7 +77,11 @@ namespace AXR
         HSSParserNodeTypeFlag, /**< Conditionally applies properties to elements. */
         HSSParserNodeTypeRootSelector, /**< Returns the root element. */
         HSSParserNodeTypePropertyPath, /**< A path to access properties in a tree of objects. */
-        HSSParserNodeTypePropertyPathNode /**< Each node in a property path. */
+        HSSParserNodeTypePropertyPathNode, /**< Each node in a property path. */
+        HSSParserNodeTypeWhitespaceNode, /**< Whitespace. */
+        HSSParserNodeTypeCommentNode, /**< Comments. */
+        HSSParserNodeTypeSymbolNode, /**< Other symbols. */
+        HSSParserNodeTypeInvalidNode /**< Node type for holding invalid code. */
     };
     /** @} */
 

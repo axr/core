@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,64 +41,64 @@
  *
  ********************************************************************/
 
+#include "HSSCommentNode.h"
 #include "HSSDisplayObject.h"
-#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::createConstant(AXRString value, AXRController * controller)
+QSharedPointer<HSSCommentNode> HSSCommentNode::createComment(AXRString value, AXRController * controller)
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(value, controller));
+    return QSharedPointer<HSSCommentNode>(new HSSCommentNode(value, controller));
 }
 
-HSSObjectNameConstant::HSSObjectNameConstant(AXRString value, AXRController * controller)
-: HSSParserNode(HSSParserNodeTypeObjectNameConstant, controller)
+HSSCommentNode::HSSCommentNode(AXRString value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeCommentNode, controller)
 {
     this->value = value;
 }
 
-QSharedPointer<HSSObjectNameConstant> HSSObjectNameConstant::clone() const
+QSharedPointer<HSSCommentNode> HSSCommentNode::clone() const
 {
-    return qSharedPointerCast<HSSObjectNameConstant> (this->cloneImpl());
+    return qSharedPointerCast<HSSCommentNode> (this->cloneImpl());
 }
 
-HSSObjectNameConstant::~HSSObjectNameConstant()
+HSSCommentNode::~HSSCommentNode()
 {
-
+    
 }
 
-void HSSObjectNameConstant::setValue(AXRString newValue)
+void HSSCommentNode::setValue(AXRString newValue)
 {
     this->value = newValue;
 }
 
-AXRString HSSObjectNameConstant::getValue()
+AXRString HSSCommentNode::getValue()
 {
     return this->value;
 }
 
-AXRString HSSObjectNameConstant::toString()
-{
-    return "HSSObjectNameConstant with value " + this->value;
-}
-
-AXRString HSSObjectNameConstant::stringRep()
+AXRString HSSCommentNode::toString()
 {
     return this->value;
 }
 
-bool HSSObjectNameConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+AXRString HSSCommentNode::stringRep()
+{
+    return "//"+this->value;
+}
+
+bool HSSCommentNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
 {
     //check wether pointers are the same
     if (this == otherNode.data()) return true;
     //other checks
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
-    QSharedPointer<HSSObjectNameConstant> castedNode = qSharedPointerCast<HSSObjectNameConstant>(otherNode);
+    QSharedPointer<HSSCommentNode> castedNode = qSharedPointerCast<HSSCommentNode>(otherNode);
     if ( this->value != castedNode->value ) return false;
     return true;
 }
 
-QSharedPointer<HSSClonable> HSSObjectNameConstant::cloneImpl() const
+QSharedPointer<HSSClonable> HSSCommentNode::cloneImpl() const
 {
-    return QSharedPointer<HSSObjectNameConstant>(new HSSObjectNameConstant(*this));
+    return QSharedPointer<HSSCommentNode>(new HSSCommentNode(*this));
 }
