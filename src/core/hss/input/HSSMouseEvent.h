@@ -41,6 +41,9 @@
  *
  ********************************************************************/
 
+#ifndef HSSMOUSEEVENT_H
+#define HSSMOUSEEVENT_H
+
 #include "HSSInputEvent.h"
 #include "HSSTypeEnums.h"
 
@@ -63,3 +66,5 @@ namespace AXR
         HSSMouseEventPrivate *const d;
     };
 }
+
+#endif

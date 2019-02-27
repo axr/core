@@ -41,6 +41,9 @@
  *
  ********************************************************************/
 
+#ifndef HSSINPUTEVENT_H
+#define HSSINPUTEVENT_H
+
 #include "AXRGlobal.h"
 #include "HSSTypeEnums.h"
 
@@ -61,3 +64,5 @@ namespace AXR
         HSSInputEventPrivate *const d;
     };
 }
+
+#endif
