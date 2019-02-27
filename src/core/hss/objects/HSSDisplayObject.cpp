@@ -753,6 +753,9 @@ void HSSDisplayObject::notifyWidth(QSharedPointer<HSSObject> theObj)
         this->_setOuterWidth(1.);
         this->setNeedsSurface(true);
         this->setNeedsLayout(true);
+        if (!this->isRoot()) {
+            this->getParent()->setNeedsLayout(true);
+        }
         this->setDirty(true);
     }
     this->notifyObservers("width", theObj);
@@ -773,6 +776,9 @@ void HSSDisplayObject::widthChanged(const AXRString target, const AXRString sour
 
         this->setNeedsSurface(true);
         this->setNeedsLayout(true);
+        if (!this->isRoot()) {
+            this->getParent()->setNeedsLayout(true);
+        }
         this->setDirty(true);
     }
     this->notifyObservers("width", this->getComputedValue("width"));
