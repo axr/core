@@ -449,7 +449,6 @@ inline void AXRController::recursiveApplyRulesToDisplayObjects(const QSharedPoin
             }
             d->currentContext.pop();
         }
-        displayObject->setNeedsRereadRules(true);
     }
 }
 
