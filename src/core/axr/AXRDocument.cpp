@@ -47,6 +47,7 @@
 #include "AXRBuffer.h"
 #include "AXRController.h"
 #include "AXRDocument.h"
+#include "AXRDocumentDelegate.h"
 #include "AXRLoggerManager.h"
 #include "AXRWarning.h"
 #include "HSSCascader.h"
@@ -72,7 +73,7 @@ namespace AXR
         friend class AXRDocument;
 
         AXRDocumentPrivate()
-        : isHSSOnly(), hasLoadedFile(), showLayoutSteps(), currentLayoutStep(), currentLayoutTick(),
+        : delegate(NULL), isHSSOnly(), hasLoadedFile(), showLayoutSteps(), currentLayoutStep(), currentLayoutTick(),
           currentLayoutChild(), needsDisplay(true), windowWidth(), windowHeight(), visitorManager(),
         controller(), file(), directory(), parserXML(), parserHSS(), customFunctions()
         , cascadeVisitor(new HSSCascader)
@@ -80,6 +81,8 @@ namespace AXR
         , renderVisitor(new HSSRenderer)
         {
         }
+        
+        AXRDocumentDelegate * delegate;
 
         bool isHSSOnly;
         bool hasLoadedFile;
@@ -133,6 +136,16 @@ AXRDocument::~AXRDocument()
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRDocument: destructing core");
     delete d;
+}
+
+AXRDocumentDelegate * AXRDocument::delegate()
+{
+    return d->delegate;
+}
+
+void AXRDocument::setDelegate(AXRDocumentDelegate * delegate)
+{
+    d->delegate = delegate;
 }
 
 AXRString AXRDocument::resourcesPath() const
@@ -470,6 +483,8 @@ bool AXRDocument::needsDisplay() const
 void AXRDocument::setNeedsDisplay(bool newValue)
 {
     d->needsDisplay = newValue;
+    if (d->delegate)
+        d->delegate->setNeedsDisplay(newValue);
 }
 
 QSharedPointer<AXRBuffer> AXRDocument::createDummyXml(const QUrl &hssUrl)

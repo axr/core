@@ -54,6 +54,7 @@ namespace AXR
 {
     class AXRBuffer;
     class AXRController;
+    class AXRDocumentDelegate;
     class AXRDocumentPrivate;
     class HSSAbstractValueChangedCallback;
     class HSSCodeParser;
@@ -81,6 +82,16 @@ namespace AXR
          *  Destroys the object
          */
         virtual ~AXRDocument();
+
+        /**
+         *  Returns the delegate object
+         */
+        AXRDocumentDelegate * delegate();
+
+        /**
+         *  Sets the delegate object
+         */
+        void setDelegate(AXRDocumentDelegate * delegate);
 
         /**
          * Gets the path to where the HSS framework resource files are stored.
