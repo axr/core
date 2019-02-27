@@ -122,6 +122,7 @@ namespace AXR
         QSharedPointer<HSSDisplayObject> front() const;
         QSharedPointer<HSSDisplayObject> back() const;
         void insert(iterator position, iterator first, iterator last);
+        void insert(QSharedPointer<HSSDisplayObject> item, const int index);
         iterator erase(iterator position);
         iterator erase (iterator first, iterator last);
         std::vector< QSharedPointer<HSSDisplayObject> > getItems() const;

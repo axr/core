@@ -222,6 +222,11 @@ void HSSSimpleSelection::insert(iterator position, iterator first, iterator last
     this->d->items.insert(position, first, last);
 }
 
+void HSSSimpleSelection::insert(QSharedPointer<HSSDisplayObject> item, const int index)
+{
+    this->d->items.insert(this->d->items.begin()+index, item);
+}
+
 HSSSimpleSelection::iterator HSSSimpleSelection::erase(iterator position)
 {
     return this->d->items.erase(position);
