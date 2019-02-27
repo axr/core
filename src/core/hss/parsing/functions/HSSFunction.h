@@ -153,6 +153,8 @@ namespace AXR
         void setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments);
         AXRString getName();
         void setName(AXRString newName);
+        
+        virtual void fireTimer(AXRString timerName);
 
     protected:
         /**

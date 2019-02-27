@@ -54,6 +54,8 @@
 #include "HSSCallback.h"
 #include "HSSCodeParser.h"
 #include "HSSContainer.h"
+#include "HSSEvent.h"
+#include "HSSFunction.h"
 #include "HSSLayout.h"
 #include "HSSMouseEvent.h"
 #include "HSSObjectDefinition.h"
@@ -82,7 +84,7 @@ namespace AXR
         , renderVisitor(new HSSRenderer)
         {
         }
-        
+
         AXRDocumentDelegate * delegate;
 
         bool isHSSOnly;
@@ -235,9 +237,9 @@ void AXRDocument::runHSS(const QUrl & url)
 {
     //needs reset on next load
     d->hasLoadedFile = true;
-    
+
     QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(d->controller->root());
-    
+
     QSharedPointer<AXRBuffer> hssfile;
     hssfile = this->createBufferFromUrl(url);
     if (!d->parserHSS->loadFile(hssfile))
@@ -251,7 +253,7 @@ void AXRDocument::runHSS(const QUrl & url)
     d->controller->matchRulesToContentTree();
     d->controller->activateRules();
     root->setNeedsRereadRules(true);
-    
+
     if (root)
     {
         QSharedPointer<HSSVisitorManager> visitorManager = this->visitorManager();
@@ -658,6 +660,27 @@ void AXRDocument::selectionChanged(QSharedPointer<HSSDisplayObject> theDO)
         d->delegate->selectionChanged(theDO);
     }
 }
+
+void AXRDocument::startTimer(AXRString timerName, HSSFunction * timerFunction, unsigned int ms, bool repeats)
+{
+    this->delegate()->startTimer(timerName, timerFunction, ms, repeats);
+}
+
+void AXRDocument::startTimerOnce(HSSFunction * timerFunction, unsigned int ms)
+{
+    this->delegate()->startTimerOnce(timerFunction, ms);
+}
+
+void AXRDocument::stopTimer(AXRString timerName)
+{
+    this->delegate()->stopTimer(timerName);
+}
+
+bool AXRDocument::hasTimer(AXRString timerName)
+{
+    return this->delegate()->hasTimer(timerName);
+}
+
 bool AXRDocument::loadHssFile(const QUrl &url)
 {
     axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
@@ -683,10 +706,10 @@ bool AXRDocument::loadHssFile(QSharedPointer<AXRBuffer> buffer)
     d->controller->enterElement("document");
     d->controller->exitElement();
     QSharedPointer<HSSContainer> root = d->controller->root();
-    
+
     //needs reset on next load
     d->hasLoadedFile = true;
-    
+
     d->isHSSOnly = true;
     d->showLayoutSteps = false;
     d->currentLayoutStep = 0;
@@ -701,7 +724,7 @@ bool AXRDocument::loadHssFile(QSharedPointer<AXRBuffer> buffer)
     d->controller->setUpTreeChangeObservers();
     d->controller->matchRulesToContentTree();
     d->controller->activateRules();
-    
+
     root->setNeedsRereadRules(true);
     QSharedPointer<HSSVisitorManager> visitorManager = this->visitorManager();
     visitorManager->runVisitors(HSSVisitorFilterCascading);
@@ -734,7 +757,7 @@ void AXRDocument::receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HS
                     d->controller->addObjectTreeNode(objDefNode);
                     break;
                 }
-                    
+
                 default:
                 {
                     d->controller->addParserTreeNode(node);
@@ -743,13 +766,13 @@ void AXRDocument::receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HS
             }
             break;
         }
-            
+
         case HSSParserNodeTypeWhitespaceNode:
         {
             d->controller->addParserTreeNode(node);
             break;
         }
-            
+
         default:
             d->controller->addParserTreeNode(node);
             break;

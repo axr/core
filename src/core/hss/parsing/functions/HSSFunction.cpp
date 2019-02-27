@@ -241,3 +241,8 @@ AXRString HSSFunction::getName()
 {
     return this->_name;
 }
+
+void HSSFunction::fireTimer(AXRString timerName)
+{
+    //override this if needed
+}

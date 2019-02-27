@@ -59,6 +59,7 @@ namespace AXR
     class AXRDocumentPrivate;
     class HSSAbstractValueChangedCallback;
     class HSSCodeParser;
+    class HSSFunction;
     class HSSInputEvent;
     class HSSObject;
     class HSSPoint;
@@ -256,6 +257,10 @@ namespace AXR
         bool handleEvent(HSSInputEvent *event);
         void handleSelection(HSSPoint thePoint);
         void selectionChanged(QSharedPointer<HSSDisplayObject> theDO);
+        void startTimer(AXRString timerName, HSSFunction * timerFunction, unsigned int ms, bool repeats);
+        void startTimerOnce(HSSFunction * timerFunction, unsigned int ms);
+        void stopTimer(AXRString timerName);
+        bool hasTimer(AXRString timerName);
 
         // Layout stuff from AXRWrapper
     public:
