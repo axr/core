@@ -279,36 +279,9 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
         {
             if (container)
             {
-                QSharedPointer<HSSSimpleSelector> subject = rule->selectorChainsLast()->subject();
-                AXRString elementName = "";
-                if (subject)
+                std::vector<QSharedPointer<HSSContainer> > newContainers = this->addContainerFromNewInstruction(instruction, rule, scope, container, false);
+                Q_FOREACH(QSharedPointer<HSSContainer> newContainer, newContainers)
                 {
-                    QSharedPointer<HSSNameSelector> nameSel = subject->getName();
-                    elementName = nameSel->getElementName();
-                }
-
-                uint argssize = 1;
-                QSharedPointer<HSSParserNode> argument = instruction->getArgument();
-                if (argument)
-                {
-                    if (argument->isA(HSSParserNodeTypeNumberConstant))
-                    {
-                        QSharedPointer<HSSNumberConstant> argnum = qSharedPointerCast<HSSNumberConstant>(argument);
-                        argssize = static_cast<uint>(argnum->getValue());
-                    }
-                }
-
-                for (uint i = 0; i < argssize; ++i)
-                {
-                    QSharedPointer<HSSContainer> newContainer = QSharedPointer<HSSContainer>(new HSSContainer(this));
-                    newContainer->setName(elementName);
-                    newContainer->setElementName(elementName);
-                    newContainer->rulesAdd(rule, HSSRuleStateOn);
-                    axr_log(LoggerChannelGeneral, "AXRController: created " + newContainer->getElementName());
-                    this->add(newContainer);
-                    newContainer->setNeedsRereadRules(true);
-                    newContainer->setNeedsSurface(true);
-                    newContainer->setDirty(true);
                     d->currentContext.push(newContainer);
                     for (size_t i = 0; i < rule->childrenSize(); ++i)
                     {
@@ -396,7 +369,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
         }
 
     }
-    else if (!instruction)
+    else
     {
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains = rule->getSelectorChains();
         if (!selectorChains.empty())
@@ -476,6 +449,51 @@ inline void AXRController::_recursiveMatchRulesToDisplayObjects(const QSharedPoi
         }
         displayObject->setNeedsRereadRules(true);
     }
+}
+
+std::vector<QSharedPointer<HSSContainer> > AXRController::addContainerFromNewInstruction(const QSharedPointer<HSSInstruction> & instruction, const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool activeByDefault)
+{
+    QSharedPointer<HSSSimpleSelector> subject = rule->selectorChainsLast()->subject();
+    AXRString elementName = "";
+    if (subject)
+    {
+        QSharedPointer<HSSNameSelector> nameSel = subject->getName();
+        elementName = nameSel->getElementName();
+    }
+    
+    uint argssize = 1;
+    QSharedPointer<HSSParserNode> argument = instruction->getArgument();
+    if (argument)
+    {
+        if (argument->isA(HSSParserNodeTypeNumberConstant))
+        {
+            QSharedPointer<HSSNumberConstant> argnum = qSharedPointerCast<HSSNumberConstant>(argument);
+            argssize = static_cast<uint>(argnum->getValue());
+        }
+    }
+    
+    std::vector<QSharedPointer<HSSContainer> > ret;
+    
+    for (uint i = 0; i < argssize; ++i)
+    {
+        QSharedPointer<HSSContainer> newContainer = QSharedPointer<HSSContainer>(new HSSContainer(this));
+        newContainer->setName(elementName);
+        newContainer->setElementName(elementName);
+        newContainer->rulesAdd(rule, activeByDefault ? HSSRuleStateOn : HSSRuleStateOff);
+        axr_log(LoggerChannelGeneral, "AXRController: created " + newContainer->getElementName());
+        if(rule->isConditional())
+        {
+            this->addOffscreen(newContainer);
+        } else {
+            this->add(newContainer);
+        }
+        newContainer->setNeedsRereadRules(true);
+        newContainer->setNeedsSurface(true);
+        newContainer->setDirty(true);
+        
+        ret.push_back(newContainer);
+    }
+    return ret;
 }
 
 QStack<QSharedPointer<HSSContainer> >& AXRController::currentContext() const

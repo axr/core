@@ -58,6 +58,7 @@ namespace AXR
     class AXRDocument;
     class HSSContainer;
     class HSSDisplayObject;
+    class HSSInstruction;
     class HSSObjectDefinition;
     class HSSParserNode;
     class HSSRule;
@@ -425,6 +426,8 @@ namespace AXR
          *  @param applyingInstructions   Wether to apply instruction rules
          */
         void recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool applyingInstructions);
+
+        std::vector<QSharedPointer<HSSContainer> > addContainerFromNewInstruction(const QSharedPointer<HSSInstruction> & instruction, const QSharedPointer<HSSRule> & rule, QSharedPointer<HSSSelection> scope, QSharedPointer<HSSContainer> container, bool activeByDefault);
 
         // TODO: All we ever do is push and pop things to and from this... should we provide
         // methods for doing that rather than providing a list reference?
