@@ -177,6 +177,8 @@ using namespace AXR;
 
 - (void)mouseUp:(NSEvent *)theEvent
 {
+    [[self window] makeFirstResponder:self];
+    
     if (!document)
         return;
 
