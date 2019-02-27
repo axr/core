@@ -69,6 +69,7 @@ namespace AXR
 
         bool isA(HSSSelectorType otherType) const;
         HSSSelectorType getSelectorType() const;
+        void setSelectorType(HSSSelectorType newType);
 
         bool isA(HSSCombinatorType otherType) const;
 

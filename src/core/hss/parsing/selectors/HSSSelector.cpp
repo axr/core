@@ -84,6 +84,10 @@ HSSSelectorType HSSSelector::getSelectorType() const
 {
     return this->_selectorType;
 }
+void HSSSelector::setSelectorType(HSSSelectorType newType)
+{
+    this->_selectorType = newType;
+}
 
 bool HSSSelector::isA(HSSCombinatorType otherType) const
 {

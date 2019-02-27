@@ -54,7 +54,7 @@ using namespace AXR;
 HSSParentSelector::HSSParentSelector(AXRController * controller)
 : HSSNameSelector("@parent", controller)
 {
-
+    this->setSelectorType(HSSSelectorTypeParentSelector);
 }
 
 QSharedPointer<HSSParentSelector> HSSParentSelector::clone() const
