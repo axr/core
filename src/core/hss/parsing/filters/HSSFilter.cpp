@@ -232,8 +232,8 @@ bool HSSFilter::equalTo(QSharedPointer<HSSParserNode> otherNode)
     //other checks
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
     QSharedPointer<HSSFilter> castedNode = qSharedPointerCast<HSSFilter>(otherNode);
-    if ( ! this->filterType == castedNode->filterType) return false;
-    if ( ! this->_negating == castedNode->_negating) return false;
+    if ( this->filterType != castedNode->filterType) return false;
+    if ( this->_negating != castedNode->_negating) return false;
     return true;
 }
 
