@@ -49,6 +49,7 @@
 #include "HSSInstruction.h"
 #include "HSSMultipleSelection.h"
 #include "HSSParserNode.h"
+#include "HSSRefFunction.h"
 #include "HSSRule.h"
 #include "HSSSelection.h"
 #include "HSSSelectorChain.h"
@@ -56,6 +57,15 @@
 #include "HSSStatement.h"
 
 using namespace AXR;
+
+bool HSSFlag::isFlag(AXRString name)
+{
+    return name == "flag"
+        || name == "unflag"
+        || name == "addFlag"
+        || name == "takeFlag"
+        || name == "replaceFlag";
+}
 
 HSSFlag::HSSFlag(AXRController * controller)
 : HSSFilter(HSSFilterTypeFlag, controller)
@@ -146,6 +156,17 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
                 this->getController()->setRuleStateOnSelection(theRule, this->getController()->selectFromTop(theRule, this->getThisObj()), newStatus);
             }
             this->setPurging(HSSRuleStateOff);
+        }
+    }
+    else if (ruleNode->isA(HSSParserNodeTypeFunctionCall))
+    {
+        QSharedPointer<HSSFunction> functionNode = qSharedPointerCast<HSSFunction>(ruleNode);
+        if(functionNode->isA(HSSFunctionTypeRef))
+        {
+            QSharedPointer<HSSRefFunction> refFunction = qSharedPointerCast<HSSRefFunction>(functionNode);
+            refFunction->setDirty(true);
+            refFunction->evaluate();
+            refFunction->notifyObservers("__impl_private__remoteValue", refFunction->getValue());
         }
     }
 }

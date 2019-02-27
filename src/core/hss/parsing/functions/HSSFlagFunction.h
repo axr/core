@@ -52,7 +52,7 @@ namespace AXR
 
     /**
      *  @brief Function type to manipulate the activation status of a flag.
-     *  All of the flagging functions [flag(), unflag() and toggleFlag()] are handled by this class.
+     *  All of the flagging functions [flag(), unflag() addFlag and replaceFlag()] are handled by this class.
      */
     class AXR_API HSSFlagFunction : public HSSFunction
     {
@@ -106,6 +106,18 @@ namespace AXR
          *  @param newValue The new HSS property name which the function should use.
          */
         void setName(AXRString newValue);
+        
+        /**
+         *  Getter for the name2 parameter, which is used in the replaceFlag function.
+         *  @return A string containing the name of the second flag.
+         */
+        const AXRString & getName2();
+        
+        /**
+         *  Setter for the name2 parameter, which is used in the replaceFlag function.
+         *  @param newValue A string containing the name of the second flag.
+         */
+        void setName2(AXRString newValue);
 
         /**
          *  Getter for the selector chain parameter.
@@ -172,6 +184,7 @@ namespace AXR
 
     protected:
         AXRString _name;
+        AXRString _name2;
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
         HSSFlagFunctionType _flagFunctionType;
 

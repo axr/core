@@ -238,9 +238,7 @@ namespace AXR
         HSSFunctionTypeFloor, /**< Rounds a number down to the next integer. */
         HSSFunctionTypeCeil, /**< Rounds a number up to the next integer. */
         HSSFunctionTypeRound, /**< Rounds a number to the nearest integer. */
-        HSSFunctionTypeFlag, /**< Activates the given flag on the selected elements. */
-        HSSFunctionTypeUnflag, /**< Deactivates the given flag on the selected elements. */
-        HSSFunctionTypeToggleFlag, /**< Toggles the given flag on the selected elements. */
+        HSSFunctionTypeFlag, /**< Toggles the given flag on the selected elements. */
         HSSFunctionTypeCustom, /**< A function whose name has been registered on the core with a callback. */
         HSSFunctionTypeAttr, /**< Returns a value from an attribute of an XML element. */
         HSSFunctionTypeLog /**< Prints values to the console. */
@@ -257,10 +255,11 @@ namespace AXR
     enum AXR_API HSSFlagFunctionType
     {
         HSSFlagFunctionTypeNone = 0, /**< Error state. */
-        HSSFlagFunctionTypeFlag, /**< Always set the flag to active. */
+        HSSFlagFunctionTypeFlag, /**< When a flag is active, deactivate it, and viceversa. */
         HSSFlagFunctionTypeUnflag, /**< Always set the flag to inactive. */
-        HSSFlagFunctionTypeToggleFlag, /**< When a flag is active, deactivate it, and viceversa. */
-        HSSFlagFunctionTypeTakeFlag /**< Deactivates a flag on other elements and activates it on itself. */
+        HSSFlagFunctionTypeAddFlag, /**< Always set the flag to active. */
+        HSSFlagFunctionTypeTakeFlag, /**< Deactivates a flag on other elements and activates it on itself. */
+        HSSFlagFunctionTypeReplaceFlag /**< Deactivates one given flag and activates another one. */
     };
     /** @} */
 

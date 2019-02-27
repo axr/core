@@ -61,15 +61,19 @@ HSSFlagFunctionType HSSFlagFunction::flagFunctionTypeFromString(AXRString name)
     {
         return HSSFlagFunctionTypeUnflag;
     }
-    if (name == "toggleFlag")
+    if (name == "addFlag")
     {
-        return HSSFlagFunctionTypeToggleFlag;
+        return HSSFlagFunctionTypeAddFlag;
     }
     if (name == "takeFlag")
     {
         return HSSFlagFunctionTypeTakeFlag;
     }
-
+    if (name == "replaceFlag")
+    {
+        return HSSFlagFunctionTypeReplaceFlag;
+    }
+    
     return HSSFlagFunctionTypeNone;
 }
 
@@ -83,6 +87,7 @@ HSSFlagFunction::HSSFlagFunction(const HSSFlagFunction & orig)
 : HSSFunction(orig)
 {
     this->_name = orig._name;
+    this->_name2 = orig._name2;
     this->_flagFunctionType = orig._flagFunctionType;
 }
 
@@ -125,6 +130,17 @@ void HSSFlagFunction::setName(AXRString newValue)
     this->setDirty(true);
 }
 
+const AXRString & HSSFlagFunction::getName2()
+{
+    return this->_name2;
+}
+
+void HSSFlagFunction::setName2(AXRString newValue)
+{
+    this->_name2 = newValue;
+    this->setDirty(true);
+}
+
 const std::vector<QSharedPointer<HSSSelectorChain> > & HSSFlagFunction::getSelectorChains() const
 {
     return this->selectorChains;
@@ -134,6 +150,10 @@ void HSSFlagFunction::setSelectorChains(std::vector<QSharedPointer<HSSSelectorCh
 {
     this->selectorChains = newValues;
     this->setDirty(true);
+    for (HSSSelectorChain::it it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
+    {
+        (*it)->setParentNode(this->shared_from_this());
+    }
 }
 
 void HSSFlagFunction::selectorChainsAdd(QSharedPointer<HSSSelectorChain> & newSelectorChain)
@@ -178,39 +198,68 @@ QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
     QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
     HSSFlagFunctionType type = this->getFlagFunctionType();
     const AXRString & flagName = this->getName();
-    if(type == HSSFlagFunctionTypeTakeFlag){
-        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+    
+    switch (type) {
+        case HSSFlagFunctionTypeTakeFlag:
         {
-            QSharedPointer<HSSDisplayObject> container = *innerIt;
-            if(container != thisObj)
+            for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
             {
+                QSharedPointer<HSSDisplayObject> container = *innerIt;
+                if(container != thisObj)
+                {
+                    container->flagsDeactivate(flagName);
+                }
+            }
+            thisObj->flagsActivate(flagName);
+            break;
+        }
+            
+        case HSSFlagFunctionTypeReplaceFlag:
+        {
+            const AXRString & flagName2 = this->getName2();
+            for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+            {
+                QSharedPointer<HSSDisplayObject> container = *innerIt;
+                container->flagsDeactivate(flagName);
+                container->flagsActivate(flagName2);
+            }
+            break;
+        }
+            
+        case HSSFlagFunctionTypeAddFlag:
+        {
+            for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+            {
+                QSharedPointer<HSSDisplayObject> container = *innerIt;
+                container->flagsActivate(flagName);
+            }
+            break;
+        }
+            
+        case HSSFlagFunctionTypeUnflag:
+        {
+            for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+            {
+                QSharedPointer<HSSDisplayObject> container = *innerIt;
                 container->flagsDeactivate(flagName);
             }
+            break;
         }
-        thisObj->flagsActivate(flagName);
-    }
-    else
-    {
-        for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
+            
+        case HSSFlagFunctionTypeFlag:
         {
-            QSharedPointer<HSSDisplayObject> container = *innerIt;
-            switch (this->getFlagFunctionType())
+            for (HSSSimpleSelection::iterator innerIt = inner->begin(); innerIt != inner->end(); ++innerIt)
             {
-                case HSSFlagFunctionTypeFlag:
-                    container->flagsActivate(flagName);
-                    break;
-                case HSSFlagFunctionTypeUnflag:
-                    container->flagsDeactivate(flagName);
-                    break;
-                case HSSFlagFunctionTypeToggleFlag:
-                    container->flagsToggle(flagName);
-                    break;
-
-                default:
-                {
-                    AXRWarning("HSSFlagFunction", "Invalid flag function type").raise();
-                    return errorState;
+                QSharedPointer<HSSDisplayObject> container = *innerIt;
+                container->flagsToggle(flagName);
             }
+            break;
+        }
+            
+        default:
+        {
+            AXRWarning("HSSFlagFunction", "Invalid flag function type").raise();
+            return errorState;
         }
     }
     //reset dirty to always re evaluate
@@ -233,12 +282,12 @@ HSSFlagFunctionType HSSFlagFunction::getFlagFunctionType() const
 QSharedPointer<HSSClonable> HSSFlagFunction::cloneImpl() const
 {
     QSharedPointer<HSSFlagFunction> clone = QSharedPointer<HSSFlagFunction>(new HSSFlagFunction(*this));
-
+    
     for (HSSSelectorChain::const_it sIt = this->selectorChains.begin(); sIt != this->selectorChains.end(); ++sIt)
     {
         QSharedPointer<HSSSelectorChain> clonedSelectorChain = (*sIt)->clone();
         clone->selectorChainsAdd(clonedSelectorChain);
     }
-
+    
     return clone;
 }

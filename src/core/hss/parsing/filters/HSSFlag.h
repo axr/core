@@ -59,6 +59,7 @@ namespace AXR
     class AXR_API HSSFlag : public HSSFilter
     {
     public:
+        static bool isFlag(AXRString name);
         /**
          *  Creates a new instance of a flag node.
          */
