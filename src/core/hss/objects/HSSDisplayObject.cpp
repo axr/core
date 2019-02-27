@@ -1742,7 +1742,11 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
     HSSMouseEvent *mouseEvent = dynamic_cast<HSSMouseEvent*>(event);
     if (mouseEvent)
     {
-        return this->handleMouseEvent(mouseEvent);
+        if (this->getVisible())
+        {
+            return this->handleMouseEvent(mouseEvent);
+        }
+        return false;
     }
     else
     {
