@@ -172,6 +172,7 @@ size_t HSSFlagFunction::selectorChainsSize() const
 
 QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
 {
+    QSharedPointer<HSSObject> errorState;
     QSharedPointer<HSSDisplayObject> thisObj = this->getThisObj();
     QSharedPointer<HSSSelection> selection = this->getController()->select(this->getSelectorChains(), this->scope, thisObj);
     QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
@@ -206,14 +207,15 @@ QSharedPointer<HSSObject> HSSFlagFunction::_evaluate()
                     break;
 
                 default:
-                    throw AXRWarning("HSSFlagFunction", "Invalid flag function type");
-                    break;
+                {
+                    AXRWarning("HSSFlagFunction", "Invalid flag function type").raise();
+                    return errorState;
             }
         }
     }
     //reset dirty to always re evaluate
     this->setDirty(true);
-    return QSharedPointer<HSSObject>();
+    return errorState;
 }
 
 void HSSFlagFunction::valueChanged(const AXRString source, const QSharedPointer<HSSObject> theObj)

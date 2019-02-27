@@ -538,6 +538,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readString()
 {
+    QSharedPointer<HSSToken> errorState;
     const qint64 line = d->currentLine;
     const qint64 column = d->currentColumn - 1;
 
@@ -548,8 +549,9 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
         while (d->currentChar != '"')
         {
             if (this->atEndOfSource())
-                throw AXRError("HSSTokenizer", "Unexpected end of source");
-
+            {
+                break;
+            }
             this->storeCurrentCharAndReadNext();
         }
 
@@ -561,8 +563,9 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
         while (d->currentChar != '\'')
         {
             if (this->atEndOfSource())
-                throw AXRError("HSSTokenizer", "Unexpected end of source");
-
+            {
+                break;
+            }
             this->storeCurrentCharAndReadNext();
         }
 

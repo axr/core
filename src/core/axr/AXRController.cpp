@@ -1107,6 +1107,7 @@ QSharedPointer<HSSObjectDefinition> AXRController::objectTreeNodeAt(int index)
 
 QSharedPointer<HSSObjectDefinition> AXRController::objectTreeNodeNamed(const AXRString &name)
 {
+    QSharedPointer<HSSObjectDefinition> errorState;
     /**
      *  @todo do this with an unordered_map for better performance
      */
@@ -1118,7 +1119,7 @@ QSharedPointer<HSSObjectDefinition> AXRController::objectTreeNodeNamed(const AXR
         }
     }
 
-    throw AXRError("AXRController", "No object with name " + name + " was found");
+    return errorState;
 }
 
 //loadSheets

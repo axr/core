@@ -188,6 +188,7 @@ size_t HSSRefFunction::selectorChainsSize() const
 
 QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
 {
+    QSharedPointer<HSSObject> errorState;
     AXRController * theController = this->getController();
     if (!this->logsSelections())
     {
@@ -250,7 +251,8 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
 
          }
          */
-        throw AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet");
+        AXRError("HSSRefFunciton", "Using modifiers in ref functions is not implemented yet").raise();
+        return errorState;
     }
     return this->_value;
 }

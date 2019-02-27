@@ -357,6 +357,7 @@ QString sanitizeRelativePath(const QString &path)
 
 QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const QUrl &resourceUrl)
 {
+    QSharedPointer<AXRBuffer> errorState;
     if (!resourceUrl.isValid())
     {
         AXRError("AXRDocument", "Cannot load invalid URL - " + resourceUrl.toString()).raise();
@@ -402,7 +403,7 @@ QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const QUrl &resourceU
         else if (fileScheme == "http" || fileScheme == "https")
         {
             AXRError("AXRDocument", "http/https not implemented yet").raise();
-            return QSharedPointer<AXRBuffer>(new AXRBuffer());
+            return errorState;
         }
     }
     else
@@ -414,13 +415,15 @@ QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const QUrl &resourceU
     // Make sure the file at that path actually exists
     if (!localResource.exists())
     {
-        throw AXRError("AXRDocument", "the file " + localResource.filePath() + " doesn't exist");
+        AXRError("AXRDocument", "the file " + localResource.filePath() + " doesn't exist").raise();
+        return errorState;
     }
 
     QSharedPointer<AXRBuffer> buffer = QSharedPointer<AXRBuffer>(new AXRBuffer(localResource));
     if (!buffer->isValid())
     {
-        throw AXRError("AXRDocument", "the file " + localResource.filePath() + " couldn't be read");
+        AXRError("AXRDocument", "the file " + localResource.filePath() + " couldn't be read").raise();
+        return errorState;
     }
 
     return buffer;

@@ -194,9 +194,8 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
             return QSharedPointer<HSSRequest>(new HSSRequest(controller));
         }
     }
-
     default:
-        throw AXRError("HSSObject", type);
+        return QSharedPointer<HSSObject>();
     }
 
     return QSharedPointer<HSSObject>();
@@ -1021,6 +1020,7 @@ void HSSObject::commitStackValues()
 
 QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QSharedPointer<HSSParserNode> parserNode)
 {
+    QSharedPointer<HSSObject> errorState;
     //set the hosting property
     parserNode->setHostProperty(propertyName);
 
@@ -1147,9 +1147,14 @@ QSharedPointer<HSSObject> HSSObject::computeValueObject(QSharedPointer<HSSParser
             break;
     }
 
-    QSharedPointer<HSSValue> ret = qSharedPointerCast<HSSValue>(this->computeValueObject(parserNode));
-    ret->setHostProperty(propertyName);
-    return ret;
+    QSharedPointer<HSSObject> computedObj = this->computeValueObject(parserNode);
+    if (computedObj)
+    {
+        QSharedPointer<HSSValue> ret = qSharedPointerCast<HSSValue>(computedObj);
+        ret->setHostProperty(propertyName);
+        return ret;
+    }
+    return computedObj; //error state
 }
 
 QSharedPointer<HSSParserNode> HSSObject::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
