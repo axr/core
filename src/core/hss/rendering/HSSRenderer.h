@@ -61,6 +61,7 @@ namespace AXR
     class HSSColorStop;
     class HSSLinearGradient;
     class HSSRadialGradient;
+    class HSSRect;
     class HSSRgb;
 
     class AXR_API HSSRenderer : public HSSAbstractVisitor
