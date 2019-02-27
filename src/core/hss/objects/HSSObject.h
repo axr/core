@@ -99,6 +99,13 @@ namespace AXR
         static QSharedPointer<HSSObject> newObjectWithType(AXRString type, AXRController * controller);
 
         /**
+         *  Strips beginning and end quotes of a string
+         *  @param string A string with quotes.
+         *  @return A string with quotes removed.
+         */
+        static AXRString stripQuotes(AXRString string);
+
+        /**
          *  This stores the name of the object.
          *
          *  @todo this should be protected and with getter/setter

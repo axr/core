@@ -201,6 +201,38 @@ QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRContro
     return QSharedPointer<HSSObject>();
 }
 
+AXRString HSSObject::stripQuotes(AXRString string)
+{
+    int position = 0;
+    int n = 0;
+    int len = string.length();
+    if (string.at(0) == '"')
+    {
+        position = 1;
+        if (string.at(len-1) == '"')
+        {
+            n = len - 1 - position;
+        }
+        else
+        {
+            n = len - position;
+        }
+    }
+    else if (string.at(0) == '\'')
+    {
+        position = 1;
+        if (string.at(len-1) == '\'')
+        {
+            n = len - 1 - position;
+        }
+        else
+        {
+            n = len - position;
+        }
+    }
+    return string.mid(position, n);
+}
+
 HSSObject::HSSObject(HSSObjectType type, AXRController * controller)
 {
     this->_initialize();
