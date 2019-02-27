@@ -49,6 +49,7 @@
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSNumberConstant.h"
+#include "HSSMultipleValue.h"
 #include "HSSObjectDefinition.h"
 #include "HSSPercentageConstant.h"
 #include "HSSPropertyPath.h"
@@ -375,43 +376,73 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
         }
         else
         {
-            if (remoteObj->isA(HSSObjectTypeValue))
+            ret = this->_evaluateObj(remoteObj);
+        }
+    }
+    return ret;
+}
+
+QSharedPointer<HSSObject> HSSRefFunction::_evaluateObj(QSharedPointer<HSSObject> & theObj)
+{
+    QSharedPointer<HSSObject> ret;
+    if (theObj->isA(HSSObjectTypeValue))
+    {
+        QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(theObj);
+        
+        QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
+        if (parserNode)
+        {
+            ret = this->_evaluateValue(parserNode, theObj);
+        }
+        else
+        {
+            ret = valueObj->clone();
+        }
+    }
+    else if (theObj->isA(HSSObjectTypeMultipleValue))
+    {
+        QList<QSharedPointer<HSSObject> > remoteValues = qSharedPointerCast<HSSMultipleValue>(theObj)->getValues();
+        QSharedPointer<HSSMultipleValue> newValues = QSharedPointer<HSSMultipleValue>(new HSSMultipleValue(this->getController()));
+        Q_FOREACH(QSharedPointer<HSSObject> value, remoteValues)
+        {
+            QSharedPointer<HSSObject> theObjInner = this->_evaluateObj(value);
+            if (theObjInner)
             {
-                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
-
-                QSharedPointer<HSSParserNode> parserNode = valueObj->getValue();
-                if (parserNode)
-                {
-                    switch (parserNode->getType())
-                    {
-                        case HSSParserNodeTypeFunctionCall:
-                        {
-                            QSharedPointer<HSSObject> remoteObj2 = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
-                            if (remoteObj2) {
-                                ret = remoteObj2->clone();
-                            }
-                            break;
-                        }
-
-                        case HSSParserNodeTypeExpression:
-                            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), parserNode->getSpecificity(), this->getThisObj(), this->scope);
-                            break;
-
-                        default:
-                            ret = remoteObj->clone();
-                            break;
-                    }
-                }
-                else
-                {
-                    ret = valueObj->clone();
-                }
-            }
-            else
-            {
-                ret = remoteObj->clone();
+                newValues->add(theObjInner->clone());
             }
         }
+        ret = newValues;
+    }
+    else
+    {
+        ret = theObj;
+    }
+    return ret;
+}
+
+QSharedPointer<HSSObject> HSSRefFunction::_evaluateValue(QSharedPointer<HSSParserNode> parserNode, QSharedPointer<HSSObject> & remoteObj)
+{
+    QSharedPointer<HSSObject> ret;
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeFunctionCall:
+        {
+            QSharedPointer<HSSObject> remoteObj2 = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+            if (remoteObj2) {
+                ret = remoteObj2->clone();
+            }
+            //we want to evaluate this function over and over
+            this->setDirty(true);
+            break;
+        }
+            
+        case HSSParserNodeTypeExpression:
+            ret = HSSValue::valueFromParserNode(this->getController(), HSSNumberConstant::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate(), this->getController()), parserNode->getSpecificity(), this->getThisObj(), this->scope);
+            break;
+            
+        default:
+            ret = remoteObj->clone();
+            break;
     }
     return ret;
 }

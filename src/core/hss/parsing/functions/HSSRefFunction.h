@@ -205,6 +205,8 @@ namespace AXR
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         QSharedPointer<HSSObject> _getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path);
         bool _logsSelections;
+        QSharedPointer<HSSObject> _evaluateObj(QSharedPointer<HSSObject> & theObj);
+        QSharedPointer<HSSObject> _evaluateValue(QSharedPointer<HSSParserNode> parserNode, QSharedPointer<HSSObject> & remoteObj);
     };
 }
 
