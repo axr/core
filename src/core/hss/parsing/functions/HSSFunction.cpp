@@ -46,8 +46,10 @@
 #include "HSSDisplayObject.h"
 #include "HSSExpression.h"
 #include "HSSFunction.h"
+#include "HSSMultipleValue.h"
 #include "HSSObjectDefinition.h"
 #include "HSSSimpleSelection.h"
+#include "HSSValue.h"
 
 using namespace AXR;
 
@@ -135,7 +137,15 @@ QSharedPointer<HSSObject> HSSFunction::evaluate(std::deque<QSharedPointer<HSSPar
 QSharedPointer<HSSObject> HSSFunction::_evaluate()
 {
     AXRDocument* document = this->getController()->document();
-    document->evaluateCustomFunction(this->getName(), QSharedPointer<HSSObject>());
+    QSharedPointer<HSSMultipleValue> multiValue = QSharedPointer<HSSMultipleValue>(new HSSMultipleValue(this->getController()));
+    Q_FOREACH(QSharedPointer<HSSParserNode> node, this->getArguments())
+    {
+        multiValue->add(HSSValue::valueFromParserNode(this->getController(), node, 0, this->getThisObj(), this->scope));
+    }
+    multiValue->setThisObj(this->getThisObj());
+    document->evaluateCustomFunction(this->getName(), multiValue);
+    //next time we call this custom function we want to reevaluate
+    this->setDirty(true);
     return QSharedPointer<HSSObject>();
 }
 
@@ -225,6 +235,11 @@ HSSFunctionType HSSFunction::getFunctionType() const
 void HSSFunction::setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
     this->_arguments = arguments;
+}
+
+void HSSFunction::addArgument(QSharedPointer<HSSParserNode> argument)
+{
+    this->_arguments.push_back(argument);
 }
 
 std::deque<QSharedPointer<HSSParserNode> > HSSFunction::getArguments()
