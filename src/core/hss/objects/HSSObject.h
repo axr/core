@@ -91,6 +91,10 @@ namespace AXR
          */
         typedef std::vector<QSharedPointer<HSSObject> >::const_iterator const_it;
         /**
+         *  @return     A string representing the given type
+         */
+        static AXRString objectTypeToString(HSSObjectType type);
+        /**
          *  Creates a new object based on a string identifying it's type. Check the HSS specification
          *  for the type names.
          *  @param type A string identifying the type for the new object

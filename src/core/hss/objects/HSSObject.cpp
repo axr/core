@@ -87,6 +87,31 @@ using namespace AXR;
 
 Q_DECLARE_METATYPE(AXR::HSSTextAlignType *)
 
+AXRString HSSObject::objectTypeToString(HSSObjectType type)
+{
+    static QMap<HSSObjectType, AXRString> typestrings;
+    if (typestrings.empty())
+    {
+        typestrings[HSSObjectTypeContainer] = "container";
+        typestrings[HSSObjectTypeTextBlock] = "textBlock";
+        typestrings[HSSObjectTypeStroke] = "stroke";
+        typestrings[HSSObjectTypeGeneric] = "object";
+        typestrings[HSSObjectTypeValue] = "value";
+        typestrings[HSSObjectTypeMargin] = "margin";
+        typestrings[HSSObjectTypeRgb] = "rgb";
+        typestrings[HSSObjectTypeGradient] = "linearGradient";
+        typestrings[HSSObjectTypeGradient] = "radialGradient";
+        typestrings[HSSObjectTypeColorStop] = "colorStop";
+        typestrings[HSSObjectTypeFont] = "font";
+        typestrings[HSSObjectTypeShape] = "rectangle";
+        typestrings[HSSObjectTypeShape] = "roundedRect";
+        typestrings[HSSObjectTypeShape] = "circle";
+        typestrings[HSSObjectTypeShape] = "polygon";
+        typestrings[HSSObjectTypeAction] = "request";
+    }
+    return typestrings[type];
+}
+
 QSharedPointer<HSSObject> HSSObject::newObjectWithType(AXRString type, AXRController * controller)
 {
     static QMap<AXRString, HSSObjectType> types;
