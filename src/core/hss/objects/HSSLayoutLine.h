@@ -44,8 +44,6 @@
 #ifndef HSSLAYOUTLINE_H
 #define HSSLAYOUTLINE_H
 
-#include <QtGlobal>
-#include <QSharedPointer>
 #include "HSSClonable.h"
 #include "HSSDisplayObject.h"
 #include "HSSObservable.h"

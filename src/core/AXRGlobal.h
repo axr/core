@@ -146,6 +146,21 @@
 
 #include <QtGlobal>
 #include <QMetaType>
+#include <QSharedPointer>
+#include <QWeakPointer>
+#include <algorithm>
+#include <cmath>
+#include <codecvt>
+#include <deque>
+#include <list>
+#include <map>
+#include <memory>
+#include <set>
+#include <stack>
+#include <vector>
+
+#include "HSSChar.h"
+#include "HSSString.h"
 
 namespace AXR
 {

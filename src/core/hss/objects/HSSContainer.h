@@ -44,7 +44,6 @@
 #ifndef HSSCONTAINER_H
 #define HSSCONTAINER_H
 
-#include <QVariant>
 #include "HSSDisplayObject.h"
 #include "HSSSimpleSelection.h"
 #include "HSSTextEnums.h"

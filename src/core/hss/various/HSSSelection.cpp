@@ -41,13 +41,8 @@
  *
  ********************************************************************/
 
-#include <QMap>
-#include <QStringList>
-#include "HSSDisplayObject.h"
-#include "HSSMultipleSelection.h"
+#include "axr.h"
 #include "HSSSelection.h"
-#include "HSSSelectorChain.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

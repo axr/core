@@ -44,7 +44,6 @@
 #ifndef HSSEXPRESSION_H
 #define HSSEXPRESSION_H
 
-#include <QSharedPointer>
 #include "HSSParserNode.h"
 
 namespace AXR

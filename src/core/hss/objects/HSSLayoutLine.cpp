@@ -41,11 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRError.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSLayoutLine.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "HSSAbstractVisitor.h"
 
 using namespace AXR;

@@ -41,10 +41,8 @@
  *
  ********************************************************************/
 
-#include <QFile>
-#include <QFileInfo>
+#include "axr.h"
 #include "AXRBuffer.h"
-#include "AXRLoggerManager.h"
 
 using namespace AXR;
 

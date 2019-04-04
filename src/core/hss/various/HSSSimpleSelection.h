@@ -44,8 +44,6 @@
 #ifndef HSSSIMPLESELECTION_H
 #define HSSSIMPLESELECTION_H
 
-#include <vector>
-#include <QSharedDataPointer>
 #include "HSSSelection.h"
 
 namespace AXR

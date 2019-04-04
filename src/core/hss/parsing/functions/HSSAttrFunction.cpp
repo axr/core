@@ -41,16 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSAttrFunction.h"
-#include "HSSSelectorChain.h"
-#include "HSSSimpleSelection.h"
-#include "HSSStringConstant.h"
-#include "HSSValue.h"
-#include <QStringList>
 
 using namespace AXR;
 

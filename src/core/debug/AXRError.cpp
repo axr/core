@@ -41,10 +41,8 @@
  *
  ********************************************************************/
 
-#include <QStringList>
-#include <QUrl>
+#include "axr.h"
 #include "AXRError.h"
-#include "AXRLoggerManager.h"
 
 using namespace AXR;
 

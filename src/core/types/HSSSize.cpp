@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include "HSSSize.h"
-#include <QSize>
 
 using namespace AXR;
 

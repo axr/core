@@ -44,8 +44,6 @@
 #ifndef AXRBUFFER_H
 #define AXRBUFFER_H
 
-#include <QByteArray>
-#include <QUrl>
 #include "AXRGlobal.h"
 
 class QFileInfo;

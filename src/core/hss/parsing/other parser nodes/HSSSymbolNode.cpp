@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "HSSSymbolNode.h"
-#include "HSSDisplayObject.h"
 
 using namespace AXR;
 

@@ -41,31 +41,8 @@
  *
  ********************************************************************/
 
-#include <QCoreApplication>
-#include <QDir>
-#include <QFileInfo>
-#include "AXRBuffer.h"
-#include "AXRController.h"
+#include "axr.h"
 #include "AXRDocument.h"
-#include "AXRDocumentDelegate.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCascader.h"
-#include "HSSCallback.h"
-#include "HSSCodeParser.h"
-#include "HSSContainer.h"
-#include "HSSEvent.h"
-#include "HSSFunction.h"
-#include "HSSLayout.h"
-#include "HSSMouseEvent.h"
-#include "HSSObjectDefinition.h"
-#include "HSSParserNode.h"
-#include "HSSPoint.h"
-#include "HSSRenderer.h"
-#include "HSSRule.h"
-#include "HSSStatement.h"
-#include "HSSVisitorManager.h"
-#include "XMLParser.h"
 
 using namespace AXR;
 

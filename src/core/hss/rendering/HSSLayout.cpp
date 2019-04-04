@@ -42,23 +42,8 @@
  ********************************************************************/
 
 #include <limits>
-#include <QFont>
-#include <QFontMetrics>
-#include <QVector>
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRError.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
+#include "axr.h"
 #include "HSSLayout.h"
-#include "HSSLayoutLine.h"
-#include "HSSContainer.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSRule.h"
-#include "HSSTextBlock.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

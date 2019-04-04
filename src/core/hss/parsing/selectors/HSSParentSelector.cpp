@@ -41,13 +41,8 @@
  *
  ********************************************************************/
 
-#include <set>
-#include "AXRDocument.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
-#include "HSSMultipleSelection.h"
+#include "axr.h"
 #include "HSSParentSelector.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

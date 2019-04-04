@@ -44,9 +44,6 @@
 #ifndef HSSFUNCTION_H
 #define HSSFUNCTION_H
 
-#include <deque>
-#include <QVariant>
-#include <QSharedPointer>
 #include "HSSParserNode.h"
 
 namespace AXR

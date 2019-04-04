@@ -41,17 +41,7 @@
  *
  ********************************************************************/
 
-#import <iostream>
-#import "AXRController.h"
-#import "AXRDocument.h"
-#import "HSSContainer.h"
-#import "HSSEvent.h"
-#import "HSSMouseEvent.h"
-#import "HSSPoint.h"
-#import "HSSRect.h"
-#import "HSSRenderer.h"
-#import "HSSTypeEnums.h"
-#import "HSSVisitorManager.h"
+#import "axr.h"
 #import "NSAXRDocument.h"
 #import "NSAXRView.h"
 

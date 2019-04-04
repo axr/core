@@ -44,12 +44,6 @@
 #ifndef HSSOBJECT_H
 #define HSSOBJECT_H
 
-#include <vector>
-#include <QMap>
-#include <QSharedPointer>
-#include <QVariant>
-#include <QVector>
-#include <QWeakPointer>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"

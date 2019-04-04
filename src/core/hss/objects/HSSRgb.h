@@ -44,7 +44,6 @@
 #ifndef HSSRGB_H
 #define HSSRGB_H
 
-#include <QSharedPointer>
 #include "HSSObject.h"
 
 namespace AXR

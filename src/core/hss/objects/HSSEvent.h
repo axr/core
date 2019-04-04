@@ -48,7 +48,6 @@
 
 namespace AXR
 {
-    class HSSAction;
     class HSSParserNode;
 
     /**

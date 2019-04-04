@@ -41,14 +41,9 @@
  *
  ********************************************************************/
 
-#include "AXRBuffer.h"
-#include "AXRError.h"
-#include "AXRLoggerManager.h"
-#include "HSSToken.h"
+#include "axr.h"
 #include "HSSTokenizer.h"
-#include "HSSValueToken.h"
-#include <QSharedPointer>
-#include <QTextStream>
+#include <iostream>
 
 using namespace AXR;
 

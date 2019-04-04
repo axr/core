@@ -44,7 +44,6 @@
 #ifndef HSSGRADIENT_H
 #define HSSGRADIENT_H
 
-#include <QSharedPointer>
 #include "HSSObject.h"
 
 namespace AXR

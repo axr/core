@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSNegation.h"
 
 using namespace AXR;

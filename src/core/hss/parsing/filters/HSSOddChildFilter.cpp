@@ -41,10 +41,8 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
-#include "HSSMultipleSelection.h"
+#include "axr.h"
 #include "HSSOddChildFilter.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

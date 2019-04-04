@@ -44,7 +44,6 @@
 #ifndef HSSRADIALGRADIENT_H
 #define HSSRADIALGRADIENT_H
 
-#include <QSharedPointer>
 #include "HSSGradient.h"
 #include "HSSRgb.h"
 

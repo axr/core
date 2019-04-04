@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "HSSObservableMapping.h"
 
 using namespace AXR;

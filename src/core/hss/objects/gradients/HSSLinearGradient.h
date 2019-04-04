@@ -44,7 +44,6 @@
 #ifndef HSSLINEARGRADIENT_H
 #define HSSLINEARGRADIENT_H
 
-#include <QSharedPointer>
 #include "HSSGradient.h"
 
 namespace AXR

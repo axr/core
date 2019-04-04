@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include "HSSMouseEvent.h"
-#include "HSSPoint.h"
 
 using namespace AXR;
 

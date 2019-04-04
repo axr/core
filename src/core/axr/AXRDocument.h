@@ -47,7 +47,6 @@
 #include "AXRGlobal.h"
 #include "HSSParserReceiver.h"
 
-class QDir;
 template <class T> class QSharedPointer;
 
 namespace AXR

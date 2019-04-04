@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSStringConstant.h"
 
 using namespace AXR;

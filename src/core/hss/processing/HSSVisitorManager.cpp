@@ -41,9 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSVisitorManager.h"
 
 using namespace AXR;

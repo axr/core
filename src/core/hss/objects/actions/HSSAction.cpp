@@ -41,13 +41,8 @@
  *
  ********************************************************************/
 
-#include <QMap>
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
+#include "axr.h"
 #include "HSSAction.h"
-#include "HSSDisplayObject.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
 
 using namespace AXR;
 

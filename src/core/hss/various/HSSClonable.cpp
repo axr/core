@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include <QSharedPointer>
+#include "axr.h"
 #include "HSSClonable.h"
 
 using namespace AXR;

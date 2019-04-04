@@ -41,16 +41,8 @@
  *
  ********************************************************************/
 
-#include <QMap>
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
-#include "HSSFunction.h"
+#include "axr.h"
 #include "HSSEvent.h"
-#include "HSSInputEvent.h"
-#include "HSSKeyboardEvent.h"
-#include "HSSMouseEvent.h"
-#include "HSSMultipleValue.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

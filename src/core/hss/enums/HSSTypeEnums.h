@@ -44,8 +44,6 @@
 #ifndef HSSTYPEENUMS_H
 #define HSSTYPEENUMS_H
 
-#include "AXRGlobal.h"
-
 /** @defgroup typeEnums Type enumerations */
 
 namespace AXR

@@ -41,12 +41,8 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
-#include "HSSKeywordConstant.h"
-#include "HSSNumberConstant.h"
+#include "axr.h"
 #include "HSSParserNode.h"
-#include "HSSPercentageConstant.h"
-#include "HSSStringConstant.h"
 
 using namespace AXR;
 

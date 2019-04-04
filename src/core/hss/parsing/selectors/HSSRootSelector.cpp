@@ -41,11 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "HSSContainer.h"
+#include "axr.h"
 #include "HSSRootSelector.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

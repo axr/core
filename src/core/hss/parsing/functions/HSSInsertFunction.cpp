@@ -41,21 +41,8 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "HSSInsertFunction.h"
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "HSSContainer.h"
-#include "HSSExpression.h"
-#include "HSSKeywordConstant.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSRefFunction.h"
-#include "HSSSimpleSelection.h"
-#include "HSSSelection.h"
-#include "HSSSelectorChain.h"
-#include "HSSStringConstant.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

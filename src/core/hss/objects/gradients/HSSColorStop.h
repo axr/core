@@ -44,7 +44,7 @@
 #ifndef HSSCOLORSTOP_H
 #define HSSCOLORSTOP_H
 
-#include <QSharedPointer>
+#include "AXRGlobal.h"
 #include "HSSObject.h"
 
 namespace AXR

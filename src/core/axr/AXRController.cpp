@@ -41,28 +41,8 @@
  *
  ********************************************************************/
 
-#include <QStack>
+#include "axr.h"
 #include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSCodeParser.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
-#include "HSSEvent.h"
-#include "HSSFlag.h"
-#include "HSSInstruction.h"
-#include "HSSMultipleSelection.h"
-#include "HSSNegation.h"
-#include "HSSNameSelector.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
-#include "HSSRule.h"
-#include "HSSSelection.h"
-#include "HSSSelectorChain.h"
-#include "HSSSimpleSelection.h"
-#include "HSSSimpleSelector.h"
 
 using namespace AXR;
 

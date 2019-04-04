@@ -41,33 +41,9 @@
  *
  ********************************************************************/
 
-#include <cmath>
 #include <limits>
-#include <QtGlobal>
+#include "axr.h"
 #include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSAbstractVisitor.h"
-#include "HSSStroke.h"
-#include "HSSCallback.h"
-#include "HSSContainer.h"
-#include "HSSExpression.h"
-#include "HSSFunction.h"
-#include "HSSLayoutLine.h"
-#include "HSSKeywordConstant.h"
-#include "HSSNumberConstant.h"
-#include "HSSMultipleValue.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSPercentageConstant.h"
-#include "HSSPoint.h"
-#include "HSSRectangle.h"
-#include "HSSRoundedRect.h"
-#include "HSSRule.h"
-#include "HSSStringConstant.h"
-#include "HSSTextBlock.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

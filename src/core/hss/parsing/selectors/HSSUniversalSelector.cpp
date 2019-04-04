@@ -41,8 +41,7 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
-#include "HSSSelection.h"
+#include "axr.h"
 #include "HSSUniversalSelector.h"
 
 using namespace AXR;

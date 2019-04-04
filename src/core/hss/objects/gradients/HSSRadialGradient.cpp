@@ -45,21 +45,8 @@
  *  @todo set defaults
  */
 
-#include <cmath>
-#include <QVariant>
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSColorStop.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
+#include "axr.h"
 #include "HSSRadialGradient.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
-#include "HSSPercentageConstant.h"
-#include "HSSRgb.h"
-#include "HSSSimpleSelection.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

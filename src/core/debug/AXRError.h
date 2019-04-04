@@ -45,7 +45,6 @@
 #define AXRERROR_H
 
 #include <QSharedDataPointer>
-#include <QUrl>
 #include "AXRGlobal.h"
 
 namespace AXR

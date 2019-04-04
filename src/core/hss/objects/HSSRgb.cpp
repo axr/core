@@ -41,19 +41,8 @@
  *
  ********************************************************************/
 
-#include <QColor>
-#include <QVariant>
-#include "AXRError.h"
-#include "AXRLoggerManager.h"
-#include "HSSCallback.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
-#include "HSSKeywordConstant.h"
-#include "HSSNumberConstant.h"
-#include "HSSPercentageConstant.h"
+#include "axr.h"
 #include "HSSRgb.h"
-#include "HSSSimpleSelection.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

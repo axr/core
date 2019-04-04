@@ -41,16 +41,8 @@
  *
  ********************************************************************/
 
-#include <QHash>
-#include <QMap>
-#include <QSharedPointer>
-#include <QVariant>
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSObject.h"
+#include "axr.h"
 #include "HSSObservable.h"
-#include "HSSObservableMapping.h"
 
 using namespace AXR;
 

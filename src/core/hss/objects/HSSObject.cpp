@@ -41,47 +41,8 @@
  *
  ********************************************************************/
 
-#include <QMap>
-#include <QVariant>
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSCircle.h"
-#include "HSSColorStop.h"
-#include "HSSContainer.h"
-#include "HSSFont.h"
-#include "HSSKeywordConstant.h"
-#include "HSSLinearGradient.h"
-#include "HSSMargin.h"
-#include "HSSMultipleValue.h"
-#include "HSSMultipleValueDefinition.h"
-#include "HSSMultiplication.h"
-#include "HSSNumberConstant.h"
+#include "axr.h"
 #include "HSSObject.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSParentSelector.h"
-#include "HSSPercentageConstant.h"
-#include "HSSPolygon.h"
-#include "HSSPropertyDefinition.h"
-#include "HSSPropertyPath.h"
-#include "HSSRadialGradient.h"
-#include "HSSRectangle.h"
-#include "HSSRefFunction.h"
-#include "HSSRequest.h"
-#include "HSSRgb.h"
-#include "HSSRoundedRect.h"
-#include "HSSRule.h"
-#include "HSSSelectorChain.h"
-#include "HSSSimpleSelection.h"
-#include "HSSSimpleSelector.h"
-#include "HSSStringConstant.h"
-#include "HSSStroke.h"
-#include "HSSThisSelector.h"
-#include "HSSTypeEnums.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

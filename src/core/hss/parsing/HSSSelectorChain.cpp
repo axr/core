@@ -41,14 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
-#include "AXRError.h"
-#include "HSSFilter.h"
-#include "HSSNameSelector.h"
-#include "HSSRule.h"
+#include "axr.h"
 #include "HSSSelectorChain.h"
-#include "HSSSimpleSelector.h"
 
 using namespace AXR;
 

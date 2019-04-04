@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRLoggerManager.h"
+#include "axr.h"
 #include "AXRWarning.h"
 
 using namespace AXR;

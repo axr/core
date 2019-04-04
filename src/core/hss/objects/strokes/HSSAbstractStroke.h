@@ -44,7 +44,6 @@
 #ifndef HSSABSTRACTSTROKE_H
 #define HSSABSTRACTSTROKE_H
 
-#include <QSharedPointer>
 #include "HSSObject.h"
 
 class QPainter;

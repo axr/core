@@ -44,7 +44,6 @@
 #ifndef HSSSELECTION_H
 #define HSSSELECTION_H
 
-#include <QSharedPointer>
 #include "HSSObject.h"
 #include "HSSTypeEnums.h"
 

@@ -45,7 +45,6 @@
 #define HSSOBSERVABLEMAPPING_H
 
 #include "HSSObservableProperties.h"
-#include <QVariant>
 
 namespace AXR
 {

@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "AXRGenericLogger.h"
 #include <QFile>
 #include <QTextStream>

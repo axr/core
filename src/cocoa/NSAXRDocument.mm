@@ -41,8 +41,8 @@
  *
  ********************************************************************/
 
+#import "axr.h"
 #import "NSAXRDocument.h"
-#import "AXRDocument.h"
 
 @implementation NSAXRDocument
 

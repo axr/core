@@ -41,22 +41,8 @@
  *
  ********************************************************************/
 
-#include <QPainter>
-#include <QPainterPathStroker>
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
-#include "HSSFunction.h"
-#include "HSSKeywordConstant.h"
+#include "axr.h"
 #include "HSSStroke.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSRgb.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

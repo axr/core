@@ -41,24 +41,8 @@
  *
  ********************************************************************/
 
-#include <QPainter>
-#include <QPainterPath>
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSAbstractStroke.h"
-#include "HSSCallback.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
-#include "HSSFunction.h"
-#include "HSSKeywordConstant.h"
-#include "HSSMultipleValue.h"
-#include "HSSNumberConstant.h"
-#include "HSSPercentageConstant.h"
-#include "HSSRgb.h"
+#include "axr.h"
 #include "HSSRoundedRect.h"
-#include "HSSSimpleSelection.h"
-#include "HSSStroke.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

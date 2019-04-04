@@ -44,8 +44,7 @@
 #ifndef HSSMOUSEEVENT_H
 #define HSSMOUSEEVENT_H
 
-#include "HSSInputEvent.h"
-#include "HSSTypeEnums.h"
+#include "axr.h"
 
 namespace AXR
 {

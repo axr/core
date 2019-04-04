@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSPercentageConstant.h"
 
 using namespace AXR;
@@ -64,12 +64,16 @@ HSSPercentageConstant::~HSSPercentageConstant()
 
 AXRString HSSPercentageConstant::toString()
 {
-    return AXRString("HSSPercentageConstant with value %1%").arg(this->_number);
+    return HSSString::format("HSSPercentageConstant with value %f%", this->_number);
 }
 
 AXRString HSSPercentageConstant::stringRep()
 {
-    return AXRString("%1%").arg(this->_number*100);
+    if (!this->_originalRep.isEmpty())
+    {
+        return this->_originalRep + "%";
+    }
+    return HSSString::format("%f%", this->_number*100);
 }
 
 bool HSSPercentageConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
@@ -91,6 +95,16 @@ void HSSPercentageConstant::setNumber(HSSUnit newValue)
 HSSUnit HSSPercentageConstant::getNumber()
 {
     return this->_number;
+}
+
+void HSSPercentageConstant::setOriginalStringRep(HSSString string)
+{
+    this->_originalRep = string;
+}
+
+HSSString HSSPercentageConstant::originalStringRep()
+{
+    return this->_originalRep;
 }
 
 QSharedPointer<HSSClonable> HSSPercentageConstant::cloneImpl() const

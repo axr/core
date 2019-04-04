@@ -43,22 +43,8 @@
 
 #define _USE_MATH_DEFINES // for M_PI when using MSVC
 #include <cmath>
-#include <QPainterPath>
-#include <QVector>
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSAbstractStroke.h"
-#include "HSSCallback.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
-#include "HSSFunction.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
-#include "HSSPercentageConstant.h"
+#include "axr.h"
 #include "HSSPolygon.h"
-#include "HSSSimpleSelection.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

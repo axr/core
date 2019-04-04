@@ -41,17 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSLogFunction.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSRefFunction.h"
-#include "HSSSelectorChain.h"
-#include "HSSSimpleSelection.h"
-#include "HSSStringConstant.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

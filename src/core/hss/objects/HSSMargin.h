@@ -44,7 +44,6 @@
 #ifndef HSSMARGIN_H
 #define HSSMARGIN_H
 
-#include <QSharedPointer>
 #include "HSSObject.h"
 
 namespace AXR

@@ -44,8 +44,6 @@
 #ifndef HSSPROPERTYDEFINITION_H
 #define HSSPROPERTYDEFINITION_H
 
-#include <QSharedPointer>
-#include <QVector>
 #include "HSSStatement.h"
 
 namespace AXR

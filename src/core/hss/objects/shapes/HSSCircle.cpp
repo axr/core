@@ -41,11 +41,8 @@
  *
  ********************************************************************/
 
-#include <QPainterPath>
-#include "AXRLoggerManager.h"
-#include "HSSAbstractStroke.h"
+#include "axr.h"
 #include "HSSCircle.h"
-#include "HSSDisplayObject.h"
 
 using namespace AXR;
 

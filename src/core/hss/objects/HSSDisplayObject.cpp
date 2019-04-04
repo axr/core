@@ -42,49 +42,8 @@
  ********************************************************************/
 
 #include <cmath>
-#include <QStack>
-#include <QVariant>
-#include <QtGlobal>
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSStroke.h"
-#include "HSSCallback.h"
-#include "HSSContainer.h"
+#include "axr.h"
 #include "HSSDisplayObject.h"
-#include "HSSEvent.h"
-#include "HSSExpression.h"
-#include "HSSFunction.h"
-#include "HSSFlag.h"
-#include "HSSFont.h"
-#include "HSSKeywordConstant.h"
-#include "HSSLinearGradient.h"
-#include "HSSMargin.h"
-#include "HSSMouseEvent.h"
-#include "HSSMultipleValue.h"
-#include "HSSMultipleValueDefinition.h"
-#include "HSSNameSelector.h"
-#include "HSSNumberConstant.h"
-#include "HSSObject.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSParserNode.h"
-#include "HSSPercentageConstant.h"
-#include "HSSPoint.h"
-#include "HSSPropertyDefinition.h"
-#include "HSSPropertyPath.h"
-#include "HSSPropertyPathNode.h"
-#include "HSSRadialGradient.h"
-#include "HSSRect.h"
-#include "HSSRgb.h"
-#include "HSSRule.h"
-#include "HSSSelectorChain.h"
-#include "HSSSimpleSelection.h"
-#include "HSSSimpleSelector.h"
-#include "HSSStringConstant.h"
-#include "HSSStroke.h"
-#include "HSSValue.h"
 
 using namespace AXR;
 

@@ -44,8 +44,6 @@
 #ifndef HSSMULTIPLESELECTION_H
 #define HSSMULTIPLESELECTION_H
 
-#include <vector>
-#include <QSharedDataPointer>
 #include "HSSSelection.h"
 
 namespace AXR

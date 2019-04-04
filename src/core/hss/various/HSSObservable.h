@@ -44,7 +44,8 @@
 #ifndef HSSOBSERVABLE_H
 #define HSSOBSERVABLE_H
 
-#include <QMap>
+#include <map>
+#include "AXRGlobal.h"
 #include "HSSObservableProperties.h"
 
 template <class T> class QSharedPointer;

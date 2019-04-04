@@ -41,12 +41,8 @@
  *
  ********************************************************************/
 
-#include <set>
-#include <QSharedPointer>
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSMultipleSelection.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

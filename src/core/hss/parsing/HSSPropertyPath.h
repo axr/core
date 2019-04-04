@@ -44,7 +44,7 @@
 #ifndef HSSPROPERTYPATH_H
 #define HSSPROPERTYPATH_H
 
-#include <QVector>
+#include <deque>
 #include "HSSParserNode.h"
 
 namespace AXR

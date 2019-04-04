@@ -44,7 +44,6 @@
 #ifndef HSSSTROKE_H
 #define HSSSTROKE_H
 
-#include <QSharedPointer>
 #include "HSSAbstractStroke.h"
 
 namespace AXR

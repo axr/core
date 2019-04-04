@@ -44,6 +44,7 @@
 #ifndef AXRLOGGERMANAGER_H
 #define AXRLOGGERMANAGER_H
 
+#include "AXRGlobal.h"
 #include "AXRLoggerEnums.h"
 
 namespace AXR

@@ -44,9 +44,6 @@
 #ifndef HSSPARSERNODE_H
 #define HSSPARSERNODE_H
 
-#include <vector>
-#include <QSharedPointer>
-#include <QWeakPointer>
 #include "HSSClonable.h"
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"

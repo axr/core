@@ -44,8 +44,6 @@
 #ifndef HSSDISPLAYOBJECT_H
 #define HSSDISPLAYOBJECT_H
 
-#include <vector>
-#include <QSharedPointer>
 #include "HSSAbstractVisitor.h"
 #include "HSSObject.h"
 

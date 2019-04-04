@@ -41,7 +41,7 @@
  *
  ********************************************************************/
 
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSObjectNameConstant.h"
 
 using namespace AXR;

@@ -41,17 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSOverrideFunction.h"
-#include "HSSPropertyDefinition.h"
-#include "HSSSimpleSelection.h"
-#include "HSSSelection.h"
-#include "HSSSelectorChain.h"
-
 
 using namespace AXR;
 

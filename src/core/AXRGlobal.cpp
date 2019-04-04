@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "axr-config.h"
 #include "AXRGlobal.h"
 

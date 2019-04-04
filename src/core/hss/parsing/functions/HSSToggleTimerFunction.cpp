@@ -41,16 +41,8 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "HSSToggleTimerFunction.h"
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
-#include "HSSNumberConstant.h"
-#include "HSSValue.h"
-
 
 using namespace AXR;
 

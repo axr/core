@@ -41,6 +41,7 @@
  *
  ********************************************************************/
 
+#include "axr.h"
 #include "HSSInputEvent.h"
 
 using namespace AXR;

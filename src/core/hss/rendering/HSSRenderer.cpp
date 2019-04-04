@@ -41,32 +41,8 @@
  *
  ********************************************************************/
 
-#include <cmath>
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRError.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSAbstractStroke.h"
-#include "HSSContainer.h"
-#include "HSSFont.h"
-#include "HSSKeywordConstant.h"
-#include "HSSLinearGradient.h"
-#include "HSSMultipleValue.h"
-#include "HSSNumberConstant.h"
-#include "HSSPercentageConstant.h"
-#include "HSSRadialGradient.h"
-#include "HSSRect.h"
+#include "axr.h"
 #include "HSSRenderer.h"
-#include "HSSRoundedRect.h"
-#include "HSSShape.h"
-#include "HSSTextBlock.h"
-#include "HSSColorStop.h"
-#include "HSSParserNode.h"
-#include "HSSValue.h"
-#include <QLinearGradient>
-#include <QPainter>
-#include <QSharedPointer>
 
 using namespace AXR;
 

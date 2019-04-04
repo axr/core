@@ -41,9 +41,8 @@
  *
  ********************************************************************/
 
-#include "HSSContainer.h"
+#include "axr.h"
 #include "HSSLastChildFilter.h"
-#include "HSSMultipleSelection.h"
 
 using namespace AXR;
 

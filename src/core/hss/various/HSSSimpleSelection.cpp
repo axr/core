@@ -41,12 +41,7 @@
  *
  ********************************************************************/
 
-#include <set>
-#include <QSharedData>
-#include "AXRError.h"
-#include "HSSContainer.h"
-#include "HSSDisplayObject.h"
-#include "HSSMultipleSelection.h"
+#include "axr.h"
 #include "HSSSimpleSelection.h"
 
 using namespace AXR;

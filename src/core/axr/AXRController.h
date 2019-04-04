@@ -44,12 +44,10 @@
 #ifndef AXRCONTROLLER_H
 #define AXRCONTROLLER_H
 
-#include <vector>
 #include "AXRGlobal.h"
 #include "HSSTypeEnums.h"
 
 template <class T> class QSharedPointer;
-template <class T> class QStack;
 
 namespace AXR
 {

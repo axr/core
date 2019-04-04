@@ -41,23 +41,8 @@
  *
  ********************************************************************/
 
-#include "AXRController.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSColorStop.h"
-#include "HSSDisplayObject.h"
-#include "HSSExpression.h"
-#include "HSSFunction.h"
+#include "axr.h"
 #include "HSSGradient.h"
-#include "HSSKeywordConstant.h"
-#include "HSSMultipleValue.h"
-#include "HSSMultipleValueDefinition.h"
-#include "HSSNumberConstant.h"
-#include "HSSObjectDefinition.h"
-#include "HSSObjectNameConstant.h"
-#include "HSSPercentageConstant.h"
-#include "HSSRgb.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

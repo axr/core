@@ -41,8 +41,7 @@
  *
  ********************************************************************/
 
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSSubtraction.h"
 
 using namespace AXR;

@@ -42,7 +42,6 @@
  ********************************************************************/
 
 #include "HSSRect.h"
-#include <QRect>
 
 #ifdef Q_OS_WIN
 #include <qt_windows.h>

@@ -44,9 +44,6 @@
 #ifndef HSSOBJECTDEFINITION_H
 #define HSSOBJECTDEFINITION_H
 
-#include <deque>
-#include <vector>
-#include <QSharedPointer>
 #include "HSSStatement.h"
 
 namespace AXR

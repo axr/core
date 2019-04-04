@@ -41,21 +41,8 @@
  *
  ********************************************************************/
 
-#include <QStack>
-#include "AXRBuffer.h"
-#include "AXRController.h"
-#include "AXRDocument.h"
-#include "AXRLoggerManager.h"
-#include "AXRWarning.h"
-#include "HSSCallback.h"
-#include "HSSContainer.h"
-#include "HSSInputEvent.h"
+#include "axr.h"
 #include "HSSRequest.h"
-#include "HSSSelFunction.h"
-#include "HSSSimpleSelection.h"
-#include "HSSStringConstant.h"
-#include "HSSValue.h"
-#include "XMLParser.h"
 
 using namespace AXR;
 

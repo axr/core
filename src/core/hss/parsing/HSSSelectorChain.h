@@ -44,8 +44,6 @@
 #ifndef HSSSELECTORCHAIN_H
 #define HSSSELECTORCHAIN_H
 
-#include <deque>
-#include <QSharedPointer>
 #include "HSSParserNode.h"
 
 namespace AXR

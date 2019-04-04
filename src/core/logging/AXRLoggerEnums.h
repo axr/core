@@ -45,7 +45,6 @@
 #define AXRLOGGERENUMS_H
 
 #include "AXRGlobal.h"
-#include <QFlags>
 
 namespace AXR
 {

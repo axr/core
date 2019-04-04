@@ -41,12 +41,8 @@
  *
  ********************************************************************/
 
-#include <QSharedPointer>
-#include "AXRLoggerManager.h"
-#include "HSSDisplayObject.h"
+#include "axr.h"
 #include "HSSMultipleValue.h"
-#include "HSSParserNode.h"
-#include "HSSSimpleSelection.h"
 
 using namespace AXR;
 

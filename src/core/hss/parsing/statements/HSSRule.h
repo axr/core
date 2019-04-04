@@ -44,9 +44,6 @@
 #ifndef HSSRULE_H
 #define HSSRULE_H
 
-#include <deque>
-#include <vector>
-#include <QSharedPointer>
 #include "HSSStatement.h"
 
 namespace AXR
