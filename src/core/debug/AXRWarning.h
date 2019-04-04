@@ -64,7 +64,7 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the warning originated.
          *  @param column   The column index (starting at 1) in the line where the warning originated.
          */
-        AXRWarning(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), qint64 line = 0, qint64 column = 0);
+        AXRWarning(const AXRString &origin, const AXRString &message, const AXRString &url = AXRString(), HSSUnit line = 0, HSSUnit column = 0);
 
         void raise() const;
         AXRString toString() const;

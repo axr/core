@@ -95,8 +95,8 @@ static int getQtWeight(AXRString keyword)
 
 HSSTextTransformType HSSTextBlock::textTransformTypeFromString(AXRString value)
 {
-    static QMap<AXRString, HSSTextTransformType> types;
-    if (types.isEmpty())
+    static std::map<AXRString, HSSTextTransformType> types;
+    if (types.empty())
     {
         types["lowercase"] = HSSTextTransformTypeLowercase;
         types["uppercase"] = HSSTextTransformTypeUppercase;
@@ -105,7 +105,7 @@ HSSTextTransformType HSSTextBlock::textTransformTypeFromString(AXRString value)
     }
 
     HSSTextTransformType type = HSSTextTransformTypeNone;
-    if (types.contains(value))
+    if (types.count(value))
     {
         type = types[value];
     }
@@ -115,8 +115,8 @@ HSSTextTransformType HSSTextBlock::textTransformTypeFromString(AXRString value)
 
 HSSTextAlignType HSSTextBlock::textAlignTypeFromString(AXRString value)
 {
-    static QMap<AXRString, HSSTextAlignType>types;
-    if (types.isEmpty())
+    static std::map<AXRString, HSSTextAlignType>types;
+    if (types.empty())
     {
         types["left"] = HSSTextAlignTypeLeft;
         types["right"] = HSSTextAlignTypeRight;
@@ -125,7 +125,7 @@ HSSTextAlignType HSSTextBlock::textAlignTypeFromString(AXRString value)
     }
 
     HSSTextAlignType type = HSSTextAlignTypeNone;
-    if (types.contains(value))
+    if (types.count(value))
     {
         type = types[value];
     }

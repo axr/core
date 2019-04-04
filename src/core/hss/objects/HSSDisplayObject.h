@@ -358,8 +358,8 @@ namespace AXR
         bool _needsSurface;
 
         //flags
-        QMap<AXRString, HSSRuleState> _flagsStatus;
-        QMap<AXRString, std::vector< QSharedPointer<HSSFlag> > > _flags;
+        std::map<AXRString, HSSRuleState> _flagsStatus;
+        std::map<AXRString, std::vector< QSharedPointer<HSSFlag> > > _flags;
 
         //if it needs to redraw
         bool _isDirty;

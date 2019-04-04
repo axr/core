@@ -43,15 +43,13 @@
 
 #include "HSSSize.h"
 
+template <typename T> inline T AXRabs(const T &t) { return t >= 0 ? t : -t; }
+inline bool AXRFuzzyIsNull(long double d)
+{
+    return AXRabs(d) <= 0.000000000001;
+}
+
 using namespace AXR;
-
-HSSSize::HSSSize(const QSizeF &size) : width(size.width()), height(size.height())
-{
-}
-
-HSSSize::HSSSize(const QSize &size) : width(size.width()), height(size.height())
-{
-}
 
 HSSSize::HSSSize() : width(0), height(0)
 {
@@ -67,7 +65,7 @@ HSSSize::HSSSize(HSSUnit sizeWidth, HSSUnit sizeHeight) : width(sizeWidth), heig
 
 bool HSSSize::operator==(const HSSSize &other) const
 {
-    return qFuzzyIsNull(width - other.width) && qFuzzyIsNull(height - other.height);
+    return AXRFuzzyIsNull(width - other.width) && AXRFuzzyIsNull(height - other.height);
 }
 
 bool HSSSize::operator!=(const HSSSize &other) const

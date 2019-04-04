@@ -59,6 +59,7 @@ namespace AXR
     class HSSEvent;
     class HSSInstruction;
     class HSSObjectDefinition;
+    class HSSObject;
     class HSSParserNode;
     class HSSRule;
     class HSSSelection;
@@ -210,7 +211,7 @@ namespace AXR
          *
          *  @param sheet    A string containing the file name of the stylesheet
          */
-        void addStyleSheetUrl(const QUrl &url);
+        void addStyleSheetUrl(const AXRString &url);
 
         /**
          *  Removes an entry in the list of sheets to be loaded.
@@ -225,28 +226,28 @@ namespace AXR
          *  @param index    An unsigned int containing the index of the sheet to be removed.
          *  @return         The sheet at that index.
          */
-        QUrl styleSheetUrlAt(int index) const;
+        AXRString styleSheetUrlAt(int index) const;
 
         /**
          *  Returns all entries from the list of sheets to be loaded.
          *
          *  @return         The list of sheets to be loaded.
          */
-        const QList<QUrl>& styleSheetUrls() const;
+        const std::vector<AXRString>& styleSheetUrls() const;
 
         /**
          *  Returns the whole parser tree.
          *
          *  @return         A vector of shared pointers to parser nodes, representing the tree.
          */
-        const QList<QSharedPointer<HSSParserNode> >& parserTree() const;
+        const std::list<QSharedPointer<HSSParserNode> >& parserTree() const;
 
         /**
          *  Replaces the whole parser tree with what you give.
          *
          *  @param newTree  A vector of shared pointers to parser nodes, representing the new tree.
          */
-        void setParserTree(const QList<QSharedPointer<HSSParserNode> > &newTree);
+        void setParserTree(const std::list<QSharedPointer<HSSParserNode> > &newTree);
 
         /**
          *  Appends the parser node to the parser tree.
@@ -267,7 +268,7 @@ namespace AXR
          *
          *  @return         A vector of shared pointers to rules.
          */
-        const QList<QSharedPointer<HSSRule> >& rules() const;
+        const std::vector<QSharedPointer<HSSRule> >& rules() const;
 
         /**
          *  Adds an entry to the list of rules.
@@ -430,7 +431,7 @@ namespace AXR
 
         // TODO: All we ever do is push and pop things to and from this... should we provide
         // methods for doing that rather than providing a list reference?
-        QStack<QSharedPointer<HSSContainer> >& currentContext() const;
+        std::vector<QSharedPointer<HSSContainer> >& currentContext() const;
 
         void currentContextPush(QSharedPointer<HSSContainer> container);
         const QSharedPointer<HSSContainer> currentContextPop() const;

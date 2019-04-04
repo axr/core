@@ -67,19 +67,33 @@ void HSSNumberConstant::setValue(HSSUnit newValue)
     this->value = newValue;
 }
 
+void HSSNumberConstant::setOriginalStringRep(HSSString string)
+{
+    this->_originalRep = string;
+}
+
+HSSString HSSNumberConstant::originalStringRep()
+{
+    return this->_originalRep;
+}
+
 HSSUnit HSSNumberConstant::getValue()
 {
     return this->value;
 }
 
-AXRString HSSNumberConstant::toString()
+HSSString HSSNumberConstant::toString()
 {
-    return AXRString("HSSNumberConstant with value %1").arg(this->value);
+    return HSSString::format("HSSNumberConstant with value %f", this->value);
 }
 
-AXRString HSSNumberConstant::stringRep()
+HSSString HSSNumberConstant::stringRep()
 {
-    return AXRString("%1").arg(this->value);
+    if (!this->_originalRep.isEmpty())
+    {
+        return this->_originalRep;
+    }
+    return HSSString::number(this->value);
 }
 
 bool HSSNumberConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)

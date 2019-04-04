@@ -113,8 +113,11 @@ const void HSSSelector::observeForContentTreeChanges(QSharedPointer<HSSSelection
     else
     {
         if(!scope) return;
-        Q_FOREACH(const QSharedPointer<HSSDisplayObject> & theDO, *(scope->joinAll().data()))
+        QSharedPointer<HSSSimpleSelection> sSel = scope->joinAll();
+        HSSSimpleSelection::const_iterator it;
+        for (it = sSel->begin(); it != sSel->end(); ++it)
         {
+            const QSharedPointer<HSSDisplayObject> & theDO = *it;
             theDO->observe("__impl_private__contentTreeChanged", "__impl_private__simpleSelection", this, new HSSValueChangedCallback<HSSSelector > (this, &HSSSelector::contentTreeChanged));
         }
     }

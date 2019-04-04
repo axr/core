@@ -83,7 +83,7 @@ namespace AXR
         QSharedPointer<XMLParser> parserXML;
         QSharedPointer<HSSCodeParser> parserHSS;
 
-        QMap<AXRString, HSSAbstractValueChangedCallback*> customFunctions;
+        std::map<AXRString, HSSAbstractValueChangedCallback*> customFunctions;
 
         HSSCascader* cascadeVisitor;
         HSSLayout* layoutVisitor;
@@ -170,9 +170,11 @@ void AXRDocument::run()
 
         QSharedPointer<HSSContainer> root = qSharedPointerCast<HSSContainer>(d->controller->root());
 
-        const QList<QUrl> &styleSheetUrls = d->controller->styleSheetUrls();
-        Q_FOREACH (const QUrl &styleSheetUrl, styleSheetUrls)
+        const std::vector<AXRString> & styleSheetUrls = d->controller->styleSheetUrls();
+        std::vector<AXRString>::const_iterator it;
+        for (it = styleSheetUrls.begin(); it!=styleSheetUrls.end(); ++it)
         {
+            const AXRString &styleSheetUrl = *it;
             QSharedPointer<AXRBuffer> hssfile;
             try
             {
@@ -512,7 +514,7 @@ bool AXRDocument::loadFileByPath(const QUrl &url)
 
 bool AXRDocument::loadXmlFile(const QUrl &url)
 {
-    axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening XML document: %1").arg(url.toString()));
+    axr_log(LoggerChannelOverview, HSSString::format("AXRDocument: opening XML document: %s", url.chardata()));
 
     d->isHSSOnly = false;
     d->showLayoutSteps = false;
@@ -812,7 +814,7 @@ void AXRDocument::breakIfNeeded()
         breakvar = 1; //we need something to break on
     }
 
-    axr_log(LoggerChannelLayout, AXRString("currentLayoutTick = %1, currentLayoutStep = %2, %3").arg(d->currentLayoutTick).arg(d->currentLayoutStep).arg(breakvar));
+    axr_log(LoggerChannelLayout, HSSString::format("currentLayoutTick = %u, currentLayoutStep = %u, %i", d->currentLayoutTick, d->currentLayoutStep, breakvar));
 }
 
 int AXRDocument::windowWidth() const

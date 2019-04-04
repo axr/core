@@ -106,8 +106,10 @@ bool HSSFlagFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
     QSharedPointer<HSSFlagFunction> castedNode = qSharedPointerCast<HSSFlagFunction>(otherNode);
     if ( this->_flagFunctionType != castedNode->_flagFunctionType ) return false;
     unsigned i = 0;
-    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
     {
+        const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
         if ( ! selectorChain->equalTo(castedNode->selectorChains[i])) return false;
         ++i;
     }

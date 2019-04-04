@@ -128,7 +128,7 @@ AXRString HSSRgb::toString()
     }
     else
     {
-        return AXRString("Annonymous HSSRgb with red: %1 green: %2 blue: %3 alpha: %4").arg(this->getRed()).arg(this->getGreen()).arg(this->getBlue()).arg(this->getAlpha());
+        return HSSString::format("Annonymous HSSRgb with red: %f green: %f blue: %f alpha: %f", this->getRed(), this->getGreen(), this->getBlue(), this->getAlpha());
     }
 }
 

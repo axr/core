@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSSelection::selectionTypeStringRepresentation(HSSSelectionType selectionType)
 {
-    static QMap<HSSSelectionType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSSelectionType, AXRString> types;
+    if (types.empty())
     {
         types[HSSSelectionTypeSimpleSelection] = "HSSSelectionTypeSimpleSelection";
         types[HSSSelectionTypeMultipleSelection] = "HSSSelectionTypeMultipleSelection";
@@ -96,7 +96,7 @@ AXRString HSSSelection::toString()
 std::string HSSSelection::toStdString()
 {
     AXRString tempstr = this->toString();
-    return tempstr.toStdString();
+    return tempstr.data();
 }
 
 AXRString HSSSelection::defaultObjectType()
@@ -127,19 +127,16 @@ bool HSSSelection::equalTo(QSharedPointer<HSSObject> otherObj)
 
 AXRString HSSSelection::logSelection(const HSSSelection * selection, const std::vector<QSharedPointer<HSSSelectorChain> > & selectorChains)
 {
-    QStringList selections;
+    std::vector<HSSString> selections;
     QSharedPointer<HSSSimpleSelection> flatSelection = selection->joinAll();
     for (HSSSimpleSelection::iterator it = flatSelection->begin(); it != flatSelection->end(); ++it) {
-        selections.append(AXRString("    %1").arg((*it)->getName()));
+        selections.push_back(HSSString::format("    %s", (*it)->getName().chardata()));
     }
 
-    QStringList selectors;
+    std::vector<HSSString> selectors;
     for (std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it2 = selectorChains.begin(); it2 != selectorChains.end(); ++it2) {
-        selectors.append((*it2)->stringRep());
+        selectors.push_back((*it2)->stringRep());
     }
-
-    return AXRString("%1 { } selected %2 elements:\n%3\n")
-            .arg(selectors.join(", "))
-            .arg(AXRString::number(flatSelection->size()))
-            .arg(selections.join("\n"));
+    
+    return HSSString::format("%s { } selected %d elements:\n%s\n", HSSString::join(selectors, ", ").chardata(), flatSelection->size(), HSSString::join(selections, "\n").chardata());
 }

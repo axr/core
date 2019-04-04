@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSGradient::gradientTypeStringRepresentation(HSSGradientType gradientType)
 {
-    static QMap<HSSGradientType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSGradientType, AXRString> types;
+    if (types.empty())
     {
         types[HSSGradientTypeLinear] = "HSSGradientTypeLinear";
         types[HSSGradientTypeRadial] = "HSSGradientTypeRadial";
@@ -172,9 +172,11 @@ QSharedPointer<HSSRgb> HSSGradient::getColorAfterFirst()
         else if (colorStops->isA(HSSObjectTypeMultipleValue))
         {
             QSharedPointer<HSSMultipleValue> multiValue = qSharedPointerCast<HSSMultipleValue>(colorStops);
-            const QList<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
-            Q_FOREACH(QSharedPointer<HSSObject> stopObj, stopsList)
+            const std::vector<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = stopsList.begin(); it != stopsList.end(); ++it)
             {
+                const QSharedPointer<HSSObject> & stopObj = *it;
                 if (stopObj->isA(HSSObjectTypeColorStop))
                 {
                     QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
@@ -229,11 +231,11 @@ QSharedPointer<HSSRgb> HSSGradient::getColorBeforeLast()
         else if (colorStops->isA(HSSObjectTypeMultipleValue))
         {
             QSharedPointer<HSSMultipleValue> multiValue = qSharedPointerCast<HSSMultipleValue>(colorStops);
-            const QList<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
-            QListIterator<QSharedPointer<HSSObject> > i(stopsList);
-            i.toBack();
-            while (i.hasPrevious()){
-                QSharedPointer<HSSObject> stopObj = i.previous();
+            const std::vector<QSharedPointer<HSSObject> > stopsList = multiValue->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_reverse_iterator it;
+            for (it=stopsList.rbegin(); it != stopsList.rend(); ++it)
+            {
+                const QSharedPointer<HSSObject> stopObj = *it;
                 if (stopObj->isA(HSSObjectTypeColorStop))
                 {
                     QSharedPointer<HSSColorStop> theStop = qSharedPointerCast<HSSColorStop>(colorStops);
@@ -269,12 +271,14 @@ QSharedPointer<HSSRgb> HSSGradient::getColorBeforeLast()
     return ret;
 }
 
-QSharedPointer<HSSRgb> HSSGradient::getNextColorFromStops(QListIterator<QSharedPointer<HSSObject> > it)
+QSharedPointer<HSSRgb> HSSGradient::getNextColorFromStops(QSharedPointer<HSSObject> theStopObj, std::vector<QSharedPointer<HSSObject> > colorStops)
 {
     //first, look into the color stops to see if we find a suitable color
     QSharedPointer<HSSRgb> ret;
-    while (it.hasNext()) {
-        const QSharedPointer<HSSObject> & stopObj = it.next();
+    std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+    for (it = std::find(colorStops.begin(), colorStops.end(), theStopObj); it != colorStops.end(); ++it)
+    {
+        const QSharedPointer<HSSObject> & stopObj = *it;
         if (stopObj->isA(HSSObjectTypeRgb)) {
             ret = qSharedPointerCast<HSSRgb>(stopObj);
             break;

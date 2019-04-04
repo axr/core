@@ -104,8 +104,9 @@ bool HSSShape::isKeyword(AXRString value, AXRString property)
     return HSSObject::isKeyword(value, property);
 }
 
-void HSSShape::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
+void HSSShape::createPath(QSharedPointer<HSSPath> & path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
-    QList<QSharedPointer<HSSParserNode> > segments;
+    path = QSharedPointer<HSSPath>(new HSSPath());
+    std::list<QSharedPointer<HSSParserNode> > segments;
     this->createPath(path, x, y, width, height, segments);
 }

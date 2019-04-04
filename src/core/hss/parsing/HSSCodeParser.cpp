@@ -64,11 +64,11 @@ namespace AXR
         
         QSharedPointer<HSSTokenizer> tokenizer;
         QSharedPointer<AXRBuffer> file;
-        QList<QSharedPointer<AXRBuffer> > loadedFiles;
+        std::vector<QSharedPointer<AXRBuffer> > loadedFiles;
         
         QSharedPointer<HSSToken> currentToken;
-        qint64 line;
-        qint64 column;
+        size_t line;
+        size_t column;
         std::vector<HSSParserContext> currentContext;
         std::stack<QSharedPointer<HSSObject> > currentObjectContext;
         AXRString _lastObjectType;
@@ -111,7 +111,6 @@ QSharedPointer<AXRBuffer> HSSCodeParser::file() const
 void HSSCodeParser::setFile(QSharedPointer<AXRBuffer> file)
 {
     d->file = file;
-    QUrl filePath = file->sourceUrl();
 }
 
 AXRController * HSSCodeParser::controller()
@@ -127,12 +126,12 @@ void HSSCodeParser::setController(AXRController * controller)
 
 bool HSSCodeParser::loadFile(QSharedPointer<AXRBuffer> file)
 {
-    axr_log(LoggerChannelOverview, "HSSParser: loading file " + file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "HSSParser: loading file " + file->sourceUrl());
 
     //check if the file has been loaded already
-    if (d->loadedFiles.contains(file))
+    if (std::find(d->loadedFiles.begin(), d->loadedFiles.end(), file) != d->loadedFiles.end())
     {
-        AXRError("HSSParser", "Failed loading file " + file->sourceUrl().toString() + " because of circular reference").raise();
+        AXRError("HSSParser", "Failed loading file " + file->sourceUrl() + " because of circular reference").raise();
         return false;
     }
 
@@ -673,7 +672,7 @@ QSharedPointer<HSSSimpleSelector> HSSCodeParser::readSimpleSelector()
             
         case HSSSymbol:
         {
-            const char currentTokenValue = *(VALUE_TOKEN(d->currentToken)->getString()).toStdString().c_str();
+            const char currentTokenValue = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
             switch (currentTokenValue)
             {
                 case '*':
@@ -871,7 +870,7 @@ QSharedPointer<HSSCombinator> HSSCodeParser::readCombinator()
     {
         case HSSSymbol:
         {
-            const char currentTokenValue = *(VALUE_TOKEN(d->currentToken)->getString()).toStdString().c_str();
+            const char currentTokenValue = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
             switch (currentTokenValue)
             {
                 case '=':
@@ -930,7 +929,7 @@ bool HSSCodeParser::isCombinator(QSharedPointer<HSSToken> token)
     {
         case HSSSymbol:
         {
-            const char currentTokenChar = *(VALUE_TOKEN(token).data()->getString()).toStdString().c_str();
+            const char currentTokenChar = *(VALUE_TOKEN(token).data()->getString()).data().c_str();
             switch (currentTokenChar)
             {
                 case '=':
@@ -1195,7 +1194,7 @@ QSharedPointer<HSSCombinator> HSSCodeParser::readSymbolCombinator()
      */
     QSharedPointer<HSSCombinator> errorState;
     QSharedPointer<HSSCombinator> ret;
-    const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).toStdString().c_str();
+    const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
     switch (currentTokenChar)
     {
         case '=':
@@ -2241,10 +2240,9 @@ QSharedPointer<HSSInstruction> HSSCodeParser::readInstruction(bool preferHex)
                 AXRString instructionKw = VALUE_TOKEN(d->currentToken)->getString();
                 if (instructionKw == "UIFramework")
                 {
-                    QUrl url;
-                    url.setScheme(HSSFRAMEWORK_PROTOCOL);
-                    url.setPath("framework/UIFramework.hss");
-                    ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSImportInstruction, url.toString(), d->controller));
+                    AXRString url(HSSFRAMEWORK_PROTOCOL);
+                    url += "://framework/UIFramework.hss";
+                    ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSImportInstruction, url, d->controller));
                 }
                 else
                 {
@@ -2318,14 +2316,14 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::getObjectFromInstruction(QSha
                 tempstr = tempstr + tempstr;
             }
             
-            hexValue = tempstr.toUInt(NULL, 16);
+            hexValue = tempstr.toHex();
             
             ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, d->controller));
             
             QSharedPointer<HSSPropertyDefinition> newRed = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(d->controller));
             QSharedPointer<HSSPropertyPath> redPath(new HSSPropertyPath(d->controller));
             redPath->add("red");
-            QVector<QSharedPointer<HSSPropertyPath> > redPaths;
+            std::vector<QSharedPointer<HSSPropertyPath> > redPaths;
             redPaths.push_back(redPath);
             newRed->setPaths(redPaths);
             newRed->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, d->controller)));
@@ -2334,7 +2332,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::getObjectFromInstruction(QSha
             QSharedPointer<HSSPropertyDefinition> newGreen = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(d->controller));
             QSharedPointer<HSSPropertyPath> greenPath(new HSSPropertyPath(d->controller));
             greenPath->add("green");
-            QVector<QSharedPointer<HSSPropertyPath> > greenPaths;
+            std::vector<QSharedPointer<HSSPropertyPath> > greenPaths;
             greenPaths.push_back(greenPath);
             newGreen->setPaths(greenPaths);
             newGreen->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, d->controller)));
@@ -2343,7 +2341,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::getObjectFromInstruction(QSha
             QSharedPointer<HSSPropertyDefinition> newBlue = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(d->controller));
             QSharedPointer<HSSPropertyPath> bluePath(new HSSPropertyPath(d->controller));
             bluePath->add("blue");
-            QVector<QSharedPointer<HSSPropertyPath> > bluePaths;
+            std::vector<QSharedPointer<HSSPropertyPath> > bluePaths;
             bluePaths.push_back(bluePath);
             newBlue->setPaths(bluePaths);
             newBlue->setValue(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(hexValue, d->controller)));
@@ -2375,60 +2373,60 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::getObjectFromInstruction(QSha
             switch (instructionType)
             {
                 case HSSRGBInstruction:
-                    red = instruction->getValue().mid(0, 1);
+                    red = instruction->getValue().substr(0, 1);
                     red += red;
-                    green = instruction->getValue().mid(1, 1);
+                    green = instruction->getValue().substr(1, 1);
                     green += green;
-                    blue = instruction->getValue().mid(2, 1);
+                    blue = instruction->getValue().substr(2, 1);
                     blue += blue;
                     alpha = "FF";
                     break;
                 case HSSRGBAInstruction:
-                    red = instruction->getValue().mid(0, 1);
+                    red = instruction->getValue().substr(0, 1);
                     red += red;
-                    green = instruction->getValue().mid(1, 1);
+                    green = instruction->getValue().substr(1, 1);
                     green += green;
-                    blue = instruction->getValue().mid(2, 1);
+                    blue = instruction->getValue().substr(2, 1);
                     blue += blue;
-                    alpha = instruction->getValue().mid(3, 1);
+                    alpha = instruction->getValue().substr(3, 1);
                     alpha += alpha;
                     break;
                 case HSSRGBAAInstruction:
-                    red = instruction->getValue().mid(0, 1);
+                    red = instruction->getValue().substr(0, 1);
                     red += red;
-                    green = instruction->getValue().mid(1, 1);
+                    green = instruction->getValue().substr(1, 1);
                     green += green;
-                    blue = instruction->getValue().mid(2, 1);
+                    blue = instruction->getValue().substr(2, 1);
                     blue += blue;
-                    alpha = instruction->getValue().mid(3, 2);
+                    alpha = instruction->getValue().substr(3, 2);
                     break;
                 case HSSRRGGBBInstruction:
-                    red = instruction->getValue().mid(0, 2);
-                    green = instruction->getValue().mid(2, 2);
-                    blue = instruction->getValue().mid(4, 2);
+                    red = instruction->getValue().substr(0, 2);
+                    green = instruction->getValue().substr(2, 2);
+                    blue = instruction->getValue().substr(4, 2);
                     alpha = "FF";
                     break;
                 case HSSRRGGBBAInstruction:
-                    red = instruction->getValue().mid(0, 2);
-                    green = instruction->getValue().mid(2, 2);
-                    blue = instruction->getValue().mid(4, 2);
-                    alpha = instruction->getValue().mid(6, 1);
+                    red = instruction->getValue().substr(0, 2);
+                    green = instruction->getValue().substr(2, 2);
+                    blue = instruction->getValue().substr(4, 2);
+                    alpha = instruction->getValue().substr(6, 1);
                     alpha += alpha;
                     break;
                 case HSSRRGGBBAAInstruction:
-                    red = instruction->getValue().mid(0, 2);
-                    green = instruction->getValue().mid(2, 2);
-                    blue = instruction->getValue().mid(4, 2);
-                    alpha = instruction->getValue().mid(6, 2);
+                    red = instruction->getValue().substr(0, 2);
+                    green = instruction->getValue().substr(2, 2);
+                    blue = instruction->getValue().substr(4, 2);
+                    alpha = instruction->getValue().substr(6, 2);
                     break;
                 default:
                     break;
             }
             
-            redHex = red.toUInt(NULL, 16);
-            greenHex = green.toUInt(NULL, 16);
-            blueHex = blue.toUInt(NULL, 16);
-            alphaHex = alpha.toUInt(NULL, 16);
+            redHex = red.toHex();
+            greenHex = green.toHex();
+            blueHex = blue.toHex();
+            alphaHex = alpha.toHex();
             
             ret = QSharedPointer<HSSObjectDefinition>(new HSSObjectDefinition(obj, d->controller));
             
@@ -2564,7 +2562,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readAdditiveExpression()
     QSharedPointer<HSSParserNode> left = this->readMultiplicativeExpression();
     while (!this->atEndOfSource() && d->currentToken->isA(HSSSymbol))
     {
-        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).toStdString().c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
         switch (currentTokenChar)
         {
             case '+':
@@ -2606,7 +2604,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readMultiplicativeExpression()
     while (!this->atEndOfSource() && d->currentToken->isA(HSSSymbol))
     {
         
-        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).toStdString().c_str();
+        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
         switch (currentTokenChar)
         {
             case '*':
@@ -3882,7 +3880,7 @@ void HSSCodeParser::skip(HSSTokenType type)
         else if (type == HSSNumber)
         {
             QSharedPointer<HSSValueToken> valueToken = VALUE_TOKEN(d->currentToken);
-            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol(QString::number(valueToken->getLong()), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol(HSSString::number(valueToken->getLong()), d->controller));
             this->readNextToken();
         }
         else

@@ -49,7 +49,7 @@ using namespace AXR;
 class AXRError::Data : public QSharedData
 {
 public:
-    Data(const AXRString &origin, const AXRString &message, const QUrl &url, qint64 line, qint64 column)
+    Data(const AXRString &origin, const AXRString &message, const AXRString &url, HSSUnit line, HSSUnit column)
     : origin(origin), message(message), url(url), line(line), column(column) { }
 
     Data(const Data &other)
@@ -71,7 +71,7 @@ public:
     /**
      * The URL of the XML or HSS file in which the problem occurred.
      */
-    QUrl url;
+    AXRString url;
 
     /**
      * The line in the XML or HSS file on which the problem occurred.
@@ -84,7 +84,7 @@ public:
     qint64 column;
 };
 
-AXRError::AXRError(const AXRString &origin, const AXRString &message, const QUrl &url, qint64 line, qint64 column)
+AXRError::AXRError(const AXRString &origin, const AXRString &message, const AXRString &url, HSSUnit line, HSSUnit column)
 : d(new Data(origin, message, url, line, column))
 {
 }
@@ -110,25 +110,34 @@ AXRString AXRError::toString() const
 
 AXRString AXRError::toProblemString(const AXRString &label) const
 {
-    QStringList parts;
-    parts << AXRString("%1: %2").arg(label).arg(d->message);
+    std::vector<AXRString> parts;
+    parts.push_back(HSSString::format("%s: %s", label.chardata(), d->message.chardata()));
 
     // If we have a URL the source is a file, otherwise it's from a memory buffer
     if (!d->url.isEmpty())
-        parts << AXRString("in %1").arg(d->url.toString());
+        parts.push_back(HSSString::format("in %s", d->url.chardata()));
 
     if (d->line > 0 || d->column > 0)
     {
-        parts << "on";
+        parts.push_back("on");
 
         if (d->line > 0)
-            parts << AXRString("line %1").arg(d->line);
+            parts.push_back(HSSString::format("line %d", d->line));
 
         if (d->column > 0)
-            parts << AXRString("column %1").arg(d->column);
+            parts.push_back(HSSString::format("column %d", d->column));
     }
 
-    return parts.join(" ");
+    AXRString ret;
+    for (size_t i = 0, j = parts.size(); i<j; ++i)
+    {
+        ret += parts[i];
+        if (i < j-1)
+        {
+            ret += " ";
+        }
+    }
+    return ret;
 }
 
 qint64 AXRError::getLine() const

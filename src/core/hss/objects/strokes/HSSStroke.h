@@ -48,6 +48,7 @@
 
 namespace AXR
 {
+    class HSSPath;
     class HSSRgb;
 
     /**
@@ -89,8 +90,6 @@ namespace AXR
         //color
         QSharedPointer<HSSObject> getColor();
         QSharedPointer<HSSObject> computeColor(QSharedPointer<HSSParserNode> parserNode);
-
-        virtual void draw(QPainter &painter, const QPainterPath &path);
 
     private:
         void _initialize();

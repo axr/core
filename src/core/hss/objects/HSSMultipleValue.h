@@ -108,7 +108,7 @@ namespace AXR
          *  @return The entire storage as a STL vector containing shared pointers to definition
          *  objects. Read only.
          */
-        const QList<QSharedPointer<HSSObject> > getValues() const;
+        const std::vector<QSharedPointer<HSSObject> > getValues() const;
 
         void commitStackValues();
         void fillWithDefaults();
@@ -116,7 +116,7 @@ namespace AXR
         void setScope(QSharedPointer<HSSSimpleSelection> newScope);
 
     protected:
-        QList<QSharedPointer<HSSObject> >valueList;
+        std::vector<QSharedPointer<HSSObject> >valueList;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

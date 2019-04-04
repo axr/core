@@ -61,7 +61,7 @@ namespace AXR
         }
 
         bool autoFlush;
-        QMap<AXRLoggerChannel, QIODevice*> outputDevices;
+        std::map<AXRLoggerChannel, QIODevice*> outputDevices;
         QFile stdoutDevice;
         QFile stderrDevice;
     };
@@ -123,7 +123,7 @@ void AXRGenericLogger::log(AXRLoggerChannel channel, const AXRString &message, b
     if (device && device->isWritable())
     {
         QTextStream out(device);
-        out << message;
+        out << QString(message.data().c_str());
         if (newLine)
             endl(out);
 

@@ -91,11 +91,11 @@ namespace AXR
         virtual bool isKeyword(AXRString value, AXRString property);
 
         //see HSSShape.h for documentation of these
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments);
+        virtual void createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments);
 
-        void createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
+        void createRoundedRect(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset);
 
-        virtual void drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
+        virtual void drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
 
         void stackCorners(QSharedPointer<HSSParserNode> parserNode);
         void stackTop(QSharedPointer<HSSParserNode> parserNode);
@@ -115,7 +115,7 @@ namespace AXR
         inline void _hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool & hasAll, bool & hasSegments) const;
 
         inline void _drawCenteredStrokeBySegments(
-            QPainterPath & path,
+            QSharedPointer<HSSPath> & path,
             const QSharedPointer<HSSObject> & segmentsObj,
             HSSUnit & theSize,
             HSSUnit & width,
@@ -141,7 +141,7 @@ namespace AXR
        ) const;
 
         inline void __drawCenteredStrokeBySegments(
-            QPainterPath & path,
+            QSharedPointer<HSSPath> & path,
             const AXRString & segment,
             HSSUnit & theSize,
             HSSUnit & width,
@@ -166,7 +166,7 @@ namespace AXR
             HSSUnit & leftCorrection
         ) const;
         inline void _drawInsideStrokeBySegments(
-            QPainterPath & path,
+            QSharedPointer<HSSPath> & path,
             const QSharedPointer<HSSObject> & segmentsObj,
             HSSUnit & theSize,
             HSSUnit & width,
@@ -192,7 +192,7 @@ namespace AXR
         ) const;
 
         inline void __drawInsideStrokeBySegments(
-            QPainterPath & path,
+            QSharedPointer<HSSPath> & path,
             const AXRString & segment,
             HSSUnit & theSize,
             HSSUnit & width,
@@ -218,7 +218,7 @@ namespace AXR
         ) const;
 
         inline void _drawOutsideStrokeBySegments(
-            QPainterPath & path,
+            QSharedPointer<HSSPath> & path,
             const QSharedPointer<HSSObject> & segmentsObj,
             HSSUnit & theSize,
             HSSUnit & width,
@@ -244,7 +244,7 @@ namespace AXR
         ) const;
 
         inline void __drawOutsideStrokeBySegments(
-            QPainterPath & path,
+            QSharedPointer<HSSPath> & path,
             const AXRString & segment,
             HSSUnit & theSize,
             HSSUnit & width,

@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
 {
-    static QMap<HSSFilterType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSFilterType, AXRString> types;
+    if (types.empty())
     {
         //position
         types[HSSFilterTypeFirst] = "HSSFilterTypeFirst";
@@ -79,8 +79,8 @@ AXRString HSSFilter::filterTypeStringRepresentation(HSSFilterType filterType)
 
 HSSFilterType HSSFilter::filterTypeFromString(AXRString name)
 {
-    static QMap<AXRString, HSSFilterType> filterTypes;
-    if (filterTypes.isEmpty())
+    static std::map<AXRString, HSSFilterType> filterTypes;
+    if (filterTypes.empty())
     {
         //position
         filterTypes["first"] = HSSFilterTypeFirst;

@@ -46,8 +46,8 @@
 
 using namespace AXR;
 
-HSSObservableMapping::HSSObservableMapping(HSSObservable* obs, HSSAbstractValueChangedCallback* cbk, const AXRString src, QVariant d)
-: observer(obs), callback(cbk), source(src), data(d)
+HSSObservableMapping::HSSObservableMapping(HSSObservable* obs, HSSAbstractValueChangedCallback* cbk, const AXRString src)
+: observer(obs), callback(cbk), source(src)
 {
 }
 

@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
 {
-    static QMap<HSSParserNodeType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSParserNodeType, AXRString> types;
+    if (types.empty())
     {
         types[HSSParserNodeTypeGeneric] = "HSSParserNode";
         types[HSSParserNodeTypeSelector] = "HSSSelector";
@@ -62,14 +62,14 @@ AXRString HSSParserNode::parserNodeStringRepresentation(HSSParserNodeType type)
         types[HSSParserNodeTypeStringConstant] = "HSSStringConstant";
         types[HSSParserNodeTypeKeywordConstant] = "HSSKeywordConstant";
         types[HSSParserNodeTypeObjectNameConstant] = "HSSObjectNameConstant";
-        types[HSSParserNodeTypeFunctionCall] = "HSSFunctionCall";
+        types[HSSParserNodeTypeFunction] = "HSSFunction";
         types[HSSParserNodeTypeMultipleValueDefinition] = "HSSParserNodeTypeMultipleValueDefinition";
         types[HSSParserNodeTypeNegation] = "HSSParserNodeTypeNegation";
         types[HSSParserNodeTypeFlag] = "HSSParserNodeTypeFlag";
     }
 
     AXRString ret = "";
-    if (types.contains(type))
+    if (types.count(type))
     {
         ret = types[type];
     }
@@ -129,7 +129,7 @@ AXRString HSSParserNode::toString()
 std::string HSSParserNode::toStdString()
 {
     AXRString tempstr = this->toString();
-    return tempstr.toStdString();
+    return tempstr.data();
 }
 
 AXRString HSSParserNode::stringRep()
@@ -140,7 +140,7 @@ AXRString HSSParserNode::stringRep()
 std::string HSSParserNode::stdStringRep()
 {
     AXRString tempstr = this->stringRep();
-    return tempstr.toStdString();
+    return tempstr.data();
 }
 
 bool HSSParserNode::equalTo(QSharedPointer<HSSParserNode> otherNode)

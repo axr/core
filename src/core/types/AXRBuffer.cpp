@@ -46,68 +46,59 @@
 
 using namespace AXR;
 
-AXRBuffer::AXRBuffer()
-: valid(false)
+
+AXRBuffer::AXRBuffer(const HSSString & buffer, const HSSString & sourceUrl)
+: _buffer(buffer)
+, _sourceUrl(sourceUrl)
+, _valid(true)
 {
+    
 }
 
-AXRBuffer::AXRBuffer(const QByteArray &data)
-: valid(true), buffer(data)
+AXRBuffer::AXRBuffer(AXRDocument * document, const HSSString & filePath)
+: _sourceUrl()
+, _valid(true)
 {
+    document->platform()->readFile(filePath, &this->_buffer, &this->_sourceUrl, &this->_valid);
 }
 
-AXRBuffer::AXRBuffer(const QFileInfo &filePath)
+AXRBuffer::AXRBuffer(HSSString buffer)
+: _buffer(buffer)
+, _sourceUrl()
+, _valid(true)
 {
-    QFile file(filePath.canonicalFilePath());
-    if (file.open(QIODevice::ReadOnly))
-    {
-        this->buffer = file.readAll();
-        this->sourceUrl_ = QUrl::fromLocalFile(filePath.canonicalFilePath());
-        this->valid = this->buffer.size() == file.size();
-    }
-    else
-    {
-        axr_log(LoggerChannelIO, AXRString("AXRBuffer: Could not open file '%1' - %2").arg(filePath.canonicalFilePath()).arg(file.errorString()));
-    }
-}
-
-AXRBuffer::AXRBuffer(const QFileInfo &filePath, const QByteArray &data)
-: valid(true), buffer(data), sourceUrl_(filePath.canonicalFilePath())
-{
+    
 }
 
 AXRBuffer::~AXRBuffer()
 {
 }
 
-QUrl AXRBuffer::sourceUrl() const
+AXRString AXRBuffer::sourceUrl() const
 {
-    return this->sourceUrl_;
+    return this->_sourceUrl;
 }
 
 AXRString AXRBuffer::getFileName() const
 {
-    QFileInfo fi(this->sourceUrl_.path());
-    return fi.fileName();
+    std::string val = this->_sourceUrl.data();
+    return HSSString(val.substr(val.find_last_of("/")+1));
 }
 
-const QByteArray& AXRBuffer::getBuffer() const
+HSSString & AXRBuffer::getBuffer()
 {
-    return this->buffer;
+    return this->_buffer;
 }
 
 bool AXRBuffer::isValid() const
 {
-    return this->valid;
+    return this->_valid;
 }
 
 AXRString AXRBuffer::toString() const
 {
-    AXRString str = "AXRBuffer:\n";
-    if (this->sourceUrl_.isValid())
-    {
-        str += AXRString("URL: %1\n").arg(this->sourceUrl_.toString());
-    }
+    AXRString str = "AXRBuffer: with URL: ";
+    str += this->_sourceUrl;
 
     return str;
 }

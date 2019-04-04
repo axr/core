@@ -47,7 +47,7 @@
 
 using namespace AXR;
 
-bool isLatin1Letter(AXRChar ch)
+bool isLatin1Letter(HSSChar ch)
 {
     return ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'));
 }
@@ -58,7 +58,7 @@ namespace AXR
     {
     public:
         HSSTokenizerPrivate()
-        : file(), textStream(), currentChar(), currentTokenText(),
+        : file(), currentChar(), index(0), bufferLength(0), currentTokenText(),
           currentLine(), currentColumn(), peekPositionOffset(),
           peekLineOffset(), peekColumnOffset(), preferHex()
         {
@@ -69,20 +69,26 @@ namespace AXR
         QTextStream *textStream;
 
         // The Unicode character that is currently being processed
-        AXRChar currentChar;
+        HSSChar currentChar;
+        
+        size_t index;
+        size_t bufferLength;
+        std::string::iterator iterator;
+        std::string::iterator bufferBegin;
+        std::string::iterator bufferEnd;
 
         // The text of a string token that is currently being processed
         AXRString currentTokenText;
 
         // The line and column number of the current character
-        qint64 currentLine;
-        qint64 currentColumn;
+        size_t currentLine;
+        size_t currentColumn;
 
         // Offsets from the buffer position and line/column numbers used when
         // peeking ahead in the stream
-        qint64 peekPositionOffset;
-        qint64 peekLineOffset;
-        qint64 peekColumnOffset;
+        size_t peekPositionOffset;
+        size_t peekLineOffset;
+        size_t peekColumnOffset;
 
         // If you are expecting a hexadecimal number, set this to true
         // don't forget to reset it afterwards
@@ -121,6 +127,9 @@ void HSSTokenizer::reset()
 
     d->currentChar = '\0';
     d->currentTokenText = AXRString();
+    
+    d->index = 0;
+    d->bufferLength = 0;
 
     d->currentLine = 1;
     d->currentColumn = 1;
@@ -148,7 +157,10 @@ void HSSTokenizer::setFile(QSharedPointer<AXRBuffer> file)
         return;
 
     d->file = file;
-    d->textStream = new QTextStream(file->getBuffer());
+    d->index = 0;
+    d->bufferLength = file->getBuffer().length();
+    d->bufferBegin = d->iterator = file->getBuffer().begin();
+    d->bufferEnd = file->getBuffer().end();
 }
 
 bool HSSTokenizer::isHexPreferred() const
@@ -161,12 +173,12 @@ void HSSTokenizer::setHexPreferred(bool prefer)
     d->preferHex = prefer;
 }
 
-qint64 HSSTokenizer::currentLine() const
+size_t HSSTokenizer::currentLine() const
 {
     return d->currentLine;
 }
 
-qint64 HSSTokenizer::currentColumn() const
+size_t HSSTokenizer::currentColumn() const
 {
     return d->currentColumn;
 }
@@ -190,7 +202,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
         *d->textStream >> d->currentChar;
     }
 
-    axr_log(LoggerChannelHSSTokenizer, AXRString("Read character %1 (line %2, col %3)").arg(d->currentChar).arg(d->currentLine).arg(d->currentColumn));
+    axr_log(LoggerChannelHSSTokenizer, HSSString::format("Read character %c (line %d, col %d)", d->currentChar.data(), d->currentLine, d->currentColumn));
 
     d->currentColumn++;
 
@@ -209,7 +221,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
         return ret;
     }
 
-    QChar cc = d->currentChar;
+    HSSChar cc = d->currentChar;
 
     // Identifiers can start with a letter or an underscore
     if (isLatin1Letter(cc) || cc == '_')
@@ -232,7 +244,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
             return this->readNumberOrPercentage();
     }
 
-    switch (cc.toLatin1())
+    switch (cc.data())
     {
         // If it starts with quotes, either single or double, it is a string
         case '"':
@@ -305,22 +317,22 @@ QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
         return ret;
 
     // Store the current position in the buffer
-    qint64 savedPosition = d->textStream->pos();
-    qint64 savedLine = d->currentLine;
-    qint64 savedColumn = d->currentColumn;
+    size_t savedPosition = d->index;
+    size_t savedLine = d->currentLine;
+    size_t savedColumn = d->currentColumn;
 
     // Read the next token
     ret = this->readNextToken();
 
     // Store the new offset
-    d->peekPositionOffset += (d->textStream->pos() - savedPosition);
+    d->peekPositionOffset += (d->index - savedPosition);
     d->peekLineOffset += (d->currentLine - savedLine);
     d->peekColumnOffset += (d->currentColumn - savedColumn);
 
     if (ret)
-        axr_log(LoggerChannelHSSTokenizer, AXRString("Peeked (offset: %1, current position: %2, saved position: %3), read token %4").arg(d->peekPositionOffset).arg(d->textStream->pos()).arg(savedPosition).arg(ret->toString()));
+        axr_log(LoggerChannelHSSTokenizer, HSSString::format("Peeked (offset: %d, current position: %d, saved position: %d), read token %s", d->peekPositionOffset, d->index, savedPosition, ret->toString().chardata()));
     else
-        axr_log(LoggerChannelHSSTokenizer, AXRString("Peeked (offset: %1, current position: %2, saved position: %3), no token read").arg(d->peekPositionOffset).arg(d->textStream->pos()).arg(savedPosition));
+        axr_log(LoggerChannelHSSTokenizer, HSSString::format("Peeked (offset: %d, current position: %d, saved position: %d), no token read", d->peekPositionOffset, d->index, savedPosition));
 
     return ret;
 }
@@ -403,8 +415,8 @@ AXRString HSSTokenizer::extractCurrentTokenText()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readWhitespace()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     while (d->currentChar.isSpace())
     {
@@ -430,8 +442,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readWhitespace()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readIdentifier()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     while (isLatin1Letter(d->currentChar) || d->currentChar.isDigit() || d->currentChar == '_')
     {
@@ -446,15 +458,15 @@ QSharedPointer<HSSToken> HSSTokenizer::readIdentifier()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     security_brake_init();
     bool done = false;
     d->currentTokenText.clear();
     while (!done)
     {
-        switch (d->currentChar.toLatin1())
+        switch (d->currentChar.data())
         {
         case 'a':
         case 'A':
@@ -484,7 +496,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
                     done = true;
                     break;
                 }
-                else if (d->currentTokenText.size() > 0)
+                else if (d->currentTokenText.length() > 0)
                 {
                     return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
                 }
@@ -510,8 +522,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     bool dotFound = false;
     while (d->currentChar.isDigit() || d->currentChar == '.')
@@ -549,8 +561,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
 QSharedPointer<HSSToken> HSSTokenizer::readString()
 {
     QSharedPointer<HSSToken> errorState;
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     QSharedPointer<HSSToken> ret;
     if (d->currentChar == '"')
@@ -594,8 +606,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     QSharedPointer<HSSValueToken> ret;
     this->readNextChar();
@@ -654,8 +666,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
 
     QSharedPointer<HSSToken> ret;
 
@@ -671,8 +683,8 @@ QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
  */
 QSharedPointer<HSSToken> HSSTokenizer::readDotChars()
 {
-    const qint64 line = d->currentLine;
-    const qint64 column = d->currentColumn - 1;
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
     QSharedPointer<HSSToken> ret;
     if (d->currentChar == '.')
     {

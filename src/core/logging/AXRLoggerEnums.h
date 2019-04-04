@@ -176,8 +176,11 @@ namespace AXR
          */
         LoggerChannelAll = 0x7fffffff
     };
+    
+    //plural is when various channels have been combined in one mask
+    typedef AXRLoggerChannel AXRLoggerChannels;
 
-    AXR_API QList<AXRLoggerChannel> loggerFlagsToList(AXRLoggerChannels channels);
+    AXR_API std::list<AXRLoggerChannel> loggerFlagsToList(AXRLoggerChannels channels);
     AXR_API AXRString loggerChannelToString(AXRLoggerChannel channel);
     AXR_API AXRLoggerChannel stringToLoggerChannel(const AXRString &channelName);
 }

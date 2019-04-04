@@ -46,12 +46,10 @@
 
 #include "HSSObject.h"
 
-class QPainter;
-class QPainterPath;
-
 namespace AXR
 {
     class HSSAbstractStroke;
+    class HSSPath;
 
     /**
      *  @brief Abstract base class for all shape objects.
@@ -95,27 +93,27 @@ namespace AXR
          *  theses are the x:0, y:0 (upper left corner) and as wide and tall as the container, but they can be
          *  different in case of joining paths together, for example.
          *
-         *  @param path     A QPainterPath to configure the shape of the object.
+         *  @param path     A HSSPath to configure the shape of the object.
          *  @param x        The horizontal coordinate for the upper left corner of the bounding box of the shape.
          *  @param y        The vertical coordinate for the upper left corner of the bounding box of the shape.
          *  @param width    The width of the bounding box of the shape.
          *  @param height   The height of the bounding box of the shape.
          *  @param segments The segments that will be drawn.
          */
-        virtual void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments) = 0;
+        virtual void createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments) = 0;
 
         /**
          *  Convenience function to create a path for all segments.
          *
-         *  @param path     A QPainterPath to configure the shape of the object.
+         *  @param path     A HSSPath to configure the shape of the object.
          *  @param x        The horizontal coordinate for the upper left corner of the bounding box of the shape.
          *  @param y        The vertical coordinate for the upper left corner of the bounding box of the shape.
          *  @param width    The width of the bounding box of the shape.
          *  @param height   The height of the bounding box of the shape.
          */
-        void createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
+        void createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height);
 
-        virtual void drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY) = 0;
+        virtual void drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY) = 0;
 
     protected:
         /**

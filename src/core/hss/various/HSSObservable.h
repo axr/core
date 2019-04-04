@@ -73,7 +73,7 @@ namespace AXR
          *  @param property     The property in enum representation.
          *  @return A string containing a textual representation of the HSSObservableProperty.
          */
-        static AXRString observablePropertyStringRepresentation(HSSObservableProperty property);
+        static HSSString observablePropertyStringRepresentation(HSSObservableProperty property);
 
         /**
          *  Returns a HSSObservableProperty from a string representation of a property name. In situations like
@@ -84,14 +84,14 @@ namespace AXR
          *  @return The HSSObservableProperty that corresponds to that name, or HSSObservablePropertyNone if
          *  not found.
          */
-        static HSSObservableProperty observablePropertyFromString(AXRString name);
+        static HSSObservableProperty observablePropertyFromString(HSSString name);
 
         /**
          *  The typedef for the inner map, which will be stored as the value for each HSSObservableProperty as
          *  key inside the private _propertyObservers map.
          *  The key for this map is a hash of HSSObservable * observed and HSObservableProperty source
          */
-        typedef QList<QSharedPointer<HSSObservableMapping> > observed;
+        typedef std::vector<QSharedPointer<HSSObservableMapping> > observed;
 
         /**
          *  Creates a new instance of a observable object. Don't call directly, this is for the use of subclasses.
@@ -119,7 +119,7 @@ namespace AXR
          *  @todo I think the requirement for the object to be a HSSObservable subclass is not really needed. Maybe
          *  a "void*" would do equally well, since we are actually only interested in the pointer itself.
          */
-        void observe(const AXRString target, const AXRString source, HSSObservable * object, HSSAbstractValueChangedCallback *callback);
+        void observe(const HSSString target, const HSSString source, HSSObservable * object, HSSAbstractValueChangedCallback *callback);
 
         /**
          *  Removes an observer from the list of observers for the given combination between target and source properties
@@ -132,7 +132,7 @@ namespace AXR
          *  @todo I think the requirement for the object to be a HSSObservable subclass is not really needed. Maybe
          *  a "void*" would do equally well, since we are actually only interested in the pointer itself.
          */
-        void removeObserver(const AXRString target, const AXRString source, HSSObservable * object);
+        std::map<HSSString, HSSString>::iterator removeObserver(const HSSString target, const HSSString source, HSSObservable * object);
 
         /**
          *  This is the form that the functions that will receive the notifications must have.
@@ -142,7 +142,7 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A shared pointer to the object that is sent along the notification.
          */
-        virtual void propertyChanged(const AXRString source, const AXRString target, const QSharedPointer<HSSObject> theObj);
+        virtual void propertyChanged(const HSSString source, const HSSString target, const QSharedPointer<HSSObject> theObj);
 
         /**
          *  Subclasses should call this method on themselves to trigger the delivery of the notification.
@@ -151,19 +151,19 @@ namespace AXR
          *  @param property The property which we are observing.
          *  @param data     A shared pointer to the object that is sent along the notification (e.g. the new value).
          */
-        void notifyObservers(const AXRString property, const QSharedPointer<HSSObject> theObj);
+        void notifyObservers(const HSSString property, const QSharedPointer<HSSObject> theObj);
 
-        bool tracksObserver(const AXRString source);
-        HSSObservable * getTrackedObserver(const AXRString source);
-        AXRString getTrackedProperty(const AXRString source);
-        void trackObserver(const AXRString target, const AXRString source, HSSObservable* observable);
-        void untrackObserver(const AXRString source);
+        bool tracksObserver(const HSSString source);
+        HSSObservable * getTrackedObserver(const HSSString source);
+        HSSString getTrackedProperty(const HSSString source);
+        void trackObserver(const HSSString target, const HSSString source, HSSObservable* observable);
+        std::map<HSSString, HSSString>::iterator untrackObserver(const HSSString source);
         void cleanTrackedObservers();
 
     private:
-        QMap<AXRString, HSSObservable::observed> _propertyObservers;
-        QMap<AXRString, HSSObservable* > _trackedObservers;
-        QMap<AXRString, AXRString> _trackedProperties;
+        std::map<HSSString, HSSObservable::observed> _propertyObservers;
+        std::map<HSSString, HSSObservable* > _trackedObservers;
+        std::map<HSSString, HSSString> _trackedProperties;
     };
 }
 

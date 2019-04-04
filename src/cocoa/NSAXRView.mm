@@ -215,7 +215,7 @@ using namespace AXR;
         return;
     
     NSString * chars = [self adjustEventChar:[event characters]];
-    HSSKeyboardEvent kbEvent(HSSEventTypeKeyDown, QString([chars UTF8String]));
+    HSSKeyboardEvent kbEvent(HSSEventTypeKeyDown, HSSString([chars UTF8String]));
     [document documentObject]->handleEvent(&kbEvent);
     if([document documentObject]->needsDisplay()){
         [self setNeedsDisplay:TRUE];
@@ -239,7 +239,7 @@ using namespace AXR;
         return;
     
     NSString * chars = [self adjustEventChar:[event characters]];
-    HSSKeyboardEvent kbEvent(HSSEventTypeKeyUp, QString([chars UTF8String]));
+    HSSKeyboardEvent kbEvent(HSSEventTypeKeyUp, HSSString([chars UTF8String]));
     [document documentObject]->handleEvent(&kbEvent);
     if([document documentObject]->needsDisplay()){
         [self setNeedsDisplay:TRUE];

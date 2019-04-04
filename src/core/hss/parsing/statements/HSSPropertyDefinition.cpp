@@ -54,13 +54,13 @@ HSSPropertyDefinition::HSSPropertyDefinition(AXRController * controller)
 
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(QVector< QSharedPointer<HSSPropertyPath> > paths, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(std::vector< QSharedPointer<HSSPropertyPath> > paths, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->paths = paths;
 }
 
-HSSPropertyDefinition::HSSPropertyDefinition(QVector< QSharedPointer<HSSPropertyPath> > paths, QSharedPointer<HSSParserNode> value, AXRController * controller)
+HSSPropertyDefinition::HSSPropertyDefinition(std::vector< QSharedPointer<HSSPropertyPath> > paths, QSharedPointer<HSSParserNode> value, AXRController * controller)
 : HSSStatement(HSSStatementTypePropertyDefinition, controller)
 {
     this->paths = paths;
@@ -86,8 +86,10 @@ HSSPropertyDefinition::~HSSPropertyDefinition()
 AXRString HSSPropertyDefinition::toString()
 {
     AXRString ret = "HSSPropertyDefinition: ";
-    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, this->paths)
+    std::vector<QSharedPointer<HSSPropertyPath> >::const_iterator it;
+    for (it = this->paths.begin(); it != this->paths.end(); ++it)
     {
+        const QSharedPointer<HSSPropertyPath> & path = *it;
         ret.append(path->toString());
     }
     if (this->value)
@@ -97,12 +99,12 @@ AXRString HSSPropertyDefinition::toString()
     return ret;
 }
 
-void HSSPropertyDefinition::setPaths(QVector< QSharedPointer<HSSPropertyPath> > paths)
+void HSSPropertyDefinition::setPaths(std::vector< QSharedPointer<HSSPropertyPath> > paths)
 {
     this->paths = paths;
 }
 
-const QVector< QSharedPointer<HSSPropertyPath> > HSSPropertyDefinition::getPaths() const
+const std::vector< QSharedPointer<HSSPropertyPath> > HSSPropertyDefinition::getPaths() const
 {
     return this->paths;
 }

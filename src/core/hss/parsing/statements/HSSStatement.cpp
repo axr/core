@@ -70,8 +70,8 @@ HSSStatementType HSSStatement::getStatementType() const
 
 AXRString HSSStatement::statementStringRepresentation(HSSStatementType type)
 {
-    static QMap<HSSStatementType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSStatementType, AXRString> types;
+    if (types.empty())
     {
         types[HSSStatementTypeNone] = "HSSGenericStatement";
         types[HSSStatementTypeRule] = "HSSRule";

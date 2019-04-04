@@ -80,6 +80,9 @@ namespace AXR
          *  @param newValue     A HSSUnit containing the new calculated value for this constant.
          */
         void setValue(HSSUnit newValue);
+        
+        void setOriginalStringRep(HSSString string);
+        HSSString originalStringRep();
 
         /**
          *  Getter for the value.
@@ -87,8 +90,8 @@ namespace AXR
          */
         HSSUnit getValue();
 
-        AXRString toString();
-        AXRString stringRep();
+        HSSString toString();
+        HSSString stringRep();
 
         /**
          *  Each node overrides this method to compare against another node
@@ -99,6 +102,9 @@ namespace AXR
 
     protected:
         HSSUnit value;
+
+    private:
+        HSSString _originalRep;
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;

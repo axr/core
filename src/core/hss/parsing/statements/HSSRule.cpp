@@ -423,8 +423,10 @@ bool HSSRule::equalTo(QSharedPointer<HSSParserNode> otherNode)
 
 void HSSRule::removeFromDisplayObjects()
 {
-    Q_FOREACH(QWeakPointer<HSSDisplayObject> weakDO, this->appliedTo)
+    std::vector<QWeakPointer<HSSDisplayObject> >::const_iterator it;
+    for (it = this->appliedTo.begin(); it != this->appliedTo.end(); ++it)
     {
+        const QWeakPointer<HSSDisplayObject> & weakDO = *it;
         QSharedPointer<HSSDisplayObject> theDO = weakDO.toStrongRef();
         this->removeFromDisplayObject(theDO);
     }
@@ -494,16 +496,20 @@ void HSSRule::recursiveSetIsConditional(const bool newValue)
 
 void HSSRule::fastForwardSelectorChain(AXR::HSSSelector *theSelector)
 {
-    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
     {
+        const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
         selectorChain->fastForward(theSelector);
     }
 }
 
 void HSSRule::resetFastForwardSelectorChain()
 {
-    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
     {
+        const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
         selectorChain->resetFastForward();
     }
 }

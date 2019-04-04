@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
 {
-    static QMap<HSSActionType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSActionType, AXRString> types;
+    if (types.empty())
     {
         types[HSSActionTypeRequest] = "HSSActionTypeRequest";
         types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";

@@ -78,8 +78,8 @@ namespace AXR
         bool isHexPreferred() const;
         void setHexPreferred(bool prefer);
 
-        qint64 currentLine() const;
-        qint64 currentColumn() const;
+        size_t currentLine() const;
+        size_t currentColumn() const;
 
         bool atEndOfSource();
 

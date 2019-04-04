@@ -164,13 +164,12 @@
 
 namespace AXR
 {
-    typedef QChar AXRChar;
-    typedef QString AXRString;
-
     /**
      * @brief Represents an HSS unit.
      */
     typedef double HSSUnit;
+    
+    typedef HSSString AXRString;
 }
 
 #define AXR_API
@@ -206,6 +205,6 @@ extern AXR_API const char* axrVersionString();
 #define AXR_DEBUG_BRAKE 9999
 #define security_brake_init() int __axr_security_count = 0;
 #define security_brake_reset() __axr_security_count = 0;
-#define security_brake() if (__axr_security_count > AXR_DEBUG_BRAKE) { axr_log(LoggerChannelObsolete1, AXR::AXRString("WARNING: Loop iterated over %1 times. Broke out of possible infinite loop.").arg(AXR_DEBUG_BRAKE)); break; } else __axr_security_count++;
+#define security_brake() if (__axr_security_count > AXR_DEBUG_BRAKE) { axr_log(LoggerChannelObsolete1, AXR::HSSString("WARNING: Loop iterated over 9999 times. Broke out of possible infinite loop.")); break; } else __axr_security_count++;
 
 #endif

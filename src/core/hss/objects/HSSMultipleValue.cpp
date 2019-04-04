@@ -55,8 +55,10 @@ HSSMultipleValue::HSSMultipleValue(AXRController * controller)
 HSSMultipleValue::HSSMultipleValue(const HSSMultipleValue & orig)
 : HSSObject(orig)
 {
-    Q_FOREACH(QSharedPointer<HSSObject> obj, orig.valueList)
+    std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+    for (it = orig.valueList.begin(); it != orig.valueList.end(); ++it)
     {
+        const QSharedPointer<HSSObject> & obj = *it;
         this->valueList.push_back(obj->clone());
     }
 }
@@ -103,12 +105,13 @@ bool HSSMultipleValue::equalTo(QSharedPointer<HSSObject> otherObj)
     if ( ! HSSObject::equalTo(otherObj)) return false;
     QSharedPointer<HSSMultipleValue> castedObj = qSharedPointerCast<HSSMultipleValue>(otherObj);
     if ( this->valueList.size() != castedObj->valueList.size() ) return false;
-    QListIterator<QSharedPointer<HSSObject> > it1(this->valueList);
-    QListIterator<QSharedPointer<HSSObject> > it2(castedObj->valueList);
-    while (it1.hasNext() && it2.hasNext())
+    std::vector<QSharedPointer<HSSObject> >::iterator it1 = this->valueList.begin();
+    std::vector<QSharedPointer<HSSObject> >::iterator it2(castedObj->valueList.begin());
+    while (it1 != this->valueList.end())
     {
-        if ( ! it1.next()->equalTo(it2.next())) return false;
-
+        if ( ! (*it1)->equalTo(*it2) )
+            return false;
+        ++it1;
     }
     return true;
 }
@@ -141,37 +144,37 @@ size_t HSSMultipleValue::size() const
     return this->valueList.size();
 }
 
-const QList<QSharedPointer<HSSObject> > HSSMultipleValue::getValues() const
+const std::vector<QSharedPointer<HSSObject> > HSSMultipleValue::getValues() const
 {
     return this->valueList;
 }
 
 void HSSMultipleValue::commitStackValues()
 {
-    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
-    while (it.hasNext())
+    std::vector<QSharedPointer<HSSObject> >::iterator it;
+    for (it = this->valueList.begin(); it != this->valueList.end(); ++it)
     {
-        QSharedPointer<HSSObject> item = it.next();
+        QSharedPointer<HSSObject> item = *it;
         item->commitStackValues();
     }
 }
 
 void HSSMultipleValue::fillWithDefaults()
 {
-    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
-    while (it.hasNext())
+    std::vector<QSharedPointer<HSSObject> >::iterator it;
+    for (it = this->valueList.begin(); it != this->valueList.end(); ++it)
     {
-        QSharedPointer<HSSObject> item = it.next();
+        QSharedPointer<HSSObject> item = *it;
         item->fillWithDefaults();
     }
 }
 
 void HSSMultipleValue::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
-    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
-    while (it.hasNext())
+    std::vector<QSharedPointer<HSSObject> >::iterator it;
+    for (it = this->valueList.begin(); it != this->valueList.end(); ++it)
     {
-        QSharedPointer<HSSObject> item = it.next();
+        QSharedPointer<HSSObject> item = *it;
         item->setThisObj(value);
     }
     HSSObject::setThisObj(value);
@@ -179,11 +182,11 @@ void HSSMultipleValue::setThisObj(QSharedPointer<HSSDisplayObject> value)
 
 void HSSMultipleValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
-    QListIterator<QSharedPointer<HSSObject> > it(this->valueList);
-    while (it.hasNext())
+    std::vector<QSharedPointer<HSSObject> >::iterator it;
+    for (it = this->valueList.begin(); it != this->valueList.end(); ++it)
     {
-        QSharedPointer<HSSObject> item = it.next();
-        item->setScope(newScope);
+        QSharedPointer<HSSObject> item = *it;
+        item->setScope(newScope);;
     }
     HSSObject::setScope(newScope);
 }

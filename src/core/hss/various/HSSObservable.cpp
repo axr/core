@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservableProperty property)
 {
-    static QMap<HSSObservableProperty, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSObservableProperty, AXRString> types;
+    if (types.empty())
     {
         types[HSSObservablePropertyNone] = "unknown";
 
@@ -163,7 +163,7 @@ AXRString HSSObservable::observablePropertyStringRepresentation(HSSObservablePro
 
 HSSObservableProperty HSSObservable::observablePropertyFromString(AXRString name)
 {
-    static QMap<AXRString, HSSObservableProperty> properties;
+    static std::map<AXRString, HSSObservableProperty> properties;
 
     if (properties.empty())
     {
@@ -294,44 +294,47 @@ void HSSObservable::observe(const AXRString target, const AXRString source, HSSO
     }
     object->trackObserver(target, source, this);
 
-    QVariant nulldata("");
-
-    if (this->_propertyObservers.contains(target))
+    if (this->_propertyObservers.count(target))
     {
         HSSObservable::observed &theObserved = this->_propertyObservers[target];
-        QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
-        theObserved.append(mapping);
+        QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source));
+        theObserved.push_back(mapping);
         axr_log(LoggerChannelObserving, AXRString("observing ").append(target).append(" from ").append(source));
     }
     else
     {
         HSSObservable::observed theObserved;
-        QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source, nulldata));
-        theObserved.append(mapping);
-        this->_propertyObservers.insert(target, theObserved);
+        QSharedPointer<HSSObservableMapping> mapping = QSharedPointer<HSSObservableMapping>(new HSSObservableMapping(object, callback, source));
+        theObserved.push_back(mapping);
+        this->_propertyObservers[target] = theObserved;
         axr_log(LoggerChannelObserving, AXRString("observing ").append(target).append(" from ").append(source));
     }
 }
 
-void HSSObservable::removeObserver(const AXRString target, const AXRString source, HSSObservable * object)
+std::map<AXRString, AXRString>::iterator HSSObservable::removeObserver(const AXRString target, const AXRString source, HSSObservable * object)
 {
-    if (this->_propertyObservers.contains(target))
+    std::map<AXRString, AXRString>::iterator ret;
+    if (this->_propertyObservers.count(target))
     {
-        if (object->tracksObserver(source))
-        {
-            object->untrackObserver(source);
-        }
+        //if (object->tracksObserver(source))
+        //{
+            ret = object->untrackObserver(source);
+        //}
         observed &theObserved = this->_propertyObservers[target];
         for (observed::iterator it = theObserved.begin(); it!= theObserved.end(); ++it) {
             const QSharedPointer<HSSObservableMapping> & mapping = *it;
             if(mapping->observer == object && mapping->source == source){
                 theObserved.erase(it);
                 axr_log(LoggerChannelObserving, AXRString("stop observing ").append(target).append(" from ").append(source));
-                return;
+                return ret;
             }
         }
     }
-    axr_log(LoggerChannelObserving, AXRString("tried to remove non existent observer for target:").append(target).append(" and source: ").append(source));
+    else
+    {
+        axr_log(LoggerChannelObserving, AXRString("tried to remove non existent observer for target:").append(target).append(" and source: ").append(source));
+    }
+    return ret;
 }
 
 void HSSObservable::propertyChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj)
@@ -341,7 +344,7 @@ void HSSObservable::propertyChanged(const AXRString target, const AXRString sour
 
 void HSSObservable::notifyObservers(const AXRString property, const QSharedPointer<HSSObject> theObj)
 {
-    if (this->_propertyObservers.contains(property))
+    if (this->_propertyObservers.count(property))
     {
         observed &theObserved = this->_propertyObservers[property];
         for (observed::iterator it = theObserved.begin(); it != theObserved.end(); ++it)
@@ -355,12 +358,12 @@ void HSSObservable::notifyObservers(const AXRString property, const QSharedPoint
 
 bool HSSObservable::tracksObserver(const AXRString source)
 {
-    return this->_trackedObservers.contains(source);
+    return this->_trackedObservers.count(source);
 }
 
 HSSObservable * HSSObservable::getTrackedObserver(const AXRString source)
 {
-    if (this->_trackedObservers.contains(source))
+    if (this->_trackedObservers.count(source))
     {
         return this->_trackedObservers[source];
     }
@@ -369,7 +372,7 @@ HSSObservable * HSSObservable::getTrackedObserver(const AXRString source)
 
 AXRString HSSObservable::getTrackedProperty(const AXRString source)
 {
-    if (this->_trackedProperties.contains(source))
+    if (this->_trackedProperties.count(source))
     {
         return this->_trackedProperties[source];
     }
@@ -378,38 +381,46 @@ AXRString HSSObservable::getTrackedProperty(const AXRString source)
 
 void HSSObservable::trackObserver(const AXRString target, const AXRString source, HSSObservable* observable)
 {
-    if (this->_trackedObservers.contains(source))
+    if (this->_trackedObservers.count(source))
     {
         AXRError("HSSObservable", AXRString("Error: this object already tracks something at ").append(source)).raise();
     }
-    this->_trackedObservers.insert(source, observable);
-    this->_trackedProperties.insert(source, target);
+    this->_trackedObservers[source] = observable;
+    this->_trackedProperties[source] = target;
 }
 
-void HSSObservable::untrackObserver(const AXRString source)
+std::map<AXRString, AXRString>::iterator HSSObservable::untrackObserver(const AXRString source)
 {
-    this->_trackedObservers.remove(source);
-    this->_trackedProperties.remove(source);
+    this->_trackedObservers.erase(source);
+    std::map<AXRString, AXRString>::iterator eraseIt = this->_trackedProperties.find(source);
+    if (eraseIt != this->_trackedProperties.end())
+    {
+        return this->_trackedProperties.erase(eraseIt);
+    }
+    return eraseIt;
 }
 
 void HSSObservable::cleanTrackedObservers()
 {
-    QMapIterator<AXRString, AXRString> it(this->_trackedProperties);
-    while (it.hasNext())
-    {
-        it.next();
-        HSSObservable * to = this->getTrackedObserver(it.key());
+    std::map<AXRString, AXRString>::iterator it;
+    for (it = _trackedProperties.begin(); it!=_trackedProperties.end();  ) {
+        AXRString key = it->first;
+        HSSObservable * to = this->getTrackedObserver(key);
         if (to)
         {
-            to->removeObserver(it.value(), it.key(), this);
+            std::map<AXRString, AXRString>::iterator eraseIt;
+            it = to->removeObserver(it->second, key, this);
+        }
+        else
+        {
+            ++it;
         }
     }
-    QMapIterator<AXRString, HSSObservable::observed> it2(this->_propertyObservers);
-    while (it2.hasNext())
+    std::map<AXRString, observed>::iterator it2;
+    for (it2 = _propertyObservers.begin(); it2 != _propertyObservers.end(); ++it2)
     {
-        it2.next();
-        AXRString target = it2.key();
-        const observed &theObserved = it2.value();
+        AXRString target = it2->first;
+        const observed &theObserved = it2->second;
         for (observed::const_iterator it3 = theObserved.begin(); it3 != theObserved.end(); ++it3)
         {
             const QSharedPointer<HSSObservableMapping> & mapping = *it3;

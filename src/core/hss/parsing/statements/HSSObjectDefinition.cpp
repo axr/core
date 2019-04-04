@@ -120,11 +120,16 @@ void HSSObjectDefinition::applyStack()
     HSSUnit specificity = 0.;
     this->prototype->clearProperties();
     this->prototype->setDefaults();
-    Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, this->properties)
+    std::deque<QSharedPointer<HSSPropertyDefinition> >::iterator it;
+    for (it = this->properties.begin(); it != this->properties.end(); ++it)
     {
-        QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
-        Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
-            QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue();
+        QSharedPointer<HSSPropertyDefinition> propertyDefinition = *it;
+        const std::vector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+        std::vector<QSharedPointer<HSSPropertyPath> >::const_iterator it2;
+        for (it2 = propertyPaths.begin(); it2 != propertyPaths.end(); ++it2)
+        {
+            const QSharedPointer<HSSPropertyPath> & path = *it2;
+            QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue()->clone();
             nodeValue->setSpecificity(objDefSpecificity + (specificity * 0.000001));
             path->setStackNode(this->prototype, nodeValue);
         }

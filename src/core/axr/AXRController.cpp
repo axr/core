@@ -52,14 +52,14 @@ namespace AXR
     {
         friend class AXRController;
 
-        QStack<QSharedPointer<HSSContainer> > currentContext;
+        std::vector<QSharedPointer<HSSContainer> > currentContext;
 
         QSharedPointer<HSSContainer> root;
 
-        QList<QSharedPointer<HSSObjectDefinition> > objectTree;
-        QList<QUrl> styleSheetUrls;
-        QList<QSharedPointer<HSSParserNode> > parserTree;
-        QList<QSharedPointer<HSSRule> > rules;
+        std::vector<QSharedPointer<HSSObjectDefinition> > objectTree;
+        std::vector<AXRString> styleSheetUrls;
+        std::list<QSharedPointer<HSSParserNode> > parserTree;
+        std::vector<QSharedPointer<HSSRule> > rules;
 
         QSharedPointer<HSSSelectorChain> currentChain;
         QSharedPointer<HSSParserNode> currentSelectorNode;
@@ -78,7 +78,6 @@ AXRController::AXRController(AXRDocument *document)
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRController: creating controller");
     d->document = document;
-    d->currentContext = QStack<QSharedPointer<HSSContainer> > ();
     d->_logsSelections = true;
     d->lastSelection = QSharedPointer<HSSSimpleSelection>();
 }
@@ -88,7 +87,6 @@ AXRController::AXRController()
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRController: creating controller");
     d->document = NULL;
-    d->currentContext = QStack<QSharedPointer<HSSContainer> > ();
     d->_logsSelections = true;
     d->lastSelection = QSharedPointer<HSSSimpleSelection>();
 }
@@ -118,8 +116,10 @@ void AXRController::setDocument(AXRDocument * document) const
 void AXRController::setUpTreeChangeObservers()
 {
     axr_log(LoggerChannelController, "AXRController: setting up observers for content tree changes");
-    Q_FOREACH (const QSharedPointer<HSSRule> &rule, rules())
+    std::vector<QSharedPointer<HSSRule> >::const_iterator it;
+    for (it=rules().begin(); it!=rules().end(); ++it)
     {
+        const QSharedPointer<HSSRule> & rule = *it;
         for (size_t k = 0; k < rule->childrenSize(); ++k)
         {
             const QSharedPointer<HSSRule> childRule = rule->childrenGet(k);
@@ -187,8 +187,10 @@ void AXRController::matchRulesToContentTree()
     QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this));
     rootScope->add(this->root());
 
-    Q_FOREACH (const QSharedPointer<HSSRule> &rule, rules())
+    std::vector<QSharedPointer<HSSRule> >::const_iterator rulesIt;
+    for (rulesIt=rules().begin(); rulesIt!=rules().end(); ++rulesIt)
     {
+        const QSharedPointer<HSSRule> & rule = *rulesIt;
         rule->setOriginalScope(rootScope);
 
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains = rule->getSelectorChains();
@@ -222,8 +224,9 @@ void AXRController::matchRulesToContentTree()
 
 inline void AXRController::_matchRuleToSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection)
 {
-    Q_FOREACH (const QSharedPointer<HSSDisplayObject> &displayObject, *selection.data())
-    {
+    HSSSimpleSelection::const_iterator it;
+    for (it=selection->begin(); it!=selection->end(); ++it) {
+        const QSharedPointer<HSSDisplayObject> &displayObject = *it;
         axr_log(LoggerChannelGeneral, "AXRController: match " + displayObject->getElementName());
         displayObject->rulesAdd(rule, HSSRuleStateOff);
 
@@ -235,13 +238,13 @@ inline void AXRController::_matchRuleToSelection(QSharedPointer<HSSRule> rule, Q
         if (displayObject->isA(HSSObjectTypeContainer))
         {
             QSharedPointer<HSSContainer> selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
-            d->currentContext.push(selectedContainer);
+            d->currentContext.push_back(selectedContainer);
             for (size_t k = 0; k < rule->childrenSize(); ++k)
             {
                 const QSharedPointer<HSSRule> childRule = rule->childrenGet(k);
                 this->recursiveMatchRulesToDisplayObjects(childRule, selectedContainer->getChildren(), selectedContainer, true);
             }
-            d->currentContext.pop();
+            d->currentContext.pop_back();
         }
 
         displayObject->setNeedsRereadRules(true);
@@ -262,16 +265,17 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
             if (container)
             {
                 std::vector<QSharedPointer<HSSContainer> > newContainers = this->addContainerFromNewInstruction(instruction, rule, scope, container, false);
-                Q_FOREACH(QSharedPointer<HSSContainer> newContainer, newContainers)
-                {
-                    d->currentContext.push(newContainer);
+                std::vector<QSharedPointer<HSSContainer> >::const_iterator it;
+                for (it=newContainers.begin(); it!=newContainers.end(); ++it) {
+                    const QSharedPointer<HSSContainer> & newContainer = *it;
+                    d->currentContext.push_back(newContainer);
                     for (size_t i = 0; i < rule->childrenSize(); ++i)
                     {
                         const QSharedPointer<HSSRule> childRule = rule->childrenGet(i);
                         this->recursiveMatchRulesToDisplayObjects(childRule, newContainer->getChildren(), newContainer, applyingInstructions);
                     }
                     newContainer->setNeedsRereadRules(true);
-                    d->currentContext.pop();
+                    d->currentContext.pop_back();
                 }
             }
             else
@@ -288,7 +292,7 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
             {
                 QSharedPointer<HSSSelection> selection = this->select(rule->getSelectorChains(), scope, container);
 
-                d->currentContext.push(container);
+                d->currentContext.push_back(container);
                 //move the children over
                 QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
                 for (HSSSimpleSelection::const_iterator it=inner->begin(); it!=inner->end(); ++it)
@@ -307,21 +311,21 @@ void AXRController::recursiveMatchRulesToDisplayObjects(const QSharedPointer<HSS
                         if (theDO->isA(HSSObjectTypeContainer))
                         {
                             QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theDO);
-                            d->currentContext.push(theContainer);
+                            d->currentContext.push_back(theContainer);
                             //assign more rules
                             for (size_t i = 0; i < rule->childrenSize(); ++i)
                             {
                                 const QSharedPointer<HSSRule> childRule = rule->childrenGet(i);
                                 this->recursiveMatchRulesToDisplayObjects(childRule, theContainer->getChildren(), theContainer, applyingInstructions);
                             }
-                            d->currentContext.pop();
+                            d->currentContext.pop_back();
                         }
 
                         theDO->setNeedsRereadRules(true);
                         //theDO->fireEvent(HSSEventTypeLoad);
                     }
                 }
-                d->currentContext.pop();
+                d->currentContext.pop_back();
             }
 
             break;
@@ -421,13 +425,13 @@ inline void AXRController::recursiveApplyRulesToDisplayObjects(const QSharedPoin
         if (displayObject->isA(HSSObjectTypeContainer))
         {
             QSharedPointer<HSSContainer> selectedContainer = qSharedPointerCast<HSSContainer>(displayObject);
-            d->currentContext.push(selectedContainer);
+            d->currentContext.push_back(selectedContainer);
             for (size_t k = 0; k < rule->childrenSize(); ++k)
             {
                 const QSharedPointer<HSSRule> childRule = rule->childrenGet(k);
                 this->recursiveMatchRulesToDisplayObjects(childRule, selectedContainer->getChildren(), selectedContainer, applyingInstructions);
             }
-            d->currentContext.pop();
+            d->currentContext.pop_back();
         }
     }
 }
@@ -477,19 +481,21 @@ std::vector<QSharedPointer<HSSContainer> > AXRController::addContainerFromNewIns
     return ret;
 }
 
-QStack<QSharedPointer<HSSContainer> >& AXRController::currentContext() const
+std::vector<QSharedPointer<HSSContainer> >& AXRController::currentContext() const
 {
     return d->currentContext;
 }
 
 void AXRController::currentContextPush(QSharedPointer<HSSContainer> container)
 {
-    d->currentContext.push(container);
+    d->currentContext.push_back(container);
 }
 
 const QSharedPointer<HSSContainer> AXRController::currentContextPop() const
 {
-    return d->currentContext.pop();
+    QSharedPointer<HSSContainer> backObj = d->currentContext.back();
+    d->currentContext.pop_back();
+    return backObj;
 }
 
 void AXRController::activateRules()
@@ -497,8 +503,10 @@ void AXRController::activateRules()
     QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this));
     rootScope->add(this->root());
 
-    Q_FOREACH (const QSharedPointer<HSSRule> &rule, rules())
+    std::vector<QSharedPointer<HSSRule> >::const_iterator it;
+    for (it=rules().begin(); it!=rules().end(); ++it)
     {
+        const QSharedPointer<HSSRule> & rule = *it;
         this->recursiveSetRuleState(rule, rootScope, this->root(), HSSRuleStateOn);
     }
 }
@@ -522,8 +530,10 @@ void AXRController::recursiveSetRuleState(QSharedPointer<HSSRule> rule, QSharedP
         if (selection->isA(HSSSelectionTypeMultipleSelection))
         {
             QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(selection);
-            Q_FOREACH (const QSharedPointer<HSSSimpleSelection> &sel, *multiSel.data())
+            HSSMultipleSelection::const_iterator it;
+            for (it=multiSel->begin(); it!=multiSel->end(); ++it)
             {
+                const QSharedPointer<HSSSimpleSelection> & sel = *it;
                 this->setRuleStateOnSelection(rule, sel, state);
             }
         }
@@ -536,8 +546,9 @@ void AXRController::recursiveSetRuleState(QSharedPointer<HSSRule> rule, QSharedP
 
 void AXRController::setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QSharedPointer<HSSSimpleSelection> selection, HSSRuleState state)
 {
-    Q_FOREACH (const QSharedPointer<HSSDisplayObject> & displayObject, *selection.data())
+    for (HSSSimpleSelection::iterator it = selection->begin(); it != selection->end(); ++it)
     {
+        const QSharedPointer<HSSDisplayObject> & displayObject = *it;
         axr_log(LoggerChannelGeneral, "AXRController: setting rule state on " + displayObject->getElementName());
         displayObject->setRuleStatus(rule, state);
 
@@ -553,9 +564,11 @@ void AXRController::setRuleStateOnSelection(QSharedPointer<HSSRule> rule, QShare
                 {
                     std::vector<QWeakPointer<HSSDisplayObject> > appliedTo = childRule->getAppliedTo();
                     QSharedPointer<HSSSimpleSelection> children(new HSSSimpleSelection(this));
-                    Q_FOREACH (const QWeakPointer<HSSDisplayObject> &displayObject, appliedTo)
+                    std::vector<QWeakPointer<HSSDisplayObject> >::const_iterator it2;
+                    for (it2=appliedTo.begin(); it2!=appliedTo.end(); ++it2)
                     {
-                        QSharedPointer<HSSDisplayObject> theDO = displayObject.toStrongRef();
+                        const QWeakPointer<HSSDisplayObject> & weakObject = *it2;
+                        QSharedPointer<HSSDisplayObject> theDO = weakObject.toStrongRef();
                         children->add(theDO);
                         if(childRule->isConditional() && theInst->isA(HSSNewInstruction))
                         {
@@ -612,8 +625,10 @@ QSharedPointer<HSSSelection> AXRController::select(std::vector<QSharedPointer<HS
 {
     QSharedPointer<HSSMultipleSelection> ret(new HSSMultipleSelection(this));
 
-    Q_FOREACH (QSharedPointer<HSSSelectorChain> chain, selectorChains)
+    std::vector<QSharedPointer<HSSSelectorChain> >::iterator it;
+    for (it=selectorChains.begin(); it!=selectorChains.end(); ++it)
     {
+        QSharedPointer<HSSSelectorChain> chain = *it;
         this->initializeSelectorChain(chain);
 
         //if we have a descendants combinator here, it means we were at root context, since the parser
@@ -666,13 +681,14 @@ QSharedPointer<HSSSelection> AXRController::selectHierarchical(QSharedPointer<HS
             QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
             d->lastSelection = inner;
 
-            Q_FOREACH (QSharedPointer<HSSDisplayObject> theDO, *inner.data())
-            {
+            for (HSSSimpleSelection::iterator it = inner->begin(); it!=inner->end(); ++it) {
+                QSharedPointer<HSSDisplayObject> theDO = *it;
                 if (theDO->isA(HSSObjectTypeContainer))
                 {
                     QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theDO);
-                    Q_FOREACH (QSharedPointer<HSSDisplayObject> displayObject, *theContainer->getChildren().data())
-                    {
+                    QSharedPointer<HSSSimpleSelection> children = theContainer->getChildren();
+                    for (HSSSimpleSelection::iterator it2 = children->begin(); it2!=children->end(); ++it2) {
+                        QSharedPointer<HSSDisplayObject> displayObject = *it2;
                         newScope->add(displayObject);
                     }
                 }
@@ -690,14 +706,16 @@ QSharedPointer<HSSSelection> AXRController::selectHierarchical(QSharedPointer<HS
             QSharedPointer<HSSSimpleSelection> newScope(new HSSSimpleSelection(this));
             this->readNextSelectorNode();
             QSharedPointer<HSSSimpleSelection> inner = selection->joinAll();
-            Q_FOREACH (QSharedPointer<HSSDisplayObject> theDO, *inner.data())
+            for (HSSSimpleSelection::iterator it = inner->begin(); it != inner->end(); ++it)
             {
+                QSharedPointer<HSSDisplayObject> theDO = *it;
                 if (theDO->isA(HSSObjectTypeContainer))
                 {
                     QSharedPointer<HSSContainer> theContainer = qSharedPointerCast<HSSContainer>(theDO);
-                    Q_FOREACH (QSharedPointer<HSSDisplayObject> displayObject, *theContainer->getChildren().data())
-                    {
-                        newScope->add(displayObject);
+                    QSharedPointer<HSSSimpleSelection> children = theContainer->getChildren();
+                    for (HSSSimpleSelection::iterator it2 = children->begin(); it2 != children->end(); ++it2) {
+                        QSharedPointer<HSSDisplayObject> childDO = *it2;
+                        newScope->add(childDO);
                     }
                 }
             }
@@ -743,8 +761,11 @@ QSharedPointer<HSSSelection> AXRController::selectOnLevel(QSharedPointer<HSSSele
             }
             else if (selection->isA(HSSSelectionTypeMultipleSelection))
             {
-                Q_FOREACH (QSharedPointer<HSSSimpleSelection> simpleSel, *qSharedPointerCast<HSSMultipleSelection>(selection).data())
+                QSharedPointer<HSSMultipleSelection> multiSel = qSharedPointerCast<HSSMultipleSelection>(selection);
+                std::vector<QSharedPointer<HSSSimpleSelection> >::iterator it;
+                for (it=multiSel->begin(); it!=multiSel->end(); ++it)
                 {
+                    QSharedPointer<HSSSimpleSelection> simpleSel = *it;
                     this->_selectOnLevelSimple(ret, combinatorType, simpleSel, thisObj, processing, subscribingToNotifications, subscribingToParent);
                 }
             }
@@ -976,9 +997,12 @@ AXRString AXRController::toString() const
     {
         tempstr.append("\n\n\nOBJECT TREE:");
 
-        Q_FOREACH (const QSharedPointer<HSSObjectDefinition> &node, d->objectTree)
+        std::vector<QSharedPointer<HSSObjectDefinition> >::const_iterator it;
+        for (it=d->objectTree.begin(); it!=d->objectTree.end(); ++it)
         {
+            const QSharedPointer<HSSObjectDefinition> &node = *it;
             tempstr.append("\n").append(node->toString());
+            
         }
     }
 
@@ -986,8 +1010,10 @@ AXRString AXRController::toString() const
     {
         tempstr.append("\n\n\nPARSER TREE:");
 
-        Q_FOREACH (const QSharedPointer<HSSParserNode> &node, d->parserTree)
+        std::list<QSharedPointer<HSSParserNode> >::const_iterator it;
+        for (it = d->parserTree.begin(); it != d->parserTree.end(); ++it)
         {
+            const QSharedPointer<HSSParserNode> &node = *it;
             tempstr.append("\n").append(node->toString());
         }
     }
@@ -1002,11 +1028,7 @@ void AXRController::reset()
     d->parserTree.clear();
     d->rules.clear();
     d->root.clear();
-
-    for (unsigned i = 0; i<d->currentContext.size(); ++i)
-    {
-        d->currentContext.pop();
-    }
+    d->currentContext.clear();
 
     d->currentChain.clear();
     d->currentSelectorNode.clear();
@@ -1023,41 +1045,36 @@ QSharedPointer<HSSContainer> & AXRController::root() const
 void AXRController::setRoot(QSharedPointer<HSSContainer> newRoot)
 {
     d->root = newRoot;
-    QSharedPointer<HSSCodeParser> hssparser = this->document()->hssParser();
-    if (hssparser->currentObjectContextSize() == 0)
-    {
-        hssparser->currentObjectContextAdd(newRoot);
-    }
     newRoot->setRoot(true);
 }
 
 void AXRController::enterElement(const AXRString &elementName)
 {
     QSharedPointer<HSSContainer> newContainer(new HSSContainer(this));
-    newContainer->setName(elementName + "_source_obj");
+    newContainer->setName(elementName);
     newContainer->setElementName(elementName);
     this->add(newContainer);
-    d->currentContext.push(newContainer);
+    d->currentContext.push_back(newContainer);
 }
 
 void AXRController::addAttribute(const AXRString &name, const AXRString &value)
 {
-    d->currentContext.top()->attributesAdd(name, value);
+    d->currentContext.back()->attributesAdd(name, value);
 }
 
 void AXRController::setContentText(const AXRString &text)
 {
-    d->currentContext.top()->setContentText(text);
+    d->currentContext.back()->setContentText(text);
 }
 
 void AXRController::appendContentText(const AXRString &text)
 {
-    d->currentContext.top()->appendContentText(text);
+    d->currentContext.back()->appendContentText(text);
 }
 
 void AXRController::exitElement()
 {
-    d->currentContext.pop();
+    d->currentContext.pop_back();
 }
 
 void AXRController::add(QSharedPointer<HSSDisplayObject> newElement)
@@ -1078,7 +1095,7 @@ void AXRController::add(QSharedPointer<HSSDisplayObject> newElement)
     {
         if (!d->currentContext.empty())
         {
-            QSharedPointer<HSSContainer> theCurrent = d->currentContext.top();
+            QSharedPointer<HSSContainer> theCurrent = d->currentContext.back();
             theCurrent->add(newElement);
         }
         else
@@ -1092,7 +1109,7 @@ void AXRController::addOffscreen(QSharedPointer<HSSDisplayObject> newElement)
 {
     if (!d->currentContext.empty())
     {
-        QSharedPointer<HSSContainer> theCurrent = d->currentContext.top();
+        QSharedPointer<HSSContainer> theCurrent = d->currentContext.back();
         theCurrent->addOffscreen(newElement);
     }
     else
@@ -1105,12 +1122,13 @@ void AXRController::addOffscreen(QSharedPointer<HSSDisplayObject> newElement)
 
 void AXRController::addObjectTreeNode(const QSharedPointer<HSSObjectDefinition> &newObject)
 {
-    d->objectTree.append(newObject);
+    d->objectTree.push_back(newObject);
 }
 
 void AXRController::removeObjectTreeNodeAt(int index)
 {
-    d->objectTree.removeAt(index);
+    
+    d->objectTree.erase(d->objectTree.begin() + index);
 }
 
 QSharedPointer<HSSObjectDefinition> AXRController::objectTreeNodeAt(int index)
@@ -1124,9 +1142,11 @@ QSharedPointer<HSSObjectDefinition> AXRController::objectTreeNodeNamed(const AXR
     /**
      *  @todo do this with an unordered_map for better performance
      */
-    Q_FOREACH (const QSharedPointer<HSSObjectDefinition> &theObj, d->objectTree)
+    std::vector<QSharedPointer<HSSObjectDefinition> >::const_iterator it;
+    for (it = d->objectTree.begin(); it != d->objectTree.end(); ++it)
     {
-        if (theObj && theObj->getObject()->name == name)
+        const QSharedPointer<HSSObjectDefinition> &theObj = *it;
+        if (theObj && theObj->name() == name)
         {
             return theObj;
         }
@@ -1137,79 +1157,83 @@ QSharedPointer<HSSObjectDefinition> AXRController::objectTreeNodeNamed(const AXR
 
 //loadSheets
 
-void AXRController::addStyleSheetUrl(const QUrl &url)
+void AXRController::addStyleSheetUrl(const AXRString &url)
 {
     d->styleSheetUrls.push_back(url);
 }
 
 void AXRController::removeStyleSheetUrlAt(int index)
 {
-    d->styleSheetUrls.removeAt(index);
+    d->styleSheetUrls.erase(d->styleSheetUrls.begin()+index);
 }
 
-QUrl AXRController::styleSheetUrlAt(int index) const
+AXRString AXRController::styleSheetUrlAt(int index) const
 {
     return d->styleSheetUrls[index];
 }
 
-const QList<QUrl>& AXRController::styleSheetUrls() const
+const std::vector<AXRString>& AXRController::styleSheetUrls() const
 {
     return d->styleSheetUrls;
 }
 
 //parser node tree
 
-const QList<QSharedPointer<HSSParserNode> >& AXRController::parserTree() const
+const std::list<QSharedPointer<HSSParserNode> >& AXRController::parserTree() const
 {
     return d->parserTree;
 }
 
-void AXRController::setParserTree(const QList<QSharedPointer<HSSParserNode> > &newTree)
+void AXRController::setParserTree(const std::list<QSharedPointer<HSSParserNode> > &newTree)
 {
     d->parserTree = newTree;
 }
 
 void AXRController::addParserTreeNode(QSharedPointer<HSSParserNode> node)
 {
-    d->parserTree.append(node);
+    d->parserTree.push_back(node);
 }
 
 void AXRController::removeParserTreeNode(QSharedPointer<HSSParserNode> node)
 {
-    d->parserTree.removeOne(node);
+    std::list<QSharedPointer<HSSParserNode> >::iterator searchResult = std::find(d->parserTree.begin(), d->parserTree.end(), node);
+    if(searchResult != d->parserTree.end()){
+        d->parserTree.erase(searchResult);
+    }
 }
 
 //rules
 
-const QList<QSharedPointer<HSSRule> >& AXRController::rules() const
+const std::vector<QSharedPointer<HSSRule> >& AXRController::rules() const
 {
     return d->rules;
 }
 
 void AXRController::addRule(QSharedPointer<HSSRule> &rule)
 {
-    d->rules.append(rule);
+    d->rules.push_back(rule);
 }
 
 void AXRController::removeRuleAt(int index)
 {
-    d->rules.removeAt(index);
+    d->rules.erase(d->rules.begin()+index);
 }
 
 QSharedPointer<HSSRule> AXRController::ruleAt(int index)
 {
-    return d->rules[index];
+    return d->rules.at(index);
 }
 
 int AXRController::ruleCount() const
 {
-    return d->rules.size();
+    return (int)d->rules.size();
 }
 
 void AXRController::_recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> & ret, QSharedPointer<HSSSimpleSelection> scope)
 {
-    Q_FOREACH (QSharedPointer<HSSDisplayObject> theDO, *scope.data())
+    for (HSSSimpleSelection::iterator it = scope->begin(); it != scope->end(); ++it)
     {
+        QSharedPointer<HSSDisplayObject> theDO = *it;
         ret->add(theDO);
         QSharedPointer<HSSContainer> cont = HSSContainer::asContainer(theDO);
         if (cont)

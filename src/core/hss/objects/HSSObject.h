@@ -97,13 +97,6 @@ namespace AXR
         static QSharedPointer<HSSObject> newObjectWithType(AXRString type, AXRController * controller);
 
         /**
-         *  Strips beginning and end quotes of a string
-         *  @param string A string with quotes.
-         *  @return A string with quotes removed.
-         */
-        static AXRString stripQuotes(AXRString string);
-
-        /**
          *  This stores the name of the object.
          *
          *  @todo this should be protected and with getter/setter
@@ -160,11 +153,6 @@ namespace AXR
          *  @return Wether the object is equal to the given one.
          */
         virtual bool equalTo(QSharedPointer<HSSObject> otherObj);
-
-        /**
-         * @return A map representing the object and it's properties
-         */
-        virtual QVariantMap toMap() const;
 
         /**
          *  @return Wether the object is named or is anonymous.
@@ -390,10 +378,10 @@ namespace AXR
 
         void objDefRulesAdd(QSharedPointer<HSSRule> rule);
         void objDefRulesPrepend(QSharedPointer<HSSRule> rule);
-        QVector<QSharedPointer<HSSRule> > getObjDefRules() const;
+        std::deque<QSharedPointer<HSSRule> > getObjDefRules() const;
 
         void modifierAdd(AXRString propertyName, QSharedPointer<HSSPropertyDefinition> propertyDef);
-        QVector<QSharedPointer<HSSPropertyDefinition> > modifierGet(AXRString propertyName) const;
+        std::vector<QSharedPointer<HSSPropertyDefinition> > modifierGet(AXRString propertyName) const;
         bool isDefaultPropertyPathObject() const;
         void setDefaultPropertyPathObject(bool newValue);
 
@@ -403,23 +391,22 @@ namespace AXR
 
         void setOverrides(std::vector<QSharedPointer<HSSPropertyDefinition> > overrides);
         void addOverride(QSharedPointer<HSSPropertyDefinition> item);
-        std::vector<QSharedPointer<HSSPropertyDefinition> > getOverrides() const;
+        std::map<AXRString, QSharedPointer<HSSPropertyDefinition> > getOverrides() const;
 
     protected:
-        QMap<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
-        QMap<AXRString, HSSAbstractComputeCallback*> _computeCallbacks;
-        QMap<AXRString, HSSAbstractObserveCallback*> _setCallbacks;
-        QMap<AXRString, HSSAbstractObserveCallback*> _listenCallbacks;
-        QMap<AXRString, HSSAbstractObserveCallback*> _notifyCallbacks;
-        QMap<AXRString, QSharedPointer<HSSObject> > _defaultValues;
-        QMap<AXRString, QSharedPointer<HSSObject> > _computedValues;
-        QMap<AXRString, QSharedPointer<HSSObject> > _stackValues;
-        std::vector<QSharedPointer<HSSPropertyDefinition> > _overrides;
+        std::map<AXRString, HSSAbstractStackCallback*> _stackCallbacks;
+        std::map<AXRString, HSSAbstractComputeCallback*> _computeCallbacks;
+        std::map<AXRString, HSSAbstractObserveCallback*> _setCallbacks;
+        std::map<AXRString, HSSAbstractObserveCallback*> _listenCallbacks;
+        std::map<AXRString, HSSAbstractObserveCallback*> _notifyCallbacks;
+        std::map<AXRString, QSharedPointer<HSSObject> > _defaultValues;
+        std::map<AXRString, QSharedPointer<HSSObject> > _computedValues;
+        std::map<AXRString, QSharedPointer<HSSObject> > _stackValues;
         std::vector<AXRString> shorthandProperties;
-        QMap<AXRString, bool> skipShorthand;
+        std::map<AXRString, bool> skipShorthand;
         size_t shorthandIndex;
-        QVector<QSharedPointer<HSSRule> > _appliedIsARules;
-        QVector<QSharedPointer<HSSRule> > _objDefRules;
+        std::vector<QSharedPointer<HSSRule> > _appliedIsARules;
+        std::deque<QSharedPointer<HSSRule> > _objDefRules;
 
         QSharedPointer<HSSSimpleSelection> scope;
         QSharedPointer<HSSDisplayObject> thisObj;
@@ -443,8 +430,8 @@ namespace AXR
         QWeakPointer<HSSObject> ptr;
         HSSUnit _specificity;
         bool _isDefaultPropertyPathObject;
-        QMap<AXRString, QVector<QSharedPointer<HSSPropertyDefinition> > > _modifiers;
-        QMap<AXRString, bool> _needsDefault;
+        std::map<AXRString, std::vector<QSharedPointer<HSSPropertyDefinition> > > _modifiers;
+        std::map<AXRString, bool> _needsDefault;
         bool _expectsIsAIncluded;
     };
 }

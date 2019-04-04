@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,42 +41,70 @@
  *
  ********************************************************************/
 
-#ifndef AXRSTRING_H
-#define AXRSTRING_H
+#include "axr.h"
+#include "HSSChar.h"
 
-#include <QMetaType>
-#include <string>
-#include "AXRGlobal.h"
-
-class QChar;
-class QString;
-typedef const struct __CFString * CFStringRef;
-
-#ifdef __OBJC__
-@class NSString;
-#else
-typedef struct objc_object NSString;
-#endif
+using namespace AXR;
 
 namespace AXR
 {
-    typedef QChar AXRChar;
-    typedef QString AXRString;
-
-    extern AXR_API std::string toStdString(const AXRString &string);
-    extern AXR_API AXRString fromStdString(const std::string &string);
-
-    extern AXR_API QString toQString(const AXRString &string);
-    extern AXR_API AXRString fromQString(const QString &string);
-
-    extern AXR_API AXRString fromCFStringRef(CFStringRef string);
-    extern AXR_API CFStringRef toCFStringRef(const AXRString &string);
-
-    extern AXR_API NSString* toNSString(const AXRString &string);
-    extern AXR_API AXRString fromNSString(const NSString *string);
+    class HSSCharPrivate
+    {
+        friend class HSSChar;
+        HSSCharPrivate()
+        {
+            
+        }
+        uint32_t value;
+    };
 }
 
-Q_DECLARE_METATYPE(AXR::AXRString)
-Q_DECLARE_METATYPE(AXR::AXRString*)
+HSSChar::HSSChar()
+: d(new HSSCharPrivate)
+{
+    
+}
 
-#endif
+HSSChar::HSSChar(const HSSChar & other)
+: d(new HSSCharPrivate)
+{
+    d->value = other.d->value;
+}
+
+HSSChar::HSSChar(uint32_t value)
+: d(new HSSCharPrivate)
+{
+    d->value = value;
+}
+
+HSSChar::~HSSChar()
+{
+    delete d;
+}
+
+HSSChar & HSSChar::operator=(const HSSChar &other)
+{
+    d->value = other.data();
+    return *this;
+}
+
+HSSChar & HSSChar::operator=(const char * other)
+{
+    d->value = static_cast<uint32_t>(*other);
+    return *this;
+}
+
+uint32_t HSSChar::data() const
+{
+    return d->value;
+}
+
+bool HSSChar::isSpace() const
+{
+    return std::isspace(static_cast<unsigned char>(this->data()));
+}
+
+bool HSSChar::isDigit() const
+{
+    return std::isdigit(static_cast<unsigned char>(this->data()));
+}

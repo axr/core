@@ -48,8 +48,8 @@ using namespace AXR;
 
 AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
 {
-    static QMap<HSSEventType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSEventType, AXRString> types;
+    if (types.empty())
     {
         types[HSSEventTypeNone] = "HSSEventTypeNone";
         types[HSSEventTypeLoad] = "HSSEventTypeLoad";
@@ -75,8 +75,8 @@ AXRString HSSEvent::eventTypeStringRepresentation(HSSEventType eventType)
 
 AXRString HSSEvent::eventTypeToName(HSSEventType eventType)
 {
-    static QMap<HSSEventType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSEventType, AXRString> types;
+    if (types.empty())
     {
         types[HSSEventTypeNone] = "";
         types[HSSEventTypeLoad] = "load";
@@ -104,8 +104,8 @@ AXRString HSSEvent::eventTypeToName(HSSEventType eventType)
 
 HSSEventType HSSEvent::nameToEventType(AXRString name)
 {
-    static QMap<AXRString, HSSEventType> types;
-    if (types.isEmpty())
+    static std::map<AXRString, HSSEventType> types;
+    if (types.empty())
     {
         types["load"] = HSSEventTypeLoad;
         types["flag"] = HSSEventTypeFlag;

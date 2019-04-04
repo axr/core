@@ -94,17 +94,20 @@ bool HSSCircle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSCircle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
+void HSSCircle::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
-    path.addEllipse(x, y, width, height);
+    path->addEllipse(HSSRect(x, y, width, height));
 }
 
-void HSSCircle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSCircle::drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     // Calculate the combined thickness of all strokes
     HSSUnit combinedThickness = 0;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
+    
+    std::list<QSharedPointer<HSSAbstractStroke> >::const_iterator it;
+    for (it = strokes.begin(); it != strokes.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         combinedThickness += theStroke->getSize();
     }
 
@@ -119,15 +122,16 @@ void HSSCircle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractS
     HSSUnit cumulativeThickness = 0;
 
     // Draw all strokes
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
+    for (it = strokes.begin(); it != strokes.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSUnit theSize = theStroke->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 
-        QPainterPath path;
+        QSharedPointer<HSSPath> path;
         HSSShape::createPath(path, offsetX + offset, offsetY + offset, width - offset * 2, height - offset * 2);
-        theStroke->draw(painter, path);
+        this->getController()->document()->platform()->drawStroke(path, theStroke);
 
         cumulativeThickness += theSize;
     }

@@ -142,7 +142,7 @@ void HSSRoundedRect::stackLeft(QSharedPointer<HSSParserNode> parserNode)
     this->setStackNode("leftBottom", parserNode);
 }
 
-void HSSRoundedRect::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
+void HSSRoundedRect::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
     this->createRoundedRect(path, x, y, width, height, 0.);
 }
@@ -167,7 +167,7 @@ HSSUnit HSSRoundedRect::getRightBottom() const
     return this->getComputedNumber("rightBottom");
 }
 
-void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset)
+void HSSRoundedRect::createRoundedRect(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, HSSUnit offset)
 {
     HSSUnit cornerTL = this->getLeftTop();
     HSSUnit cornerBL = this->getLeftBottom();
@@ -182,25 +182,29 @@ void HSSRoundedRect::createRoundedRect(QPainterPath &path, HSSUnit x, HSSUnit y,
     if(bottomRightOffset < 1) bottomRightOffset = 1;
     HSSUnit topRightOffset = (cornerTR*2+offset);
     if(topRightOffset < 1) topRightOffset = 1;
-    QRectF topLeftBounds(x, y, topLeftOffset, topLeftOffset);
-    QRectF bottomLeftBounds(x, y + height - bottomLeftOffset, bottomLeftOffset, bottomLeftOffset);
-    QRectF bottomRightBounds(x + width - bottomRightOffset, y + height - bottomRightOffset, bottomRightOffset, bottomRightOffset);
-    QRectF topRightBounds(x + width - topRightOffset, y, topRightOffset, topRightOffset);
 
-    QVector<QRectF> corners;
-    corners << topLeftBounds << bottomLeftBounds << bottomRightBounds << topRightBounds;
+    HSSRect topLeftBounds(x, y, topLeftOffset, topLeftOffset);
+    HSSRect bottomLeftBounds(x, y + height - bottomLeftOffset, bottomLeftOffset, bottomLeftOffset);
+    HSSRect bottomRightBounds(x + width - bottomRightOffset, y + height - bottomRightOffset, bottomRightOffset, bottomRightOffset);
+    HSSRect topRightBounds(x + width - topRightOffset, y, topRightOffset, topRightOffset);
 
-    path.arcMoveTo(corners[0], 90);
+    std::vector<HSSRect> corners;
+    corners.push_back(topLeftBounds);
+    corners.push_back(bottomLeftBounds);
+    corners.push_back(bottomRightBounds);
+    corners.push_back(topRightBounds);
+
+    path->moveTo(topLeftBounds.origin.x + topLeftBounds.size.width/2, topLeftBounds.origin.y);
 
     for (int i = 1; i <= corners.size(); ++i)
     {
-        path.arcTo(corners[i - 1], i * 90, 90);
+        path->arcTo(corners[i - 1], i * 90, 90);
     }
 
-    path.closeSubpath();
+    path->closeSubpath();
 }
 
-void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSRoundedRect::drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     HSSUnit cornerTL = this->getLeftTop();
     HSSUnit cornerBL = this->getLeftBottom();
@@ -208,9 +212,11 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
     HSSUnit cornerTR = this->getRightTop();
 
     //sort strokes in three groups
-    QList<QSharedPointer<HSSAbstractStroke> > center, inside, outside;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
+    std::list<QSharedPointer<HSSAbstractStroke> > center, inside, outside;
+    std::list<QSharedPointer<HSSAbstractStroke> >::const_iterator it;
+    for (it = strokes.begin(); it != strokes.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSStrokePosition thePos = theStroke->getPosition();
         if (thePos == HSSStrokePositionCenter)
         {
@@ -227,8 +233,9 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
     }
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, center)
+    for (it = center.begin(); it != center.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false;
         bool hasSegments = false;
@@ -265,8 +272,9 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
 //    painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, center)
+    for (it = center.begin(); it != center.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSUnit theSize = theStroke->getSize();
 
         QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
@@ -274,23 +282,23 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
         bool hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
         if(hasSegments && !hasAll){
-            QPainterPath path;
+            QSharedPointer<HSSPath> path(new HSSPath());
             this->_drawCenteredStrokeBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             ///@todo uncomment this once there are stroke types
             //if(theStroke->isA(HSSStrokeTypeLineStroke){
-                QPainterPath path;
+                QSharedPointer<HSSPath> path(new HSSPath());
                 QSharedPointer<HSSStroke> theLineStroke = qSharedPointerCast<HSSStroke>(theStroke);
                 QSharedPointer<HSSObject> theColorObj = theLineStroke->getColor();
                 if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
                     QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
-                    QPainterPath outerPath, innerPath;
+                    QSharedPointer<HSSPath> innerPath(new HSSPath());
                     HSSUnit outerLeftOffset = (leftThickness/2)-leftCumulative-theSize+leftCorrection;
                     HSSUnit outerTopOffset = (topThickness/2)-topCumulative-theSize+topCorrection;
                     HSSUnit outerRightOffset = (rightThickness/2)-rightCumulative-theSize+rightCorrection;
                     HSSUnit outerBottomOffset = (bottomThickness/2)-bottomCumulative-theSize+bottomCorrection;
                     this->createRoundedRect(
-                                            outerPath,
+                                            path,
                                             offsetX+outerLeftOffset,
                                             offsetY+outerTopOffset,
                                             -outerLeftOffset+width-outerRightOffset,
@@ -308,8 +316,8 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
                                             -innerLeftOffset+width-innerRightOffset,
                                             -innerTopOffset+height-innerBottomOffset,
                                             -innerLeftOffset*2);
-                    path = outerPath.subtracted(innerPath);
-                    painter.fillPath(path, theColor->toQColor());
+                    path->subtract(innerPath);
+                    this->getController()->document()->platform()->fillPath(path, theColor);
                 }
             //}
 
@@ -322,8 +330,8 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    QList<QSharedPointer<HSSAbstractStroke> >::const_iterator insideIt = inside.constEnd();
-    while (insideIt != inside.constBegin())
+    std::list<QSharedPointer<HSSAbstractStroke> >::const_iterator insideIt = inside.end();
+    while (insideIt != inside.begin())
     {
         --insideIt;
         const QSharedPointer<HSSAbstractStroke> & theStroke = *insideIt;
@@ -333,7 +341,7 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
         bool hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
         if(hasSegments && !hasAll){
-            QPainterPath path;
+            QSharedPointer<HSSPath> path(new HSSPath());
             ///@todo uncomment this once there are stroke types
             //if(theStroke->isA(HSSStrokeTypeLineStroke){
                 QSharedPointer<HSSStroke> theLineStroke = qSharedPointerCast<HSSStroke>(theStroke);
@@ -342,24 +350,24 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
                     this->_drawInsideStrokeBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
 
                     QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
-                    painter.fillPath(path, theColor->toQColor());
+                    this->getController()->document()->platform()->fillPath(path, theColor);
                 }
             //}
         } else {
             ///@todo uncomment this once there are stroke types
             //if(theStroke->isA(HSSStrokeTypeLineStroke){
-                QPainterPath path;
+                QSharedPointer<HSSPath> path(new HSSPath());
                 QSharedPointer<HSSStroke> theLineStroke = qSharedPointerCast<HSSStroke>(theStroke);
                 QSharedPointer<HSSObject> theColorObj = theLineStroke->getColor();
                 if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
                     QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
-                    QPainterPath outerPath, innerPath;
+                    QSharedPointer<HSSPath> innerPath(new HSSPath());
                     HSSUnit outerLeftOffset = leftCumulative+leftCorrection;
                     HSSUnit outerTopOffset = topCumulative+topCorrection;
                     HSSUnit outerRightOffset = rightCumulative+rightCorrection;
                     HSSUnit outerBottomOffset = bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
-                                            outerPath,
+                                            path,
                                             offsetX+outerLeftOffset,
                                             offsetY+outerTopOffset,
                                             -outerLeftOffset+width-outerRightOffset,
@@ -377,8 +385,8 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
                                             -innerLeftOffset+width-innerRightOffset,
                                             -innerTopOffset+height-innerBottomOffset,
                                             -innerLeftOffset*2);
-                    path = outerPath.subtracted(innerPath);
-                    painter.fillPath(path, theColor->toQColor());
+                    path->subtract(innerPath);
+                    this->getController()->document()->platform()->fillPath(path, theColor);
                 }
             //}
 
@@ -390,31 +398,32 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, outside)
+    for (it = outside.begin(); it != outside.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSUnit theSize = theStroke->getSize();
         QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false;
         bool hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
         if(hasSegments && !hasAll){
-            QPainterPath path;
+            QSharedPointer<HSSPath> path(new HSSPath());
             this->_drawOutsideStrokeBySegments(path, segmentsObj, theSize, width, height, offsetX, offsetY, cornerTL, cornerBL, cornerBR, cornerTR, topThickness, topCumulative, topCorrection, rightThickness, rightCumulative, rightCorrection, bottomThickness, bottomCumulative, bottomCorrection, leftThickness, leftCumulative, leftCorrection);
         } else {
             ///@todo uncomment this once there are stroke types
             //if(theStroke->isA(HSSStrokeTypeLineStroke){
-                QPainterPath path;
+                QSharedPointer<HSSPath> path(new HSSPath());
                 QSharedPointer<HSSStroke> theLineStroke = qSharedPointerCast<HSSStroke>(theStroke);
                 QSharedPointer<HSSObject> theColorObj = theLineStroke->getColor();
                 if(theColorObj && theColorObj->isA(HSSObjectTypeRgb)){
                     QSharedPointer<HSSRgb> theColor = qSharedPointerCast<HSSRgb>(theColorObj);
-                    QPainterPath outerPath, innerPath;
+                    QSharedPointer<HSSPath> innerPath(new HSSPath());
                     HSSUnit outerLeftOffset = theSize+leftCumulative+leftCorrection;
                     HSSUnit outerTopOffset = theSize+topCumulative+topCorrection;
                     HSSUnit outerRightOffset = theSize+rightCumulative+rightCorrection;
                     HSSUnit outerBottomOffset = theSize+bottomCumulative+bottomCorrection;
                     this->createRoundedRect(
-                                            outerPath,
+                                            path,
                                             offsetX-outerLeftOffset,
                                             offsetY-outerTopOffset,
                                             outerLeftOffset+width+outerRightOffset,
@@ -432,8 +441,8 @@ void HSSRoundedRect::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbst
                                             innerLeftOffset+width+innerRightOffset,
                                             innerTopOffset+height+innerBottomOffset,
                                             innerLeftOffset*2);
-                    path = outerPath.subtracted(innerPath);
-                    painter.fillPath(path, theColor->toQColor());
+                    path->subtract(innerPath);
+                    this->getController()->document()->platform()->fillPath(path, theColor);
                 }
             //}
             leftCumulative += theSize;
@@ -452,8 +461,11 @@ void HSSRoundedRect::_increaseThickness(const QSharedPointer<HSSObject> & segmen
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 this->__increaseThickness(qSharedPointerCast<HSSValue>(theObj)->getValue(), size, top, right, bottom, left);
@@ -497,8 +509,11 @@ void HSSRoundedRect::_hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool
     }
     else if (segmentsObj && segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 hasSegments = true;
@@ -514,7 +529,7 @@ void HSSRoundedRect::_hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool
 }
 
 void HSSRoundedRect::_drawCenteredStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -549,8 +564,11 @@ void HSSRoundedRect::_drawCenteredStrokeBySegments(
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -564,7 +582,7 @@ void HSSRoundedRect::_drawCenteredStrokeBySegments(
 }
 
 void HSSRoundedRect::__drawCenteredStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const AXRString & segment,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -596,8 +614,8 @@ void HSSRoundedRect::__drawCenteredStrokeBySegments(
         HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
         HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
 
-        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
+        path->moveTo(offsetX+leftOffset, offsetY+topOffset);
+        path->lineTo(offsetX+width-rightOffset, offsetY+topOffset);
         topCumulative += theSize;
     }
     else if (segment == "right")
@@ -606,8 +624,8 @@ void HSSRoundedRect::__drawCenteredStrokeBySegments(
         HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
         HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-        path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
-        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        path->moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+        path->lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
         rightCumulative += theSize;
     }
     else if (segment == "bottom")
@@ -616,8 +634,8 @@ void HSSRoundedRect::__drawCenteredStrokeBySegments(
         HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
         HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
 
-        path.moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
-        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        path->moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        path->lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
         bottomCumulative += theSize;
     }
     else if(segment == "left")
@@ -626,14 +644,14 @@ void HSSRoundedRect::__drawCenteredStrokeBySegments(
         HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
         HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-        path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
-        path.lineTo(offsetX+leftOffset, offsetY+topOffset);
+        path->moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        path->lineTo(offsetX+leftOffset, offsetY+topOffset);
         leftCumulative += theSize;
     }
 }
 
 void HSSRoundedRect::_drawInsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -668,8 +686,11 @@ void HSSRoundedRect::_drawInsideStrokeBySegments(
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -683,7 +704,7 @@ void HSSRoundedRect::_drawInsideStrokeBySegments(
 }
 
 void HSSRoundedRect::__drawInsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const AXRString & segment,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -714,45 +735,45 @@ void HSSRoundedRect::__drawInsideStrokeBySegments(
         HSSUnit topOffset = topCumulative+topCorrection;
         HSSUnit rightOffset = rightCumulative+rightCorrection+(cornerTR*2);
 
-        QRectF curve1(offsetX+leftOffset, offsetY+topOffset, cornerTL*2, cornerTL*2);
+        HSSRect curve1(offsetX+leftOffset, offsetY+topOffset, cornerTL*2, cornerTL*2);
         if (cornerTL != 0)
         {
-            path.arcMoveTo(curve1, 90);
-            path.arcTo(curve1, 90, 90);
+            path->moveTo(curve1.origin.x, curve1.origin.y);
+            path->arcTo(curve1, 90, 90);
         }
         else
         {
-            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-            path.arcTo(curve1, 90, 90);
+            path->moveTo(offsetX+leftOffset, offsetY+topOffset);
+            path->arcTo(curve1, 90, 90);
         }
         if(cornerTL != 0)
         {
-            QRectF curve2(offsetX+leftOffset, offsetY+topOffset+theSize, cornerTL*2, (cornerTL*2)-theSize);
-            path.arcTo(curve2, 180, -90);
+            HSSRect curve2(offsetX+leftOffset, offsetY+topOffset+theSize, cornerTL*2, (cornerTL*2)-theSize);
+            path->arcTo(curve2, 180, -90);
         }
         else
         {
-            path.lineTo(offsetX+leftOffset, offsetY+topOffset+theSize);
+            path->lineTo(offsetX+leftOffset, offsetY+topOffset+theSize);
         }
         qreal trsize = (cornerTR*2)-theSize;
         if(trsize > 0)
         {
-            QRectF curve3(offsetX+width-rightOffset, offsetY+topOffset+theSize, cornerTR*2, (cornerTR*2)-theSize);
-            path.arcTo(curve3, 90, -90);
+            HSSRect curve3(offsetX+width-rightOffset, offsetY+topOffset+theSize, cornerTR*2, (cornerTR*2)-theSize);
+            path->arcTo(curve3, 90, -90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset+theSize);
+            path->lineTo(offsetX+width-rightOffset, offsetY+topOffset+theSize);
         }
         if (cornerTR != 0) {
-            QRectF curve4(offsetX+width-rightOffset, offsetY+topOffset, cornerTR*2, cornerTR*2);
-            path.arcTo(curve4, 0, 90);
+            HSSRect curve4(offsetX+width-rightOffset, offsetY+topOffset, cornerTR*2, cornerTR*2);
+            path->arcTo(curve4, 0, 90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
+            path->lineTo(offsetX+width-rightOffset, offsetY+topOffset);
         }
-        path.closeSubpath();
+        path->closeSubpath();
 
         topCumulative += theSize;
     }
@@ -764,45 +785,45 @@ void HSSRoundedRect::__drawInsideStrokeBySegments(
 
         if (cornerTR != 0)
         {
-            QRectF curve1(offsetX+width-rightOffset-(cornerTR*2), offsetY+topOffset, cornerTR*2, cornerTR*2);
-            path.arcMoveTo(curve1, 90);
-            path.arcTo(curve1, 90, -90);
+            HSSRect curve1(offsetX+width-rightOffset-(cornerTR*2), offsetY+topOffset, cornerTR*2, cornerTR*2);
+            path->moveTo(curve1.origin.x, curve1.origin.y);
+            path->arcTo(curve1, 90, -90);
         }
         else
         {
-            path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
-            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-cornerBR);
+            path->moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+            path->lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-cornerBR);
         }
         if (cornerBR != 0)
         {
-            QRectF curve2(offsetX+width-rightOffset-(cornerBR*2), offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, (cornerBR*2));
-            path.arcTo(curve2, 0, -90);
+            HSSRect curve2(offsetX+width-rightOffset-(cornerBR*2), offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, (cornerBR*2));
+            path->arcTo(curve2, 0, -90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+            path->lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
         }
         qreal brsize = (cornerBR*2)-theSize;
         if (brsize > 0)
         {
-            QRectF curve3(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, brsize, cornerBR*2);
-            path.arcTo(curve3, 270, 90);
+            HSSRect curve3(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, brsize, cornerBR*2);
+            path->arcTo(curve3, 270, 90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset-theSize, offsetY+height-bottomOffset);
+            path->lineTo(offsetX+width-rightOffset-theSize, offsetY+height-bottomOffset);
         }
         qreal trsize = (cornerTR*2)-theSize;
         if (trsize > 0)
         {
-            QRectF curve4(offsetX+width-(cornerTR*2)-rightOffset, offsetY+topOffset, trsize, cornerTR*2);
-            path.arcTo(curve4, 0, 90);
+            HSSRect curve4(offsetX+width-(cornerTR*2)-rightOffset, offsetY+topOffset, trsize, cornerTR*2);
+            path->arcTo(curve4, 0, 90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset-theSize, offsetY+topOffset);
+            path->lineTo(offsetX+width-rightOffset-theSize, offsetY+topOffset);
         }
-        path.closeSubpath();
+        path->closeSubpath();
         rightCumulative += theSize;
     }
     else if (segment == "bottom")
@@ -813,45 +834,45 @@ void HSSRoundedRect::__drawInsideStrokeBySegments(
 
         if(cornerBL != 0)
         {
-            QRectF curve1(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, cornerBL*2);
-            path.arcMoveTo(curve1, 180);
-            path.arcTo(curve1, 180, 90);
+            HSSRect curve1(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, cornerBL*2);
+            path->moveTo(curve1.origin.x, curve1.origin.y + curve1.size.height);
+            path->arcTo(curve1, 180, 90);
         }
         else
         {
-            path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
-            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+            path->moveTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
+            path->lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
         }
         if (cornerBR != 0)
         {
-            QRectF curve2(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, cornerBR*2);
-            path.arcTo(curve2, 270, 90);
+            HSSRect curve2(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, cornerBR*2);
+            path->arcTo(curve2, 270, 90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+            path->lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
         }
         qreal brsize = (cornerBR*2)-theSize;
         if (brsize > 0)
         {
-            QRectF curve3(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, brsize);
-            path.arcTo(curve3, 0, -90);
+            HSSRect curve3(offsetX+width-(cornerBR*2)-rightOffset, offsetY+height-(cornerBR*2)-bottomOffset, cornerBR*2, brsize);
+            path->arcTo(curve3, 0, -90);
         }
         else
         {
-            path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-theSize);
+            path->lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset-theSize);
         }
         qreal blsize = (cornerBL*2)-theSize;
         if (blsize > 0)
         {
-            QRectF curve4(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, blsize);
-            path.arcTo(curve4, 270, -90);
+            HSSRect curve4(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, blsize);
+            path->arcTo(curve4, 270, -90);
         }
         else
         {
-            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
+            path->lineTo(offsetX+leftOffset, offsetY+height-bottomOffset-theSize);
         }
-        path.closeSubpath();
+        path->closeSubpath();
         bottomCumulative += theSize;
     }
     else if(segment == "left")
@@ -860,42 +881,42 @@ void HSSRoundedRect::__drawInsideStrokeBySegments(
         HSSUnit leftOffset = leftCumulative+leftCorrection;
         HSSUnit topOffset = topCumulative+topCorrection;
 
-        QRectF curve1(offsetX+leftOffset, offsetY+topOffset, cornerTL*2, cornerTL*2);
+        HSSRect curve1(offsetX+leftOffset, offsetY+topOffset, cornerTL*2, cornerTL*2);
         if(cornerTL != 0){
-            path.arcMoveTo(curve1, 90);
-            path.arcTo(curve1, 90, 90);
+            path->moveTo(curve1.origin.x, curve1.origin.y);
+            path->arcTo(curve1, 90, 90);
         } else {
-            path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-            path.arcTo(curve1, 90, 90);
+            path->moveTo(offsetX+leftOffset, offsetY+topOffset);
+            path->arcTo(curve1, 90, 90);
         }
         if(cornerBL != 0){
-            QRectF curve2(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, cornerBL*2);
-            path.arcTo(curve2, 180, 90);
+            HSSRect curve2(offsetX+leftOffset, offsetY+height-(cornerBL*2)-bottomOffset, cornerBL*2, cornerBL*2);
+            path->arcTo(curve2, 180, 90);
         } else {
-            path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+            path->lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
         }
 
         if((cornerBL*2)-theSize > 0){
-            QRectF curve3(offsetX+leftOffset+theSize, offsetY+height-(cornerBL*2)-bottomOffset, (cornerBL*2)-theSize, (cornerBL*2));
-            path.arcTo(curve3, 270, -90);
+            HSSRect curve3(offsetX+leftOffset+theSize, offsetY+height-(cornerBL*2)-bottomOffset, (cornerBL*2)-theSize, (cornerBL*2));
+            path->arcTo(curve3, 270, -90);
         } else {
-            path.lineTo(offsetX+leftOffset+theSize, offsetY+height-bottomOffset);
+            path->lineTo(offsetX+leftOffset+theSize, offsetY+height-bottomOffset);
         }
 
         if(cornerTL != 0){
-            QRectF curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (cornerTL*2)-theSize, cornerTL*2);
-            path.arcTo(curve4, 180, -90);
+            HSSRect curve4(offsetX+leftOffset+theSize, offsetY+topOffset, (cornerTL*2)-theSize, cornerTL*2);
+            path->arcTo(curve4, 180, -90);
         } else {
-            path.lineTo(offsetX+leftOffset+theSize, offsetY+topOffset);
+            path->lineTo(offsetX+leftOffset+theSize, offsetY+topOffset);
         }
 
-        path.closeSubpath();
+        path->closeSubpath();
         leftCumulative += theSize;
     }
 }
 
 void HSSRoundedRect::_drawOutsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -930,8 +951,11 @@ void HSSRoundedRect::_drawOutsideStrokeBySegments(
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -945,7 +969,7 @@ void HSSRoundedRect::_drawOutsideStrokeBySegments(
 }
 
 void HSSRoundedRect::__drawOutsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const AXRString & segment,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -978,26 +1002,26 @@ void HSSRoundedRect::__drawOutsideStrokeBySegments(
 
     if (segment == "top")
     {
-        path.moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
-        path.lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
+        path->moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
+        path->lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
         topCumulative += theSize;
     }
     else if (segment == "right")
     {
-        path.moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
-        path.lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
+        path->moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
+        path->lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
         rightCumulative += theSize;
     }
     else if (segment == "bottom")
     {
-        path.moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
-        path.lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
+        path->moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
+        path->lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
         bottomCumulative += theSize;
     }
     else if(segment == "left")
     {
-        path.moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
-        path.lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
+        path->moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
+        path->lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
         leftCumulative += theSize;
     }
 }

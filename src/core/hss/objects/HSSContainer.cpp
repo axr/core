@@ -178,29 +178,6 @@ AXRString HSSContainer::toString()
     return tempstr;
 }
 
-QVariantMap HSSContainer::toMap() const
-{
-    QVariantMap map = HSSObject::toMap();
-
-    if (this->children->size() > 0)
-    {
-        QList<QVariant> childrenList;
-
-        for (HSSSimpleSelection::iterator it = this->children->begin(); it!= this->children->end(); ++it)
-        {
-            childrenList.append((*it)->toMap());
-        }
-
-        map.insert("children", QVariant(childrenList));
-    }
-    else
-    {
-        map.insert("children", QVariant(false));
-    }
-
-    return map;
-}
-
 AXRString HSSContainer::defaultObjectType()
 {
     return "container";
@@ -267,14 +244,14 @@ QSharedPointer<HSSParserNode> HSSContainer::getPercentageExpression(QSharedPoint
         return QSharedPointer<HSSParserNode>();
     }
 
-    static QMap<AXRString, AXRString> mappings;
+    static std::map<AXRString, AXRString> mappings;
     if (mappings.empty())
     {
-        mappings.insert("contentAlignX", "innerWidth");
-        mappings.insert("contentAlignY", "innerHeight");
+        mappings["contentAlignX"] = "innerWidth";
+        mappings["contentAlignY"] = "innerHeight";
     }
 
-    if (mappings.contains(propertyName))
+    if (mappings.count(propertyName))
     {
         HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
         //get the properties from itself
@@ -376,16 +353,18 @@ void HSSContainer::remove(size_t index)
 
 void HSSContainer::changeRulesAdd(QSharedPointer<HSSRule> theRule)
 {
-    if (!this->_changeRules.contains(theRule))
+    if (!this->_changeRules.count(theRule))
     {
-        this->_changeRules.append(theRule);
+        this->_changeRules.insert(theRule);
     }
 }
 
 void HSSContainer::changeRulesNotifyAdd(QSharedPointer<HSSDisplayObject> theDO)
 {
-    Q_FOREACH(const QSharedPointer<HSSRule> & theRule, this->_changeRules)
+    std::set<QSharedPointer<HSSRule> >::const_iterator it;
+    for (it=_changeRules.begin(); it!=_changeRules.end(); ++it)
     {
+        const QSharedPointer<HSSRule> & theRule = *it;
         QSharedPointer<HSSSimpleSelection> theScope(new HSSSimpleSelection(this->getController()));
         theScope->add(theDO);
         this->getController()->recursiveMatchRulesToDisplayObjects(theRule, theScope, this->shared_from_this(), true);
@@ -395,8 +374,10 @@ void HSSContainer::changeRulesNotifyAdd(QSharedPointer<HSSDisplayObject> theDO)
 
 void HSSContainer::changeRulesNotifyRemove(QSharedPointer<HSSDisplayObject> theDO)
 {
-    Q_FOREACH(const QSharedPointer<HSSRule> & theRule, this->_changeRules)
+    std::set<QSharedPointer<HSSRule> >::const_iterator it;
+    for (it=_changeRules.begin(); it!=_changeRules.end(); ++it)
     {
+        const QSharedPointer<HSSRule> & theRule = *it;
         theRule->removeFromDisplayObject(theDO);
     }
 }
@@ -651,16 +632,25 @@ bool HSSContainer::handleSelection(HSSPoint thePoint)
 
 void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
 {
-    QVector<QSharedPointer<HSSRule> > newRuleSet;
+    std::deque<QSharedPointer<HSSRule> > newRuleSet;
     if (theObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(QSharedPointer<HSSObject> mvObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues()){
-            Q_FOREACH(QSharedPointer<HSSRule> tmprule, mvObj->getObjDefRules()){
+        const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(theObj)->getValues();
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        for (it = multiValues.begin(); it != multiValues.end(); ++it)
+        {
+            const QSharedPointer<HSSObject> mvObj = *it;
+            const std::deque<QSharedPointer<HSSRule> > objDefRules = mvObj->getObjDefRules();
+            std::deque<QSharedPointer<HSSRule> >::const_iterator it2;
+            for (it2 = objDefRules.begin(); it2 != objDefRules.end(); ++it2)
+            {
+                const QSharedPointer<HSSRule> & tmprule = *it2;
                 newRuleSet.push_back(tmprule);
             }
         }
-        Q_FOREACH(QSharedPointer<HSSObject> mvObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues())
+        for (it = multiValues.begin(); it != multiValues.end(); ++it)
         {
+            const QSharedPointer<HSSObject> mvObj = *it;
             HSSObject::_setIsA(mvObj);
         }
     }
@@ -676,14 +666,21 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
     }
 
     QSharedPointer<HSSContainer> thisContainer = qSharedPointerCast<HSSContainer>(this->shared_from_this());
-    QVector<QSharedPointer<HSSRule> > currentRules(this->_appliedIsARules);
-    QVector<QSharedPointer<HSSRule> > newRules;
+    std::vector<QSharedPointer<HSSRule> > currentRules(this->_appliedIsARules);
+    std::vector<QSharedPointer<HSSRule> > newRules;
 
     //find the new rules to add
-    Q_FOREACH(QSharedPointer<HSSRule> rule, theObj->getObjDefRules()){
+    const std::deque<QSharedPointer<HSSRule> > & objDefRules = theObj->getObjDefRules();
+    std::deque<QSharedPointer<HSSRule> >::const_iterator it;
+    for (it = objDefRules.begin(); it != objDefRules.end(); ++it)
+    {
+        const QSharedPointer<HSSRule> & rule = *it;
         bool found = false;
-        Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
+        
+        std::vector<QSharedPointer<HSSRule> >::const_iterator it2;
+        for (it2 = currentRules.begin(); it2 != currentRules.end(); ++it2)
         {
+            const QSharedPointer<HSSRule> & tmprule = *it2;
             if (tmprule->equalTo(rule))
             {
                 found = true;
@@ -696,11 +693,16 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
         }
     }
     //remove obsolete rules
-    Q_FOREACH(QSharedPointer<HSSRule> tmprule, currentRules)
+    std::vector<QSharedPointer<HSSRule> >::const_iterator it3;
+    for (it3 = currentRules.begin(); it3 != currentRules.end(); ++it3)
     {
+        const QSharedPointer<HSSRule> & tmprule = *it3;
         bool found = false;
-        Q_FOREACH(QSharedPointer<HSSRule> tmprule2, newRuleSet)
+        
+        std::deque<QSharedPointer<HSSRule> >::const_iterator it4;
+        for (it4 = newRuleSet.begin(); it4 != newRuleSet.end(); ++it4)
         {
+            const QSharedPointer<HSSRule> & tmprule2 = *it4;
             if (tmprule->equalTo(tmprule2))
             {
                 found = true;
@@ -710,11 +712,11 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
         if (!found)
         {
             tmprule->removeFromDisplayObjects();
-            for (int i = 0, size = this->_appliedIsARules.size(); i<size; ++i)
+            for (size_t i = 0, size = this->_appliedIsARules.size(); i<size; ++i)
             {
                 if (this->_appliedIsARules[i] == tmprule)
                 {
-                    this->_appliedIsARules.remove(i);
+                    this->_appliedIsARules.erase(this->_appliedIsARules.begin() + i);
                     this->setNeedsRereadRules(true);
                     --i;
                     --size;
@@ -722,7 +724,10 @@ void HSSContainer::_setIsA(QSharedPointer<HSSObject> theObj)
             }
         }
     }
-    Q_FOREACH(QSharedPointer<HSSRule> rule, newRules){
+    std::vector<QSharedPointer<HSSRule> >::iterator it5;
+    for (it5 = newRules.begin(); it5 != newRules.end(); ++it5)
+    {
+        const QSharedPointer<HSSRule> & rule = *it5;
         rule->setSpecificity(theObj->getSpecificity());
         this->_appliedIsARules.push_back(rule);
         this->objDefRulesPrepend(rule);

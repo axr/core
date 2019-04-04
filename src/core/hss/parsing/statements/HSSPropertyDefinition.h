@@ -78,7 +78,7 @@ namespace AXR
          *  value.
          *  @param paths    A vector of property paths.
          */
-        HSSPropertyDefinition(QVector< QSharedPointer<HSSPropertyPath> > paths, AXRController * controller);
+        HSSPropertyDefinition(std::vector< QSharedPointer<HSSPropertyPath> > paths, AXRController * controller);
 
         /**
          *  Creates a new instance of a property definition, with the given names and value.
@@ -86,7 +86,7 @@ namespace AXR
          *  @param value    A shared pointer to the parser node that holds the value of this
          *                  property definition.
          */
-        HSSPropertyDefinition(QVector< QSharedPointer<HSSPropertyPath> > paths, QSharedPointer<HSSParserNode> value, AXRController * controller);
+        HSSPropertyDefinition(std::vector< QSharedPointer<HSSPropertyPath> > paths, QSharedPointer<HSSParserNode> value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSPropertyDefinition objects. Do not call directly, use clone() instead.
@@ -113,13 +113,13 @@ namespace AXR
          *  Setter for the names of the property.
          *  @param paths    A vector of property paths.
          */
-        void setPaths(QVector< QSharedPointer<HSSPropertyPath> > paths);
+        void setPaths(std::vector< QSharedPointer<HSSPropertyPath> > paths);
 
         /**
          *  Getter for the property paths.
          *  @return A vector of property paths.
          */
-        const QVector< QSharedPointer<HSSPropertyPath> > getPaths() const;
+        const std::vector< QSharedPointer<HSSPropertyPath> > getPaths() const;
 
         /**
          *  Setter for the value of the property.
@@ -148,7 +148,7 @@ namespace AXR
     protected:
         QSharedPointer<HSSPropertyDefinition> shared_from_this();
 
-        QVector< QSharedPointer<HSSPropertyPath> > paths;
+        std::vector< QSharedPointer<HSSPropertyPath> > paths;
         QSharedPointer<HSSParserNode> value;
 
     private:

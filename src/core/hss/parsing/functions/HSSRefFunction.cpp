@@ -84,8 +84,10 @@ bool HSSRefFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
     if ( this->modifier != castedNode->modifier ) return false;
     if ( ! this->propertyPath->equalTo(castedNode->propertyPath) ) return false;
     unsigned i = 0;
-    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
     {
+        const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
         if ( ! selectorChain->equalTo(castedNode->selectorChains[i])) return false;
         ++i;
     }
@@ -389,10 +391,12 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluateObj(QSharedPointer<HSSObject>
     }
     else if (theObj->isA(HSSObjectTypeMultipleValue))
     {
-        QList<QSharedPointer<HSSObject> > remoteValues = qSharedPointerCast<HSSMultipleValue>(theObj)->getValues();
+        std::vector<QSharedPointer<HSSObject> > remoteValues = qSharedPointerCast<HSSMultipleValue>(theObj)->getValues();
         QSharedPointer<HSSMultipleValue> newValues = QSharedPointer<HSSMultipleValue>(new HSSMultipleValue(this->getController()));
-        Q_FOREACH(QSharedPointer<HSSObject> value, remoteValues)
+        std::vector<QSharedPointer<HSSObject> >::iterator it;
+        for (it = remoteValues.begin(); it != remoteValues.end(); ++it)
         {
+            QSharedPointer<HSSObject> value = *it;
             QSharedPointer<HSSObject> theObjInner = this->_evaluateObj(value);
             if (theObjInner)
             {

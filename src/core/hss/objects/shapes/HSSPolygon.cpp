@@ -127,43 +127,47 @@ bool HSSPolygon::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSPolygon::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
+void HSSPolygon::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
     // The center point of the polygon
-    const QPointF centerPoint(x + (width / 2.), y + (height / 2.));
+    const HSSPoint centerPoint(x + (width / 2.), y + (height / 2.));
 
     // 2 dimensional radius for stretched polygons
-    const QSizeF radius(width / 2., height / 2.);
+    const HSSSize radius(width / 2., height / 2.);
 
     // Number of sides in the polygon
-    const unsigned int sides = qMax(3u, (unsigned int)this->getSides());
+    unsigned int sides = (unsigned int)this->getSides();
+    if (sides < 3) sides = 3u;
+    
     HSSUnit angle = this->getAngle();
 
     // Angle of rotation of the entire polygon specified in radians
     const HSSUnit theta = angle * (M_PI / 180.);
 
     // Build a list of points comprising the polygon vertices
-    QVector<QPointF> points;
+    std::vector<HSSPoint> points;
     for (unsigned int i = 1; i <= sides; ++i)
     {
-        double px = radius.width() * cos(((2 * M_PI * i) / sides) + theta) + centerPoint.x();
-        double py = radius.height() * sin(((2 * M_PI * i) / sides) + theta) + centerPoint.y();
-        points << QPointF(px, py);
+        double px = radius.width * cos(((2 * M_PI * i) / sides) + theta) + centerPoint.x;
+        double py = radius.height * sin(((2 * M_PI * i) / sides) + theta) + centerPoint.y;
+        points.push_back(HSSPoint(px, py));
     }
 
     // Create a polygon from the vertex list and add to the path
-    path.addPolygon(QPolygonF(points));
+    path->addPolygon(points);
 
     // Close the path
-    path.closeSubpath();
+    path->closeSubpath();
 }
 
-void HSSPolygon::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSPolygon::drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     // Calculate the combined thickness of all strokes
     HSSUnit combinedThickness = 0;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
+    std::list<QSharedPointer<HSSAbstractStroke> >::const_iterator it;
+    for (it = strokes.begin(); it != strokes.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         combinedThickness += theStroke->getSize();
     }
 
@@ -178,15 +182,16 @@ void HSSPolygon::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstract
     HSSUnit cumulativeThickness = 0;
 
     // Draw all strokes
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
+    for (it = strokes.begin(); it != strokes.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSUnit theSize = theStroke->getSize();
 
         HSSUnit offset = (combinedThickness / 2) - cumulativeThickness - (theSize / 2) + correction;
 
-        QPainterPath path;
+        QSharedPointer<HSSPath> path;
         HSSShape::createPath(path, offsetX + offset, offsetY + offset, width - offset * 2, height - offset * 2);
-        theStroke->draw(painter, path);
+        this->getController()->document()->platform()->drawStroke(path, theStroke);
 
         cumulativeThickness += theSize;
     }

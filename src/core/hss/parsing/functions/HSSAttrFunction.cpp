@@ -79,8 +79,10 @@ bool HSSAttrFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
     if ( this->attributeName != castedNode->attributeName ) return false;
     if ( this->_stringValue != castedNode->_stringValue ) return false;
     unsigned i = 0;
-    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+    std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+    for (it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
     {
+        const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
         if ( ! selectorChain->equalTo(castedNode->selectorChains[i])) return false;
         ++i;
     }
@@ -160,13 +162,15 @@ QSharedPointer<HSSObject> HSSAttrFunction::_evaluate()
     }
     else
     {
-        QStringList selectorChainStrings;
-        foreach (QSharedPointer<HSSSelectorChain> selectorChain, this->selectorChains)
+        std::vector<HSSString> selectorChainStrings;
+        std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+        for (it = this->selectorChains.begin(); it != this->selectorChains.end(); ++it)
         {
-            selectorChainStrings.append(selectorChain->stringRep());
+            const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
+            selectorChainStrings.push_back(selectorChain->stringRep());
         }
 
-        AXRWarning("HSSAttrFunction", AXRString("attr(%1) of %2 did not select any elements").arg(this->attributeName).arg(selectorChainStrings.join(", "))).raise();
+        AXRWarning("HSSAttrFunction", HSSString::format("attr(%s) of %s did not select any elements", this->attributeName.chardata(), HSSString::join(selectorChainStrings, ", ").chardata())).raise();
         this->_stringValue = AXRString();
     }
     this->_value = HSSValue::valueFromParserNode(this->getController(), HSSStringConstant::stringToConstant(this->_stringValue, this->getController()), this->getSpecificity(), this->getThisObj(), this->scope);

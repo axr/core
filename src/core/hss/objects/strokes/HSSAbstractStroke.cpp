@@ -46,20 +46,32 @@
 
 using namespace AXR;
 
-HSSAbstractStroke::HSSAbstractStroke(AXRController * controller)
+HSSAbstractStroke::HSSAbstractStroke(HSSStrokeType type, AXRController * controller)
 : HSSObject(HSSObjectTypeStroke, controller)
+, strokeType(type)
 {
 }
 
 HSSAbstractStroke::HSSAbstractStroke(const HSSAbstractStroke & orig)
 : HSSObject(orig)
 {
+    this->strokeType = orig.strokeType;
 }
 
 HSSAbstractStroke::~HSSAbstractStroke()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSAbstractStroke: destructing stroke object");
     this->cleanTrackedObservers();
+}
+
+bool HSSAbstractStroke::isA(HSSStrokeType strokeType) const
+{
+    return this->strokeType == strokeType;
+}
+
+HSSStrokeType HSSAbstractStroke::getStrokeType() const
+{
+    return this->strokeType;
 }
 
 AXRString HSSAbstractStroke::toString()

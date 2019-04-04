@@ -75,8 +75,8 @@ AXRString HSSToken::toString()
 
 AXRString HSSToken::tokenStringRepresentation(HSSTokenType type)
 {
-    static QMap<HSSTokenType, AXRString> types;
-    if (types.isEmpty())
+    static std::map<HSSTokenType, AXRString> types;
+    if (types.empty())
     {
         types[HSSNone] = "HSSNone";
         types[HSSIdentifier] = "HSSIdentifier";

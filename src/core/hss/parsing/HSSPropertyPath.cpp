@@ -57,8 +57,10 @@ HSSPropertyPath::HSSPropertyPath(const HSSPropertyPath & orig)
 : HSSParserNode(orig),
 _iterator(_nodes)
 {
-    Q_FOREACH(QSharedPointer<HSSPropertyPathNode> ppn, orig._nodes)
+    std::deque<QSharedPointer<HSSPropertyPathNode> >::const_iterator it;
+    for (it = orig._nodes.begin(); it != orig._nodes.end(); ++it)
     {
+        const QSharedPointer<HSSPropertyPathNode> & ppn = *it;
         this->_nodes.push_back(ppn->clone());
     }
 }
@@ -78,7 +80,7 @@ AXRString HSSPropertyPath::toString()
 {
     AXRString tempstr = AXRString("HSSPropertyPath with the following nodes:\n");
 
-    for (QVector<QSharedPointer<HSSPropertyPathNode> >::iterator it = this->_nodes.begin(); it != this->_nodes.end(); ++it)
+    for (std::deque<QSharedPointer<HSSPropertyPathNode> >::iterator it = this->_nodes.begin(); it != this->_nodes.end(); ++it)
     {
         QSharedPointer<HSSPropertyPathNode> value = *it;
         tempstr.append(value->toString().append("\n"));
@@ -95,7 +97,7 @@ bool HSSPropertyPath::equalTo(QSharedPointer<HSSParserNode> otherNode)
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
     QSharedPointer<HSSPropertyPath> castedNode = qSharedPointerCast<HSSPropertyPath>(otherNode);
     if ( this->_nodes.size() != castedNode->_nodes.size() ) return false;
-    QVector<QSharedPointer<HSSPropertyPathNode> >::const_iterator it1, it2;
+    std::deque<QSharedPointer<HSSPropertyPathNode> >::const_iterator it1, it2;
     it2 = castedNode->_nodes.begin();
     for (it1 = this->_nodes.begin(); it1 != this->_nodes.end(); ++it1)
     {
@@ -120,11 +122,11 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
     {
         this->_iterator = QVectorIterator<QSharedPointer<HSSPropertyPathNode> >(this->_nodes);
     }
-    QSharedPointer<HSSPropertyPathNode> ppn = this->_iterator.next();
     AXRString propertyName = ppn->getPropertyName();
+    QSharedPointer<HSSPropertyPathNode> ppn = *this->_iterator;
     if(!object->hasStackValue(propertyName))
     {
-        if (this->_iterator.hasNext())
+        if (this->_iterator != this->_endIterator)
         {
             AXRController * controller = this->getController();
             QSharedPointer<HSSObject> newObject = HSSObject::newObjectWithType(object->defaultObjectType(propertyName), controller);
@@ -137,12 +139,12 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
         else
         {
             object->setStackNode(propertyName, value);
-            this->_iterator.toFront();
+            this->_iterator = this->_nodes.begin();
         }
     }
     else
     {
-        if (this->_iterator.hasNext())
+        if (this->_iterator != this->_endIterator)
         {
             QSharedPointer<HSSObject> existingObject = object->getStackValue(propertyName);
             if (existingObject->isA(HSSObjectTypeValue))
@@ -185,7 +187,7 @@ void HSSPropertyPath::setStackNode(QSharedPointer<HSSObject> object, QSharedPoin
         else
         {
             object->setStackNode(propertyName, value);
-            this->_iterator.toFront();
+            this->_iterator = this->_nodes.begin();
         }
     }
 }
@@ -194,7 +196,7 @@ void HSSPropertyPath::_setModifiers(QSharedPointer<HSSObject> theObj, AXRString 
 {
     theObj->observe("__impl_private__replace", propertyName, baseObj.data(), new HSSValueChangedCallback<HSSObject>(baseObj.data(), &HSSObject::replaceByPropertyPath));
     QSharedPointer<HSSPropertyDefinition> propDef(new HSSPropertyDefinition(this->getController()));
-    QVector<QSharedPointer<HSSPropertyPath> > paths;
+    std::vector<QSharedPointer<HSSPropertyPath> > paths;
     paths.push_back(this->cloneFromCurrentIterator());
     propDef->setPaths(paths);
     propDef->setValue(value);
@@ -218,11 +220,11 @@ void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPoi
     {
         this->_iterator = QVectorIterator<QSharedPointer<HSSPropertyPathNode> >(this->_nodes);
     }
-    QSharedPointer<HSSPropertyPathNode> ppn = this->_iterator.next();
     AXRString propertyName = ppn->getPropertyName();
+    QSharedPointer<HSSPropertyPathNode> ppn = *this->_iterator;
     if(!object->getComputedValue(propertyName))
     {
-        if (this->_iterator.hasNext())
+        if (this->_iterator != this->_endIterator)
         {
             AXRController * controller = this->getController();
             QSharedPointer<HSSObject> newObject = HSSObject::newObjectWithType(object->defaultObjectType(propertyName), controller);
@@ -239,12 +241,12 @@ void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPoi
             theObj->setSpecificity(value->getSpecificity());
             object->setStackValue(propertyName, theObj);
             object->setComputed(propertyName, theObj);
-            this->_iterator.toFront();
+            this->_iterator = this->_nodes.begin();
         }
     }
     else
     {
-        if (this->_iterator.hasNext())
+        if (this->_iterator != this->_endIterator)
         {
             QSharedPointer<HSSObject> existingObject = object->getComputedValue(propertyName);
             if (existingObject->isA(HSSObjectTypeValue))
@@ -281,7 +283,7 @@ void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPoi
             theObj->setSpecificity(value->getSpecificity());
             object->setStackValue(propertyName, theObj);
             object->setComputed(propertyName, theObj);
-            this->_iterator.toFront();
+            this->_iterator = this->_nodes.begin();
         }
     }
 }
@@ -289,14 +291,14 @@ void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPoi
 HSSPropertyPath::query HSSPropertyPath::getComputed(QSharedPointer<HSSObject> object)
 {
     query ret;
-    if (this->_iterator.hasNext())
+    if (this->_iterator != this->_endIterator)
     {
-        QSharedPointer<HSSPropertyPathNode> ppn = this->_iterator.next();
         AXRString propertyName = ppn->getPropertyName();
+        QSharedPointer<HSSPropertyPathNode> ppn = *this->_iterator;
         QSharedPointer<HSSObject> computedValue = object->getComputedValue(propertyName);
         if(computedValue)
         {
-            if (this->_iterator.hasNext())
+            if (this->_iterator != this->_endIterator)
             {
                 return this->getComputed(computedValue);
             }
@@ -305,29 +307,29 @@ HSSPropertyPath::query HSSPropertyPath::getComputed(QSharedPointer<HSSObject> ob
                 ret.propertyName = propertyName;
                 ret.value = computedValue;
                 ret.object = object;
-                this->_iterator.toFront();
+                this->_iterator = this->_nodes.begin();
             }
         }
         else
         {
             ret.object = object;
             ret.propertyName = propertyName;
-            this->_iterator.toFront();
+            this->_iterator = this->_nodes.begin();
         }
     }
     else
     {
-        this->_iterator.toFront();
+        this->_iterator = this->_nodes.begin();
     }
     return ret;
 }
 
-QVector<QSharedPointer<HSSPropertyPathNode> > HSSPropertyPath::getNodes()
+std::deque<QSharedPointer<HSSPropertyPathNode> > HSSPropertyPath::getNodes()
 {
     return this->_nodes;
 }
 
-void HSSPropertyPath::setNodes(QVector<QSharedPointer<HSSPropertyPathNode> > newNodes)
+void HSSPropertyPath::setNodes(std::deque<QSharedPointer<HSSPropertyPathNode> > newNodes)
 {
     this->_nodes = newNodes;
 }
@@ -363,10 +365,11 @@ QSharedPointer<HSSPropertyPathNode> HSSPropertyPath::popFront()
 QSharedPointer<HSSPropertyPath> HSSPropertyPath::cloneFromCurrentIterator()
 {
     QSharedPointer<HSSPropertyPath> newPath(new HSSPropertyPath(this->getController()));
-    QVectorIterator<QSharedPointer<HSSPropertyPathNode> > currentIterator = this->_iterator;
-    while (this->_iterator.hasNext())
+    
+    std::deque<QSharedPointer<HSSPropertyPathNode> >::iterator currentIterator = this->_iterator;
+    while (this->_iterator != this->_endIterator)
     {
-        newPath->add(this->_iterator.next()->clone());
+        newPath->add((*this->_iterator)->clone());
     }
     this->_iterator = currentIterator;
     return newPath;

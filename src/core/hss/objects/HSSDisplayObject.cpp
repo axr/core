@@ -305,29 +305,29 @@ QSharedPointer<HSSParserNode> HSSDisplayObject::getPercentageExpression(QSharedP
         return QSharedPointer<HSSParserNode>();
     }
 
-    static QMap<AXRString, AXRString> parentMappings;
+    static std::map<AXRString, AXRString> parentMappings;
     if (parentMappings.empty())
     {
-        parentMappings.insert("width", "innerWidth");
-        parentMappings.insert("height", "innerHeight");
-        parentMappings.insert("alignX", "innerWidth");
-        parentMappings.insert("alignY", "innerHeight");
+        parentMappings["width"] = "innerWidth";
+        parentMappings["height"] = "innerHeight";
+        parentMappings["alignX"] = "innerWidth";
+        parentMappings["alignY"] = "innerHeight";
     }
 
-    if (parentMappings.contains(propertyName))
+    if (parentMappings.count(propertyName))
     {
         HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
         return this->getPercentageExpressionFromParent(number, parentMappings[propertyName]);
     }
 
-    static QMap<AXRString, AXRString> thisMappings;
+    static std::map<AXRString, AXRString> thisMappings;
     if (thisMappings.empty())
     {
-        thisMappings.insert("anchorX", "width");
-        thisMappings.insert("anchorY", "height");
+        thisMappings["anchorX"] = "width";
+        thisMappings["anchorY"] = "height";
     }
 
-    if (thisMappings.contains(propertyName))
+    if (thisMappings.count(propertyName))
     {
         HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
         return this->getPercentageExpressionFromThis(number, thisMappings[propertyName]);
@@ -434,7 +434,7 @@ AXRString HSSDisplayObject::getElementName()
 void HSSDisplayObject::setElementName(AXRString newName)
 {
     this->elementName = newName;
-    this->_debugName = newName.toStdString();
+    this->_debugName = newName.data();
 }
 
 //rules
@@ -462,15 +462,24 @@ QSharedPointer<HSSRule> HSSDisplayObject::rulesGet(size_t index) const
 void HSSDisplayObject::rulesRemove(size_t index)
 {
     QSharedPointer<HSSRule> rule = this->rules[index]->rule;
-    Q_FOREACH(QSharedPointer<HSSSelectorChain> selectorChain, rule->getSelectorChains())
+    const std::vector<QSharedPointer<HSSSelectorChain> > selectorChains = rule->getSelectorChains();
+    std::vector<QSharedPointer<HSSSelectorChain> >::const_iterator it;
+    for (it = selectorChains.begin(); it != selectorChains.end(); ++it)
     {
-        Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, selectorChain->getNodeList())
+        const QSharedPointer<HSSSelectorChain> & selectorChain = *it;
+        const std::deque<QSharedPointer<HSSParserNode> > nodeList = selectorChain->getNodeList();
+        std::deque<QSharedPointer<HSSParserNode> >::const_iterator it2;
+        for (it2 = nodeList.begin(); it2 != nodeList.end(); ++it2)
         {
+            const QSharedPointer<HSSParserNode> & parserNode = *it2;
             if (parserNode->isA(HSSSelectorTypeSimpleSelector))
             {
                 QSharedPointer<HSSSimpleSelector> simpleSelector = qSharedPointerCast<HSSSimpleSelector>(parserNode);
-                Q_FOREACH(QSharedPointer<HSSFilter> filter, simpleSelector->getFilters())
+                const std::list<QSharedPointer<HSSFilter> > filters = simpleSelector->getFilters();
+                std::list<QSharedPointer<HSSFilter> >::const_iterator it3;
+                for (it3 = filters.begin(); it3 != filters.end(); ++it3)
                 {
+                    const QSharedPointer<HSSFilter> & filter = *it3;
                     if (filter->isA(HSSFilterTypeFlag))
                     {
                         QSharedPointer<HSSFlag> theFlag = qSharedPointerCast<HSSFlag>(filter);
@@ -1243,8 +1252,11 @@ bool HSSDisplayObject::fireEvent(HSSEventType type)
         else if(computed->isA(HSSObjectTypeMultipleValue))
         {
             bool allFired = true;
-            Q_FOREACH(QSharedPointer<HSSObject> comp, qSharedPointerCast<HSSMultipleValue>(computed)->getValues())
+            const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(computed)->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = multiValues.begin(); it != multiValues.end(); ++it)
             {
+                const QSharedPointer<HSSObject> comp = *it;
                 if (comp->isA(HSSObjectTypeValue))
                 {
                     QSharedPointer<HSSValue> theValue = qSharedPointerCast<HSSValue>(comp);
@@ -1286,8 +1298,11 @@ void HSSDisplayObject::_fireEventObject(QSharedPointer<HSSObject> theObj)
         }
         else if (theObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(const QSharedPointer<HSSObject> & aObj, qSharedPointerCast<HSSMultipleValue>(theObj)->getValues())
+            const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(theObj)->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = multiValues.begin(); it != multiValues.end(); ++it)
             {
+                const QSharedPointer<HSSObject> aObj = *it;
                 if (aObj->isA(HSSObjectTypeValue))
                 {
                     QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(aObj)->getValue();
@@ -1552,8 +1567,11 @@ void HSSDisplayObject::_setInnerWidth(HSSUnit specificity)
         }
         else if(paddingObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(QSharedPointer<HSSObject> pObj, qSharedPointerCast<HSSMultipleValue>(paddingObj)->getValues())
+            const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(paddingObj)->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = multiValues.begin(); it != multiValues.end(); ++it)
             {
+                const QSharedPointer<HSSObject> pObj = *it;
                 if (pObj->isA(HSSObjectTypeMargin))
                 {
                     QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(pObj);
@@ -1577,7 +1595,7 @@ void HSSDisplayObject::_setInnerWidth(HSSUnit specificity)
     }
     this->setRightPadding(rightPadding, specificity);
     this->setLeftPadding(leftPadding, specificity);
-    innerWidth = qMax(0., innerWidth);
+    innerWidth = std::max<HSSUnit>(0., innerWidth);
     QSharedPointer<HSSObject> computedValue = this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(innerWidth, this->getController())));
     computedValue->setSpecificity(specificity);
     this->setComputed("innerWidth", computedValue);
@@ -1600,8 +1618,11 @@ void HSSDisplayObject::_setInnerHeight(HSSUnit specificity)
         }
         else if(paddingObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(QSharedPointer<HSSObject> pObj, qSharedPointerCast<HSSMultipleValue>(paddingObj)->getValues())
+            const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(paddingObj)->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = multiValues.begin(); it != multiValues.end(); ++it)
             {
+                const QSharedPointer<HSSObject> pObj = *it;
                 if (pObj->isA(HSSObjectTypeMargin))
                 {
                     QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(pObj);
@@ -1625,7 +1646,7 @@ void HSSDisplayObject::_setInnerHeight(HSSUnit specificity)
     }
     this->setTopPadding(topPadding, specificity);
     this->setBottomPadding(bottomPadding, specificity);
-    innerHeight = qMax(0., innerHeight);
+    innerHeight = std::max<HSSUnit>(0., innerHeight);
     QSharedPointer<HSSObject> computedValue = this->computeValueObject(QSharedPointer<HSSNumberConstant>(new HSSNumberConstant(innerHeight, this->getController())));
     computedValue->setSpecificity(specificity);
     this->setComputed("innerHeight", computedValue);
@@ -1648,8 +1669,11 @@ void HSSDisplayObject::_setOuterWidth(HSSUnit specificity)
         }
         else if(marginObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(QSharedPointer<HSSObject> mObj, qSharedPointerCast<HSSMultipleValue>(marginObj)->getValues())
+            const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(marginObj)->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = multiValues.begin(); it != multiValues.end(); ++it)
             {
+                const QSharedPointer<HSSObject> mObj = *it;
                 if (mObj->isA(HSSObjectTypeMargin))
                 {
                     QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(mObj);
@@ -1695,8 +1719,11 @@ void HSSDisplayObject::_setOuterHeight(HSSUnit specificity)
         }
         else if(marginObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(QSharedPointer<HSSObject> mObj, qSharedPointerCast<HSSMultipleValue>(marginObj)->getValues())
+            const std::vector<QSharedPointer<HSSObject> > multiValues = qSharedPointerCast<HSSMultipleValue>(marginObj)->getValues();
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            for (it = multiValues.begin(); it != multiValues.end(); ++it)
             {
+                const QSharedPointer<HSSObject> mObj = *it;
                 if (mObj->isA(HSSObjectTypeMargin))
                 {
                     QSharedPointer<HSSMargin> theMargin = qSharedPointerCast<HSSMargin>(mObj);
@@ -1942,8 +1969,9 @@ void HSSDisplayObject::removeFlag(QSharedPointer<HSSFlag> flag)
     if (this->hasFlag(name))
     {
         std::vector<QSharedPointer<HSSFlag> > flags = this->_flags[name];
-        Q_FOREACH(QSharedPointer<HSSFlag> existingFlag, flags)
+        for (size_t i = 0; i<flags.size(); ++i)
         {
+            QSharedPointer<HSSFlag> existingFlag = flags[i];
             if (existingFlag->equalTo(flag))
             {
                 flags.erase(std::remove(flags.begin(), flags.end(), flag), flags.end());
@@ -1951,8 +1979,8 @@ void HSSDisplayObject::removeFlag(QSharedPointer<HSSFlag> flag)
         }
         if (flags.size() == 0)
         {
-            this->_flags.remove(name);
-            this->_flagsStatus.remove(name);
+            this->_flags.erase(name);
+            this->_flagsStatus.erase(name);
         }
     }
 }
@@ -2004,11 +2032,11 @@ void HSSDisplayObject::flagsDeactivate(AXRString name)
     if (name == "*")
     {
         //std_log("deactivating all flags on element "+this->getElementName());
-        for (QMap<AXRString, std::vector<QSharedPointer<HSSFlag> >  >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
+        for (std::map<AXRString, std::vector<QSharedPointer<HSSFlag> >  >::const_iterator it = this->_flags.begin(); it != this->_flags.end(); ++it)
         {
             HSSRuleState newValue = HSSRuleStatePurge;
-            std::vector<QSharedPointer<HSSFlag> > flags = it.value();
-            this->_flagsStatus[it.key()] = newValue;
+            std::vector<QSharedPointer<HSSFlag> > flags = it->second;
+            this->_flagsStatus[it->first] = newValue;
 
             for (std::vector<QSharedPointer<HSSFlag> >::iterator it = flags.begin(); it != flags.end(); ++it)
             {

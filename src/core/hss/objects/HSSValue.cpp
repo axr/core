@@ -279,12 +279,12 @@ AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parserNode)
         case HSSParserNodeTypeStringConstant:
         {
             AXRString ret = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-            return ret;
+            return ret.stripQuotes();
         }
         case HSSParserNodeTypeNumberConstant:
-            return QString::number(qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue());
+            return HSSString::number(qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue());
         case HSSParserNodeTypeExpression:
-            return QString::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate());
+            return HSSString::number(qSharedPointerCast<HSSExpression>(parserNode)->evaluate());
         case HSSParserNodeTypeKeywordConstant:
         {
             return qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue();

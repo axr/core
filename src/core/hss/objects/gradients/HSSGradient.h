@@ -106,12 +106,12 @@ namespace AXR
         /**
          *  When a transparent color stop is found, this method allows to continue iterating through the
          *  color stops to find the next color that is not transparent.
-         *  @param it       The current iterator.
-         *  @param endIt    The iterator that points to the end of the color stops.
+         *  @param theStopObj   A shared pointer to the color stop before the one we want to find.
+         *  @param colorStops   A vector of pointers to color stops.
          *  @return A shared pointer to the next suitable color from the color stops, starting at the given
          *          iterator, the end color, or transparent black.
          */
-        QSharedPointer<HSSRgb> getNextColorFromStops(QListIterator<QSharedPointer<HSSObject> > it);
+        QSharedPointer<HSSRgb> getNextColorFromStops(QSharedPointer<HSSObject> theStopObj, std::vector<QSharedPointer<HSSObject> > colorStops);
 
         //startColor
         QSharedPointer<HSSObject> getStartColor() const;

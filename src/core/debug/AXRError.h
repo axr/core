@@ -65,7 +65,7 @@ namespace AXR
          *  @param line     The line index (starting at 1) in the file where the error happened.
          *  @param column   The column index (starting at 1) in the line where the error happened.
          */
-        AXRError(const AXRString &origin, const AXRString &message, const QUrl &url = QUrl(), qint64 line = 0, qint64 column = 0);
+        AXRError(const HSSString &origin, const HSSString &message, const HSSString &url = HSSString(), HSSUnit line = 0, HSSUnit column = 0);
         AXRError(const AXRError &other);
         virtual ~AXRError();
 
@@ -78,13 +78,13 @@ namespace AXR
          *  Print itself as a textual representation.
          *  @return A string containing the textual representation of the error.
          */
-        virtual AXRString toString() const;
+        virtual HSSString toString() const;
 
         /**
          *  Getter for message.
          *  @return The message in this error.
          */
-        AXRString getMessage() const;
+        HSSString getMessage() const;
         
         qint64 getLine() const;
         qint64 getColumn() const;
@@ -92,7 +92,7 @@ namespace AXR
         AXRError& operator=(const AXRError &other);
 
     protected:
-        virtual AXRString toProblemString(const AXRString &label) const;
+        virtual HSSString toProblemString(const HSSString &label) const;
 
     private:
         class Data;

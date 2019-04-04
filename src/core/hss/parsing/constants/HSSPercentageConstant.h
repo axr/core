@@ -93,11 +93,15 @@ namespace AXR
          *  @return The number of the percentage value.
          */
         HSSUnit getNumber();
+        
+        void setOriginalStringRep(HSSString string);
+        HSSString originalStringRep();
 
     protected:
         HSSUnit _number;
 
-    private:
+    private:private:
+        HSSString _originalRep;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

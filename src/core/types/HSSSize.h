@@ -75,8 +75,6 @@ namespace AXR
         HSSSize(const NSSize &size);
 #endif
 
-        HSSSize(const QSizeF &size);
-        HSSSize(const QSize &size);
         HSSSize();
         HSSSize(HSSUnit widthAndHeight);
         HSSSize(HSSUnit sizeWidth, HSSUnit sizeHeight);

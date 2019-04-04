@@ -67,22 +67,22 @@ HSSStringConstant::~HSSStringConstant()
 
 }
 
-void HSSStringConstant::setValue(AXRString newValue)
+void HSSStringConstant::setValue(HSSString newValue)
 {
     this->value = newValue;
 }
 
-AXRString HSSStringConstant::getValue()
+HSSString HSSStringConstant::getValue()
 {
     return this->value;
 }
 
-AXRString HSSStringConstant::toString()
+HSSString HSSStringConstant::toString()
 {
     return "HSSStringConstant with value " + this->value;
 }
 
-AXRString HSSStringConstant::stringRep()
+HSSString HSSStringConstant::stringRep()
 {
     return this->value;
 }

@@ -73,8 +73,6 @@ namespace AXR
         HSSRect(const NSRect &rect);
 #endif
 
-        HSSRect(const QRectF &rect);
-        HSSRect(const QRect &rect);
         HSSRect();
         HSSRect(const HSSSize &rectSize);
         HSSRect(const HSSPoint &rectOrigin, const HSSSize &rectSize);

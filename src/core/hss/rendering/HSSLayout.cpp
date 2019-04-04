@@ -1054,37 +1054,18 @@ void HSSLayout::visit(HSSTextBlock &textBlock)
 {
     if (textBlock.needsLayout())
     {
-        int flags = Qt::AlignLeft;
-        switch (textBlock.getTextAlign())
-        {
-            case HSSTextAlignTypeLeft:
-                flags = Qt::AlignLeft;
-                break;
-            case HSSTextAlignTypeRight:
-                flags = Qt::AlignRight;
-                break;
-            case HSSTextAlignTypeCenter:
-                flags = Qt::AlignCenter;
-                break;
-            case HSSTextAlignTypeJustify:
-                flags = Qt::AlignJustify;
-                break;
-            default:
-                break;
-        }
-
-        QFontMetrics fontMetrics(textBlock.getQFont());
         HSSUnit allowedWidth = textBlock.getParent()->getInnerWidth();
         AXRString text = textBlock.getText();
-        QRect bounds = fontMetrics.boundingRect(0, 0, static_cast<int>(allowedWidth), std::numeric_limits<int>::max(), flags | Qt::TextWordWrap, text);
+        QSharedPointer<HSSFont> font = textBlock.getFont();
+        HSSRect bounds = d->document->platform()->getTextBounds(text, font, allowedWidth, textBlock.getTextAlign());
 
         if (textBlock.widthByContent)
         {
-            textBlock.setWidth(bounds.width(), std::numeric_limits<int>::max());
+            textBlock.setWidth(bounds.size.width, std::numeric_limits<int>::max());
         }
         if (textBlock.heightByContent)
         {
-            textBlock.setHeight(bounds.height(), std::numeric_limits<int>::max());
+            textBlock.setHeight(bounds.size.height, std::numeric_limits<int>::max());
         }
         textBlock.setNeedsSurface(true);
 

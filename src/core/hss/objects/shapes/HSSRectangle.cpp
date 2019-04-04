@@ -95,11 +95,13 @@ bool HSSRectangle::isKeyword(AXRString value, AXRString property)
     return HSSShape::isKeyword(value, property);
 }
 
-void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, QList<QSharedPointer<HSSParserNode> > segments)
+void HSSRectangle::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
     if(segments.size() > 0){
-        Q_FOREACH(const QSharedPointer<HSSParserNode> & segment, segments)
+        std::list<QSharedPointer<HSSParserNode> >::const_iterator it;
+        for (it = segments.begin(); it != segments.end(); ++it)
         {
+            const QSharedPointer<HSSParserNode> & segment = *it;
             switch (segment->getType()) {
                 case HSSParserNodeTypeKeywordConstant:
                 {
@@ -107,23 +109,23 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
                     AXRString theValue = theKw->getValue();
                     if(theValue == "left")
                     {
-                        path.moveTo(x, y+height);
-                        path.lineTo(x, y);
+                        path->moveTo(x, y+height);
+                        path->lineTo(x, y);
                     }
                     else if (theValue == "top")
                     {
-                        path.moveTo(x, y);
-                        path.lineTo(x+width, y);
+                        path->moveTo(x, y);
+                        path->lineTo(x+width, y);
                     }
                     else if (theValue == "right")
                     {
-                        path.moveTo(x+width, y);
-                        path.lineTo(x+width, y+height);
+                        path->moveTo(x+width, y);
+                        path->lineTo(x+width, y+height);
                     }
                     else if (theValue == "bottom")
                     {
-                        path.moveTo(x+width, y+height);
-                        path.lineTo(x, y+height);
+                        path->moveTo(x+width, y+height);
+                        path->lineTo(x, y+height);
                     }
                     break;
                 }
@@ -133,16 +135,18 @@ void HSSRectangle::createPath(QPainterPath &path, HSSUnit x, HSSUnit y, HSSUnit 
             }
         }
     } else {
-        path.addRect(x, y, width, height);
+        path->addRect(x, y, width, height);
     }
 }
 
-void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
+void HSSRectangle::drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY)
 {
     //sort strokes in three groups
-    QList<QSharedPointer<HSSAbstractStroke> > center, inside, outside;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, strokes)
+    std::list<QSharedPointer<HSSAbstractStroke> > center, inside, outside;
+    std::list<QSharedPointer<HSSAbstractStroke> >::const_iterator it;
+    for (it = strokes.begin(); it != strokes.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSStrokePosition thePos = theStroke->getPosition();
         if (thePos == HSSStrokePositionCenter)
         {
@@ -159,8 +163,9 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
     }
 
     HSSUnit topThickness = 0., rightThickness = 0., bottomThickness = 0., leftThickness = 0.;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, center)
+    for (it = center.begin(); it != center.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         const QSharedPointer<HSSObject> & segmentsObj = theStroke->getSegments();
         bool hasAll = false;
         bool hasSegments = false;
@@ -197,11 +202,12 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
     //painter.strokePath(outerPath, QPen(Qt::red, 1, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 
     HSSUnit topCumulative = 0., rightCumulative = 0., bottomCumulative = 0., leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, center)
+    for (it = center.begin(); it != center.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSUnit theSize = theStroke->getSize();
 
-        QPainterPath path;
+        QSharedPointer<HSSPath> path(new HSSPath());
         QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false, hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
@@ -214,25 +220,25 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
             HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
             HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
 
-            path.addRect(offsetX + leftOffset, offsetY + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
+            path->addRect(offsetX + leftOffset, offsetY + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
 
             leftCumulative += theSize;
             topCumulative += theSize;
             rightCumulative += theSize;
             bottomCumulative += theSize;
         }
-        theStroke->draw(painter, path);
+        this->getController()->document()->platform()->drawStroke(path, theStroke);
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    QList<QSharedPointer<HSSAbstractStroke> >::const_iterator insideIt = inside.constEnd();
-    while (insideIt != inside.constBegin())
+    std::list<QSharedPointer<HSSAbstractStroke> >::const_iterator insideIt = inside.end();
+    while (insideIt != inside.begin())
     {
         --insideIt;
         const QSharedPointer<HSSAbstractStroke> & theStroke = *insideIt;
         HSSUnit theSize = theStroke->getSize();
 
-        QPainterPath path;
+        QSharedPointer<HSSPath> path(new HSSPath());
 
         QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false, hasSegments = false;
@@ -247,7 +253,7 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
             HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + (theSize / 2) + rightCorrection;
             HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + (theSize / 2) + bottomCorrection;
 
-            path.addRect(offsetX + leftOffset, offsetY + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
+            path->addRect(offsetX + leftOffset, offsetY + topOffset, width-rightOffset-leftOffset, height-bottomOffset-topOffset);
 
             leftCumulative += theSize;
             topCumulative += theSize;
@@ -255,15 +261,16 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
             bottomCumulative += theSize;
         }
 
-        theStroke->draw(painter, path);
+        this->getController()->document()->platform()->drawStroke(path, theStroke);
     }
 
     topCumulative = rightCumulative = bottomCumulative = leftCumulative = 0.;
-    Q_FOREACH(const QSharedPointer<HSSAbstractStroke> & theStroke, outside)
+    for (it = outside.begin(); it != outside.end(); ++it)
     {
+        const QSharedPointer<HSSAbstractStroke> & theStroke = *it;
         HSSUnit theSize = theStroke->getSize();
 
-        QPainterPath path;
+        QSharedPointer<HSSPath> path(new HSSPath());
         QSharedPointer<HSSObject> segmentsObj = theStroke->getSegments();
         bool hasAll = false, hasSegments = false;
         this->_hasAll(segmentsObj, hasAll, hasSegments);
@@ -277,7 +284,7 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
             HSSUnit rightOffset = (rightThickness / 2) + rightCumulative + (theSize / 2) + rightCorrection;
             HSSUnit bottomOffset = (bottomThickness / 2) + bottomCumulative + (theSize / 2) + bottomCorrection;
 
-            path.addRect(offsetX - leftOffset, offsetY - topOffset, width+rightOffset+leftOffset, height+bottomOffset+topOffset);
+            path->addRect(offsetX - leftOffset, offsetY - topOffset, width+rightOffset+leftOffset, height+bottomOffset+topOffset);
 
             leftCumulative += theSize;
             topCumulative += theSize;
@@ -285,7 +292,7 @@ void HSSRectangle::drawStrokes(QPainter &painter, QList<QSharedPointer<HSSAbstra
             bottomCumulative += theSize;
         }
 
-        theStroke->draw(painter, path);
+        this->getController()->document()->platform()->drawStroke(path, theStroke);
     }
 }
 
@@ -297,8 +304,11 @@ void HSSRectangle::_increaseThickness(const QSharedPointer<HSSObject> & segments
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 this->__increaseThickness(qSharedPointerCast<HSSValue>(theObj)->getValue(), size, top, right, bottom, left);
@@ -342,8 +352,11 @@ void HSSRectangle::_hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool &
     }
     else if (segmentsObj && segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 hasSegments = true;
@@ -359,7 +372,7 @@ void HSSRectangle::_hasAll(const QSharedPointer<HSSObject> & segmentsObj, bool &
 }
 
 void HSSRectangle::_drawCenteredStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -390,9 +403,12 @@ void HSSRectangle::_drawCenteredStrokeBySegments(
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
-            if (theObj->isA(HSSObjectTypeValue))
+            const QSharedPointer<HSSObject> & theObj = *it;
+                    if (theObj->isA(HSSObjectTypeValue))
             {
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
                 if (parserNode->isA(HSSParserNodeTypeKeywordConstant))
@@ -405,7 +421,7 @@ void HSSRectangle::_drawCenteredStrokeBySegments(
 }
 
 void HSSRectangle::__drawCenteredStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const AXRString & segment,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -432,8 +448,8 @@ void HSSRectangle::__drawCenteredStrokeBySegments(
         HSSUnit topOffset = (topThickness / 2) - topCumulative - (theSize / 2) + topCorrection;
         HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
 
-        path.moveTo(offsetX+leftOffset, offsetY+topOffset);
-        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset);
+        path->moveTo(offsetX+leftOffset, offsetY+topOffset);
+        path->lineTo(offsetX+width-rightOffset, offsetY+topOffset);
         topCumulative += theSize;
     }
     else if (segment == "right")
@@ -442,8 +458,8 @@ void HSSRectangle::__drawCenteredStrokeBySegments(
         HSSUnit rightOffset = (rightThickness / 2) - rightCumulative - (theSize / 2) + rightCorrection;
         HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-        path.moveTo(offsetX+width-rightOffset, offsetY+topOffset);
-        path.lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        path->moveTo(offsetX+width-rightOffset, offsetY+topOffset);
+        path->lineTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
         rightCumulative += theSize;
     }
     else if (segment == "bottom")
@@ -452,8 +468,8 @@ void HSSRectangle::__drawCenteredStrokeBySegments(
         HSSUnit rightOffset = (rightThickness / 2) - rightCumulative + rightCorrection;
         HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative - (theSize / 2) + bottomCorrection;
 
-        path.moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
-        path.lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        path->moveTo(offsetX+width-rightOffset, offsetY+height-bottomOffset);
+        path->lineTo(offsetX+leftOffset, offsetY+height-bottomOffset);
         bottomCumulative += theSize;
     }
     else if(segment == "left")
@@ -462,14 +478,14 @@ void HSSRectangle::__drawCenteredStrokeBySegments(
         HSSUnit topOffset = (topThickness / 2) - topCumulative + topCorrection;
         HSSUnit bottomOffset = (bottomThickness / 2) - bottomCumulative + bottomCorrection;
 
-        path.moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
-        path.lineTo(offsetX+leftOffset, offsetY+topOffset);
+        path->moveTo(offsetX+leftOffset, offsetY+height-bottomOffset);
+        path->lineTo(offsetX+leftOffset, offsetY+topOffset);
         leftCumulative += theSize;
     }
 }
 
 void HSSRectangle::_drawInsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -500,8 +516,11 @@ void HSSRectangle::_drawInsideStrokeBySegments(
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -515,7 +534,7 @@ void HSSRectangle::_drawInsideStrokeBySegments(
 }
 
 void HSSRectangle::__drawInsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const AXRString & segment,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -543,33 +562,33 @@ void HSSRectangle::__drawInsideStrokeBySegments(
 
     if (segment == "top")
     {
-        path.moveTo(offsetX+leftOffset, offsetY+topOffset+(theSize/2));
-        path.lineTo(offsetX+width-rightOffset, offsetY+topOffset+(theSize/2));
+        path->moveTo(offsetX+leftOffset, offsetY+topOffset+(theSize/2));
+        path->lineTo(offsetX+width-rightOffset, offsetY+topOffset+(theSize/2));
         topCumulative += theSize;
     }
     else if (segment == "right")
     {
         qreal rightValue = offsetX+width-rightOffset-(theSize/2);
-        path.moveTo(rightValue, offsetY+topOffset);
-        path.lineTo(rightValue, offsetY+height-bottomOffset);
+        path->moveTo(rightValue, offsetY+topOffset);
+        path->lineTo(rightValue, offsetY+height-bottomOffset);
         rightCumulative += theSize;
     }
     else if (segment == "bottom")
     {
-        path.moveTo(offsetX+width-rightOffset, offsetY+height-(bottomOffset+(theSize/2)));
-        path.lineTo(offsetX+leftOffset, offsetY+height-(bottomOffset+(theSize/2)));
+        path->moveTo(offsetX+width-rightOffset, offsetY+height-(bottomOffset+(theSize/2)));
+        path->lineTo(offsetX+leftOffset, offsetY+height-(bottomOffset+(theSize/2)));
         bottomCumulative += theSize;
     }
     else if(segment == "left")
     {
-        path.moveTo(offsetX+leftOffset+(theSize/2), offsetY+height-bottomOffset);
-        path.lineTo(offsetX+leftOffset+(theSize/2), offsetY+topOffset);
+        path->moveTo(offsetX+leftOffset+(theSize/2), offsetY+height-bottomOffset);
+        path->lineTo(offsetX+leftOffset+(theSize/2), offsetY+topOffset);
         leftCumulative += theSize;
     }
 }
 
 void HSSRectangle::_drawOutsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const QSharedPointer<HSSObject> & segmentsObj,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -600,8 +619,11 @@ void HSSRectangle::_drawOutsideStrokeBySegments(
     }
     else if (segmentsObj->isA(HSSObjectTypeMultipleValue))
     {
-        Q_FOREACH(const QSharedPointer<HSSObject> & theObj, qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues())
+        std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+        const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(segmentsObj)->getValues();
+        for (it = values.begin(); it != values.end(); ++it)
         {
+            const QSharedPointer<HSSObject> & theObj = *it;
             if (theObj->isA(HSSObjectTypeValue))
             {
                 const QSharedPointer<HSSParserNode> & parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
@@ -615,7 +637,7 @@ void HSSRectangle::_drawOutsideStrokeBySegments(
 }
 
 void HSSRectangle::__drawOutsideStrokeBySegments(
-    QPainterPath & path,
+    QSharedPointer<HSSPath> & path,
     const AXRString & segment,
     HSSUnit & theSize,
     HSSUnit & width,
@@ -643,26 +665,26 @@ void HSSRectangle::__drawOutsideStrokeBySegments(
 
     if (segment == "top")
     {
-        path.moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
-        path.lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
+        path->moveTo(offsetX-leftOffset, offsetY-(topOffset+(theSize/2)));
+        path->lineTo(offsetX+width+rightOffset, offsetY-(topOffset+(theSize/2)));
         topCumulative += theSize;
     }
     else if (segment == "right")
     {
-        path.moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
-        path.lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
+        path->moveTo(offsetX+width+(rightOffset+(theSize/2)), offsetY-topOffset);
+        path->lineTo(offsetX+width+(rightOffset+(theSize/2)), offsetY+height+bottomOffset);
         rightCumulative += theSize;
     }
     else if (segment == "bottom")
     {
-        path.moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
-        path.lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
+        path->moveTo(offsetX+width+rightOffset, offsetY+height+(bottomOffset+(theSize/2)));
+        path->lineTo(offsetX-leftOffset, offsetY+height+(bottomOffset+(theSize/2)));
         bottomCumulative += theSize;
     }
     else if(segment == "left")
     {
-        path.moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
-        path.lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
+        path->moveTo(offsetX-(leftOffset+(theSize/2)), offsetY+height+bottomOffset);
+        path->lineTo(offsetX-(leftOffset+(theSize/2)), offsetY-topOffset);
         leftCumulative += theSize;
     }
 }

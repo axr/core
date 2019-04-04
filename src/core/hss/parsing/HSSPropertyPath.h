@@ -105,14 +105,14 @@ namespace AXR
          *  @return A vector of shared pointers to parser nodes that are stored inside this
          *  property path.
          */
-        QVector<QSharedPointer<HSSPropertyPathNode> > getNodes();
+        std::deque<QSharedPointer<HSSPropertyPathNode> > getNodes();
 
         /**
          *  Setter for nodes.
          *  @param newNodes    A vector of shared pointers to parser nodes that to store them inside this
          *  property path.
          */
-        void setNodes(QVector<QSharedPointer<HSSPropertyPathNode> > newNodes);
+        void setNodes(std::deque<QSharedPointer<HSSPropertyPathNode> > newNodes);
 
         /**
          *  Adds a node to the nodes list.
@@ -148,8 +148,9 @@ namespace AXR
 
     private:
         void _setModifiers(QSharedPointer<HSSObject> theObj, AXRString propertyName, QSharedPointer<HSSParserNode> value, QSharedPointer<HSSObject> baseObj);
-        QVector<QSharedPointer<HSSPropertyPathNode> > _nodes;
-        QVectorIterator<QSharedPointer<HSSPropertyPathNode> > _iterator;
+        std::deque<QSharedPointer<HSSPropertyPathNode> > _nodes;
+        std::deque<QSharedPointer<HSSPropertyPathNode> >::iterator _iterator;
+        std::deque<QSharedPointer<HSSPropertyPathNode> >::iterator _endIterator;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

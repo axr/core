@@ -46,10 +46,9 @@
 
 #include "AXRGlobal.h"
 
-class QFileInfo;
-
 namespace AXR
 {
+    class AXRDocument;
     /**
      *  @brief Provides an array of bytes and references to the name of the file
      *  it was loaded from.
@@ -60,10 +59,9 @@ namespace AXR
         /**
          *  Creates a new instance of an in-memory buffer.
          */
-        AXRBuffer();
-        AXRBuffer(const QByteArray &data);
-        AXRBuffer(const QFileInfo &filePath);
-        AXRBuffer(const QFileInfo &filePath, const QByteArray &data);
+        AXRBuffer(const HSSString & buffer, const HSSString & sourceUrl);
+        AXRBuffer(AXRDocument * document, const HSSString &filePath);
+        AXRBuffer(HSSString buffer);
 
         /**
          *  Destructor.
@@ -72,33 +70,33 @@ namespace AXR
 
         /**
          * Returns the URL from which this buffer was loaded.
-         * If this buffer was created in-memory, this will be a null URL.
+         * If this buffer was created in-memory, this will be an empty string.
          */
-        QUrl sourceUrl() const;
+        HSSString sourceUrl() const;
 
         /**
          *  Getter for fileName
          *  @return A string containing the file name, including extension.
          */
-        AXRString getFileName() const;
+        HSSString getFileName() const;
 
         /**
          *  Getter for the buffer where the contents of the file will be stored.
          *  @return A reference to the internal buffer.
          */
-        const QByteArray& getBuffer() const;
+        HSSString & getBuffer();
 
         bool isValid() const;
 
         /**
          *  @return A textual representation of the buffer.
          */
-        AXRString toString() const;
+        HSSString toString() const;
 
     private:
-        bool valid;
-        QByteArray buffer;
-        QUrl sourceUrl_;
+        bool _valid;
+        HSSString _buffer;
+        HSSString _sourceUrl;
     };
 }
 

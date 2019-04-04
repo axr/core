@@ -51,14 +51,6 @@ HSSRect::HSSRect(const RECT &rect) : origin(HSSPoint(rect.left, rect.top)), size
 }
 #endif
 
-HSSRect::HSSRect(const QRectF &rect) : origin(rect.topLeft()), size(rect.size())
-{
-}
-
-HSSRect::HSSRect(const QRect &rect) : origin(rect.topLeft()), size(rect.size())
-{
-}
-
 HSSRect::HSSRect()
 {
 }
@@ -87,5 +79,8 @@ bool HSSRect::operator!=(const HSSRect &other) const
 
 bool HSSRect::contains(const HSSPoint &point) const
 {
-    return QRectF(origin.x, origin.y, size.width, size.height).contains(point.x, point.y);
+    return (
+           point.x >= origin.x && point.x <= origin.x + size.width
+        && point.y >= origin.y && point.y <= origin.y + size.height
+    );
 }

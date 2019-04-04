@@ -77,8 +77,6 @@ namespace AXR
         HSSPoint(const NSPoint &point);
 #endif
 
-        HSSPoint(const QPointF &point);
-        HSSPoint(const QPoint &point);
         HSSPoint();
         HSSPoint(HSSUnit xAndY);
         HSSPoint(HSSUnit pointX, HSSUnit pointY);

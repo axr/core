@@ -110,7 +110,7 @@ AXRString HSSInsertFunction::_getTextFromValue(QSharedPointer<HSSParserNode> val
         case HSSParserNodeTypeStringConstant:
         {
             QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant>(value);
-            return HSSObject::stripQuotes(theString->getValue());
+            return theString->getValue().stripQuotes();
         }
         case HSSParserNodeTypeFunctionCall:
         {
@@ -145,7 +145,7 @@ AXRString HSSInsertFunction::_getTextFromValue(QSharedPointer<HSSParserNode> val
         }
         case HSSParserNodeTypeNumberConstant:
         {
-            AXRString kwValue = QString::number(qSharedPointerCast<HSSNumberConstant>(value)->getValue());
+            AXRString kwValue = HSSString::number(qSharedPointerCast<HSSNumberConstant>(value)->getValue());
             return kwValue;
         }
             

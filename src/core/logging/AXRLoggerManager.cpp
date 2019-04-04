@@ -51,7 +51,7 @@ namespace AXR
     class AXRLoggerManagerPrivate
     {
     public:
-        QList<AXRAbstractLogger*> loggers;
+        std::list<AXRAbstractLogger*> loggers;
     };
 }
 
@@ -74,17 +74,17 @@ AXRLoggerManager& AXRLoggerManager::instance()
 void AXRLoggerManager::addLogger(AXRAbstractLogger *logger)
 {
     if (!containsLogger(logger))
-        d->loggers.append(logger);
+        d->loggers.push_back(logger);
 }
 
 bool AXRLoggerManager::containsLogger(AXRAbstractLogger *logger)
 {
-    return d->loggers.contains(logger);
+    return std::find(d->loggers.begin(), d->loggers.end(), logger) != d->loggers.end();
 }
 
 void AXRLoggerManager::removeLogger(AXRAbstractLogger *logger)
 {
-    d->loggers.removeAll(logger);
+    d->loggers.remove(logger);
 }
 
 void AXRLoggerManager::clearLoggers()
@@ -113,15 +113,15 @@ void AXRLoggerManager::logLine(AXRLoggerChannels channels, const AXRString &mess
 
 namespace AXR
 {
-    QList<AXRLoggerChannel> loggerFlagsToList(AXRLoggerChannels channels)
+    std::list<AXRLoggerChannel> loggerFlagsToList(AXRLoggerChannels channels)
     {
-        QList<AXRLoggerChannel> channelList;
+        std::list<AXRLoggerChannel> channelList;
 
         // It's necessary to check for > 0 since after i <= LoggerChannelMax
         // evaluates to 2^31 - 1 <= 2^31 - 1 we'll overflow to negative
         for (int i = 1; i > 0 && i <= LoggerChannelMax; i *= 2)
             if (channels & i)
-                channelList.append(static_cast<AXRLoggerChannel>(i));
+                channelList.push_back(static_cast<AXRLoggerChannel>(i));
 
         return channelList;
     }
@@ -131,50 +131,50 @@ namespace AXR
         switch (channel)
         {
             case LoggerChannelAll:
-                return QLatin1String("LoggerChannelAll");
+                return AXRString("LoggerChannelAll");
             case LoggerChannelUserError:
-                return QLatin1String("LoggerChannelUserError");
+                return AXRString("LoggerChannelUserError");
             case LoggerChannelUserWarning:
-                return QLatin1String("LoggerChannelUserWarning");
+                return AXRString("LoggerChannelUserWarning");
             case LoggerChannelOverview:
-                return QLatin1String("LoggerChannelOverview");
+                return AXRString("LoggerChannelOverview");
             case LoggerChannelGeneral:
-                return QLatin1String("LoggerChannelGeneral");
+                return AXRString("LoggerChannelGeneral");
             case LoggerChannelGeneralSpecific:
-                return QLatin1String("LoggerChannelGeneralSpecific");
+                return AXRString("LoggerChannelGeneralSpecific");
             case LoggerChannelIO:
-                return QLatin1String("LoggerChannelIO");
+                return AXRString("LoggerChannelIO");
             case LoggerChannelNetwork:
-                return QLatin1String("LoggerChannelNetwork");
+                return AXRString("LoggerChannelNetwork");
             case LoggerChannelXMLParser:
-                return QLatin1String("LoggerChannelXMLParser");
+                return AXRString("LoggerChannelXMLParser");
             case LoggerChannelHSSParser:
-                return QLatin1String("LoggerChannelHSSParser");
+                return AXRString("LoggerChannelHSSParser");
             case LoggerChannelHSSTokenizer:
-                return QLatin1String("LoggerChannelHSSTokenizer");
+                return AXRString("LoggerChannelHSSTokenizer");
             case LoggerChannelLayout:
-                return QLatin1String("LoggerChannelLayout");
+                return AXRString("LoggerChannelLayout");
             case LoggerChannelRendering:
-                return QLatin1String("LoggerChannelRendering");
+                return AXRString("LoggerChannelRendering");
             case LoggerChannelObserving:
-                return QLatin1String("LoggerChannelObserving");
+                return AXRString("LoggerChannelObserving");
             case LoggerChannelEvents:
-                return QLatin1String("LoggerChannelEvents");
+                return AXRString("LoggerChannelEvents");
             case LoggerChannelEventsSpecific:
-                return QLatin1String("LoggerChannelEventsSpecific");
+                return AXRString("LoggerChannelEventsSpecific");
             case LoggerChannelController:
-                return QLatin1String("LoggerChannelController");
+                return AXRString("LoggerChannelController");
             case LoggerChannelControllerSpecific:
-                return QLatin1String("LoggerChannelControllerSpecific");
+                return AXRString("LoggerChannelControllerSpecific");
             case LoggerChannelLogFunction:
-                return QLatin1String("LoggerChannelLogFunction");
+                return AXRString("LoggerChannelLogFunction");
 
             case LoggerChannelObsolete0:
-                return QLatin1String("LoggerChannelObsolete0");
+                return AXRString("LoggerChannelObsolete0");
             case LoggerChannelObsolete1:
-                return QLatin1String("LoggerChannelObsolete1");
+                return AXRString("LoggerChannelObsolete1");
             case LoggerChannelObsolete3:
-                return QLatin1String("LoggerChannelObsolete3");
+                return AXRString("LoggerChannelObsolete3");
 
             default:
                 return AXRString();
@@ -183,50 +183,50 @@ namespace AXR
 
     AXRLoggerChannel stringToLoggerChannel(const AXRString &channelName)
     {
-        if (channelName == QLatin1String("LoggerChannelAll"))
+        if (channelName == AXRString("LoggerChannelAll"))
             return LoggerChannelAll;
-        else if (channelName == QLatin1String("LoggerChannelUserError"))
+        else if (channelName == AXRString("LoggerChannelUserError"))
             return LoggerChannelUserError;
-        else if (channelName == QLatin1String("LoggerChannelUserWarning"))
+        else if (channelName == AXRString("LoggerChannelUserWarning"))
             return LoggerChannelUserWarning;
-        else if (channelName == QLatin1String("LoggerChannelOverview"))
+        else if (channelName == AXRString("LoggerChannelOverview"))
             return LoggerChannelOverview;
-        else if (channelName == QLatin1String("LoggerChannelGeneral"))
+        else if (channelName == AXRString("LoggerChannelGeneral"))
             return LoggerChannelGeneral;
-        else if (channelName == QLatin1String("LoggerChannelGeneralSpecific"))
+        else if (channelName == AXRString("LoggerChannelGeneralSpecific"))
             return LoggerChannelGeneralSpecific;
-        else if (channelName == QLatin1String("LoggerChannelIO"))
+        else if (channelName == AXRString("LoggerChannelIO"))
             return LoggerChannelIO;
-        else if (channelName == QLatin1String("LoggerChannelNetwork"))
+        else if (channelName == AXRString("LoggerChannelNetwork"))
             return LoggerChannelNetwork;
-        else if (channelName == QLatin1String("LoggerChannelXMLParser"))
+        else if (channelName == AXRString("LoggerChannelXMLParser"))
             return LoggerChannelXMLParser;
-        else if (channelName == QLatin1String("LoggerChannelHSSParser"))
+        else if (channelName == AXRString("LoggerChannelHSSParser"))
             return LoggerChannelHSSParser;
-        else if (channelName == QLatin1String("LoggerChannelHSSTokenizer"))
+        else if (channelName == AXRString("LoggerChannelHSSTokenizer"))
             return LoggerChannelHSSTokenizer;
-        else if (channelName == QLatin1String("LoggerChannelLayout"))
+        else if (channelName == AXRString("LoggerChannelLayout"))
             return LoggerChannelLayout;
-        else if (channelName == QLatin1String("LoggerChannelRendering"))
+        else if (channelName == AXRString("LoggerChannelRendering"))
             return LoggerChannelRendering;
-        else if (channelName == QLatin1String("LoggerChannelObserving"))
+        else if (channelName == AXRString("LoggerChannelObserving"))
             return LoggerChannelObserving;
-        else if (channelName == QLatin1String("LoggerChannelEvents"))
+        else if (channelName == AXRString("LoggerChannelEvents"))
             return LoggerChannelEvents;
-        else if (channelName == QLatin1String("LoggerChannelEventsSpecific"))
+        else if (channelName == AXRString("LoggerChannelEventsSpecific"))
             return LoggerChannelEventsSpecific;
-        else if (channelName == QLatin1String("LoggerChannelController"))
+        else if (channelName == AXRString("LoggerChannelController"))
             return LoggerChannelController;
-        else if (channelName == QLatin1String("LoggerChannelControllerSpecific"))
+        else if (channelName == AXRString("LoggerChannelControllerSpecific"))
             return LoggerChannelControllerSpecific;
-        else if (channelName == QLatin1String("LoggerChannelLogFunction"))
+        else if (channelName == AXRString("LoggerChannelLogFunction"))
             return LoggerChannelLogFunction;
 
-        else if (channelName == QLatin1String("LoggerChannelObsolete0"))
+        else if (channelName == AXRString("LoggerChannelObsolete0"))
             return LoggerChannelObsolete0;
-        else if (channelName == QLatin1String("LoggerChannelObsolete1"))
+        else if (channelName == AXRString("LoggerChannelObsolete1"))
             return LoggerChannelObsolete1;
-        else if (channelName == QLatin1String("LoggerChannelObsolete3"))
+        else if (channelName == AXRString("LoggerChannelObsolete3"))
             return LoggerChannelObsolete3;
 
         else

@@ -155,16 +155,16 @@ QSharedPointer<HSSParserNode> HSSLinearGradient::getPercentageExpression(QShared
         return QSharedPointer<HSSParserNode>();
     }
 
-    static QMap<AXRString, AXRString> mappings;
+    static std::map<AXRString, AXRString> mappings;
     if (mappings.empty())
     {
-        mappings.insert("startX", "width");
-        mappings.insert("startY", "height");
-        mappings.insert("endX", "width");
-        mappings.insert("endY", "height");
+        mappings["startX"] = "width";
+        mappings["startY"] = "height";
+        mappings["endX"] = "width";
+        mappings["endY"] = "height";
     }
 
-    if (mappings.contains(propertyName))
+    if (mappings.count(propertyName))
     {
         HSSUnit number = qSharedPointerCast<HSSPercentageConstant>(parserNode)->getNumber();
         //get the properties from itself

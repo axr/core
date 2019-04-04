@@ -47,7 +47,7 @@
 using namespace AXR;
 
 HSSStroke::HSSStroke(AXRController * controller)
-: HSSAbstractStroke(controller)
+: HSSAbstractStroke(HSSStrokeTypeLine, controller)
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSStroke: creating stroke object");
 
@@ -180,26 +180,4 @@ QSharedPointer<HSSObject> HSSStroke::computeColor(QSharedPointer<HSSParserNode> 
             break;
     }
     return this->computeObject(parserNode, "color");
-}
-
-void HSSStroke::draw(QPainter &painter, const QPainterPath &path)
-{
-    QPainterPathStroker stroker;
-    stroker.setWidth(this->getSize());
-    stroker.setJoinStyle(Qt::MiterJoin);
-    stroker.setCapStyle(Qt::FlatCap);
-    QPainterPath strokePath = stroker.createStroke(path);
-
-    QSharedPointer<HSSObject> colorObj = this->getColor();
-    QColor usedColor;
-    if (colorObj && colorObj->isA(HSSObjectTypeRgb))
-    {
-        usedColor = qSharedPointerCast<HSSRgb>(colorObj)->toQColor();
-    }
-    else
-    {
-        usedColor = QColor(Qt::black);
-    }
-    painter.fillPath(strokePath, usedColor);
-
 }

@@ -199,8 +199,10 @@ void HSSSelectorChain::fastForward(HSSSelector * theSelector)
 {
     HSSParserNode * lastSelector = NULL;
     size_t index = 0;
-    Q_FOREACH(QSharedPointer<HSSParserNode> theNode, this->nodeList)
+    std::deque<QSharedPointer<HSSParserNode> >::const_iterator it;
+    for (it = this->nodeList.begin(); it != this->nodeList.end(); ++it)
     {
+        const QSharedPointer<HSSParserNode> & theNode = *it;
         if (theNode.data() == theSelector)
         {
             this->startingSelectorIndex = index;

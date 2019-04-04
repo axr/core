@@ -112,7 +112,6 @@ namespace AXR
 
         virtual void setDefaults();
         virtual AXRString toString();
-        virtual QVariantMap toMap() const;
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
         virtual bool isKeyword(AXRString value, AXRString property);
@@ -291,7 +290,7 @@ namespace AXR
         {
             return a->getAlignY() < b->getAlignY();
         }
-        QList<QSharedPointer<HSSRule> > _changeRules;
+        std::set<QSharedPointer<HSSRule> > _changeRules;
     };
 }
 

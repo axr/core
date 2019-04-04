@@ -43,6 +43,11 @@
 
 #include "HSSPoint.h"
 
+template <typename T> inline T AXRabs(const T &t) { return t >= 0 ? t : -t; }
+inline bool AXRFuzzyIsNull(long double d)
+{
+    return AXRabs(d) <= 0.000000000001;
+}
 
 using namespace AXR;
 
@@ -51,14 +56,6 @@ HSSPoint::HSSPoint(const POINT &point) : x(point.x), y(point.y)
 {
 }
 #endif
-
-HSSPoint::HSSPoint(const QPointF &point) : x(point.x()), y(point.y())
-{
-}
-
-HSSPoint::HSSPoint(const QPoint &point) : x(point.x()), y(point.y())
-{
-}
 
 HSSPoint::HSSPoint() : x(0), y(0)
 {
@@ -74,7 +71,7 @@ HSSPoint::HSSPoint(HSSUnit pointX, HSSUnit pointY) : x(pointX), y(pointY)
 
 bool HSSPoint::operator==(const HSSPoint &other) const
 {
-    return qFuzzyIsNull(x - other.x) && qFuzzyIsNull(y - other.y);
+    return AXRFuzzyIsNull(x - other.x) && AXRFuzzyIsNull(y - other.y);
 }
 
 bool HSSPoint::operator!=(const HSSPoint &other) const

@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,39 +41,60 @@
  *
  ********************************************************************/
 
-#include <QString>
-#include "AXRString.h"
-#import <Foundation/Foundation.h>
+#ifndef AXRCHAR_H
+#define AXRCHAR_H
 
-using namespace AXR;
 
-AXRString AXR::fromCFStringRef(CFStringRef string)
+namespace AXR
 {
-    if (!string)
-        return AXRString();
-
-    CFIndex length = CFStringGetLength(string);
-    const UniChar *chars = CFStringGetCharactersPtr(string);
-    if (chars)
-        return AXRString(reinterpret_cast<const AXRChar*>(chars), static_cast<int>(length));
-
-    UniChar buffer[length];
-    CFStringGetCharacters(string, CFRangeMake(0, length), buffer);
-    return AXRString(reinterpret_cast<const AXRChar*>(buffer), static_cast<int>(length));
+    class HSSCharPrivate;
+    
+    class HSSChar
+    {
+    public:
+        HSSChar();
+        HSSChar(const HSSChar & other);
+        HSSChar(uint32_t value);
+        virtual ~HSSChar();
+        
+        HSSChar & operator=(const HSSChar &other);
+        HSSChar & operator=(const char * other);
+        
+        uint32_t data() const;
+        bool isSpace() const;
+        bool isDigit() const;
+        
+    private:
+        HSSCharPrivate * d;
+    };
+    
+    inline bool operator<(const HSSChar & c1, const HSSChar & c2)
+    { return c1.data() < c2.data(); }
+    
+    inline bool operator<=(const HSSChar & c1, const HSSChar & c2)
+    { return c1.data() <= c2.data(); }
+    
+    inline bool operator>(const HSSChar & c1, const HSSChar & c2)
+    { return c1.data() > c2.data(); }
+    
+    inline bool operator>=(const HSSChar & c1, const HSSChar & c2)
+    { return c1.data() >= c2.data(); }
+    
+    inline bool operator==(const HSSChar & c1, const HSSChar & c2)
+    { return c1.data() == c2.data(); }
+    
+    inline bool operator==(const HSSChar & c1, const char c2)
+    { return c1.data() == c2; }
+    
+    inline bool operator==(const char c1, const HSSChar & c2)
+    { return c1 == c2.data(); }
+    
+    inline bool operator!=(const HSSChar & c1, const HSSChar & c2)
+    { return ! operator==(c1, c2); }
+    
+    inline bool operator!=(const char c1, const HSSChar & c2)
+    { return ! operator==(c1, c2); }
 }
 
-CFStringRef AXR::toCFStringRef(const AXRString &string)
-{
-    return CFStringCreateWithCharacters(0, reinterpret_cast<const UniChar*>(string.unicode()), string.length());
-}
 
-NSString* AXR::toNSString(const AXRString &string)
-{
-    // The const cast below is safe: CFStringRef and NSString are immutable
-    return [const_cast<NSString*>(reinterpret_cast<const NSString*>(toCFStringRef(string))) autorelease];
-}
-
-AXRString AXR::fromNSString(const NSString *string)
-{
-    return fromCFStringRef(reinterpret_cast<CFStringRef>(string));
-}
+#endif /* AXRCHAR_H */

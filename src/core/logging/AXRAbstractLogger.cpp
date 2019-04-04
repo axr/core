@@ -117,24 +117,32 @@ bool AXRAbstractLogger::areChannelsActive(AXRLoggerChannels channels) const
 
 void AXRAbstractLogger::activateChannels(AXRLoggerChannels channels)
 {
-    d->activeChannels |= channels;
+    d->activeChannels = static_cast<AXRLoggerChannel>(d->activeChannels | channels);
 }
 
 void AXRAbstractLogger::deactivateChannels(AXRLoggerChannels channels)
 {
-    d->activeChannels &= ~channels;
+    d->activeChannels = static_cast<AXRLoggerChannel>(d->activeChannels & channels);
 }
 
 void AXRAbstractLogger::log(AXRLoggerChannels channels, const AXRString &message)
 {
-    foreach (AXRLoggerChannel channel, loggerFlagsToList(channels))
-        if (d->activeChannels.testFlag(channel))
+    std::list<AXRLoggerChannel> chList = loggerFlagsToList(channels);
+    for (std::list<AXRLoggerChannel>::iterator it = chList.begin(); it != chList.end(); ++it)
+    {
+        AXRLoggerChannel channel = *it;
+        if (channel == static_cast<AXRLoggerChannel>(d->activeChannels & channel))
             log(channel, message, false);
+    }
 }
 
 void AXRAbstractLogger::logLine(AXRLoggerChannels channels, const AXRString &message)
 {
-    foreach (AXRLoggerChannel channel, loggerFlagsToList(channels))
-        if (d->activeChannels.testFlag(channel))
+    std::list<AXRLoggerChannel> chList = loggerFlagsToList(channels);
+    for (std::list<AXRLoggerChannel>::iterator it = chList.begin(); it != chList.end(); ++it)
+    {
+        AXRLoggerChannel channel = *it;
+        if (channel == static_cast<AXRLoggerChannel>(d->activeChannels & channel))
             log(channel, message, true);
+    }
 }

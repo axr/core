@@ -61,8 +61,10 @@ HSSLogFunction::~HSSLogFunction()
 HSSLogFunction::HSSLogFunction(const HSSLogFunction & orig)
 : HSSFunction(orig)
 {
-    Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, orig.values)
+    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
+    for (it = orig.values.begin(); it != orig.values.end(); ++it)
     {
+        const QSharedPointer<HSSParserNode> & parserNode = *it;
         this->add(parserNode);
     }
 }
@@ -104,7 +106,10 @@ bool HSSLogFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
 
 QSharedPointer<HSSObject> HSSLogFunction::_evaluate()
 {
-    Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, this->values){
+    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
+    for (it = this->values.begin(); it != this->values.end(); ++it)
+    {
+        const QSharedPointer<HSSParserNode> & parserNode = *it;
         this->_logParserNode(parserNode);
     }
     this->setDirty(true);
@@ -143,7 +148,7 @@ void HSSLogFunction::_logParserNode(QSharedPointer<HSSParserNode> parserNode) co
         case HSSParserNodeTypeStringConstant:
         {
             AXRString kwValue = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-            axr_log(LoggerChannelLogFunction, kwValue);
+            axr_log(LoggerChannelLogFunction, kwValue.stripQuotes());
             break;
         }
 
@@ -157,7 +162,7 @@ void HSSLogFunction::_logParserNode(QSharedPointer<HSSParserNode> parserNode) co
         }
         case HSSParserNodeTypeNumberConstant:
         {
-            AXRString kwValue = QString::number(qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue());
+            AXRString kwValue = HSSString::number(qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue());
             axr_log(LoggerChannelLogFunction, kwValue);
             break;
         }

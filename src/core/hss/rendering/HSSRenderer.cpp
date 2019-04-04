@@ -100,7 +100,7 @@ void HSSRenderer::visit(HSSContainer &container)
 
         if (container._isDirty || d->repaintAll)
         {
-            axr_log(LoggerChannelRendering, AXRString("HSSRenderer: redrawing contents of %1 with width: %2, height: %3, x: %4 and y: %5").arg(container.elementName).arg(container.getWidth()).arg(container.getHeight()).arg(container.globalX).arg(container.globalY));
+            axr_log(LoggerChannelRendering, HSSString::format("HSSRenderer: redrawing contents of %s with width: %f, height: %f, x: %f and y: %f", container.elementName.chardata(), container.getWidth(), container.getHeight(), container.globalX, container.globalY));
 
             container._isDirty = false;
             drawBackground(container);
@@ -122,7 +122,7 @@ void HSSRenderer::visit(HSSTextBlock &textBlock)
 
         if (textBlock._isDirty || d->repaintAll)
         {
-            axr_log(LoggerChannelRendering, AXRString("HSSRenderer: redrawing contents of %1 with width: %2, height: %3, x: %4 and y: %5").arg(textBlock.elementName).arg(textBlock.getWidth()).arg(textBlock.getHeight()).arg(textBlock.x).arg(textBlock.y));
+            axr_log(LoggerChannelRendering, HSSString::format("HSSRenderer: redrawing contents of %s with width: %f, height: %f, x: %f and y: %f", textBlock.elementName.chardata(), textBlock.getWidth(), textBlock.getHeight(), textBlock.x, textBlock.y));
             textBlock._isDirty = false;
             drawForeground(textBlock);
         }
@@ -139,20 +139,23 @@ void HSSRenderer::drawStrokes(HSSContainer &container)
         d->canvasPainter->setRenderHint(QPainter::Antialiasing);
 
     QSharedPointer<HSSObject> strokeObj = container.getStroke();
-    QList<QSharedPointer<HSSAbstractStroke> > strokes;
+    std::list<QSharedPointer<HSSAbstractStroke> > strokes;
     if (strokeObj)
     {
         if (strokeObj->isA(HSSObjectTypeStroke))
         {
-            strokes.append(qSharedPointerCast<HSSAbstractStroke>(strokeObj));
+            strokes.push_back(qSharedPointerCast<HSSAbstractStroke>(strokeObj));
         }
         else if (strokeObj->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(const QSharedPointer<HSSObject> bObj, qSharedPointerCast<HSSMultipleValue>(strokeObj)->getValues())
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(strokeObj)->getValues();
+            for (it = values.begin(); it != values.end(); ++it)
             {
+                const QSharedPointer<HSSObject> & bObj = *it;
                 if (bObj->isA(HSSObjectTypeStroke))
                 {
-                    strokes.append(qSharedPointerCast<HSSAbstractStroke>(bObj));
+                    strokes.push_back(qSharedPointerCast<HSSAbstractStroke>(bObj));
                 }
             }
         }
@@ -175,9 +178,12 @@ void HSSRenderer::drawBackground(HSSContainer &container)
         container.getShape()->createPath(path, container.globalX, container.globalY, container.getWidth(), container.getHeight());
         if (background->isA(HSSObjectTypeMultipleValue))
         {
-            Q_FOREACH(QSharedPointer<HSSObject> theobj, qSharedPointerCast<HSSMultipleValue>(background)->getValues())
+            std::vector<QSharedPointer<HSSObject> >::const_iterator it;
+            const std::vector<QSharedPointer<HSSObject> > & values = qSharedPointerCast<HSSMultipleValue>(background)->getValues();
+            for (it = values.begin(); it != values.end(); ++it)
             {
                 this->_drawBackground(path, theobj, container.globalX, container.globalY);
+                const QSharedPointer<HSSObject> & theObj = *it;
             }
         }
         else

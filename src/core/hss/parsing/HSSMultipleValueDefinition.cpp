@@ -114,8 +114,10 @@ void HSSMultipleValueDefinition::add(QSharedPointer<HSSParserNode> newValue)
 void HSSMultipleValueDefinition::setSpecificity(HSSUnit newValue)
 {
     HSSParserNode::setSpecificity(newValue);
-    Q_FOREACH(QSharedPointer<HSSParserNode> parserNode, this->values)
+    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
+    for (it = this->values.begin(); it != this->values.end(); ++it)
     {
+        const QSharedPointer<HSSParserNode> & parserNode = *it;
         parserNode->setSpecificity(newValue);
     }
 }

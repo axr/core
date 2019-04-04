@@ -94,11 +94,17 @@ void HSSCascader::visit(HSSContainer &container)
 
 void HSSCascader::applyOverrides(HSSContainer & container, HSSUnit & specificity)
 {
-    Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, container.getOverrides())
+    std::map<AXRString, QSharedPointer<HSSPropertyDefinition> >::const_iterator it;
+    std::map<AXRString, QSharedPointer<HSSPropertyDefinition> > overrides = container.getOverrides();
+    for (it = overrides.begin(); it != overrides.end(); ++it)
     {
+        const QSharedPointer<HSSPropertyDefinition>& propertyDefinition = it->second;
         specificity += 1.0;
-        QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
-        Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
+        std::vector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+        std::vector<QSharedPointer<HSSPropertyPath> >::iterator it2;
+        for (it2 = propertyPaths.begin(); it2 != propertyPaths.end(); ++it2)
+        {
+            QSharedPointer<HSSPropertyPath> path = *it2;
             QSharedPointer<HSSParserNode> clonedNode = propertyDefinition->getValue()->clone();
             if (clonedNode->getSpecificity() == 0.0)
             {
@@ -136,11 +142,17 @@ void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
             case HSSRuleStateOn:
             {
                 QSharedPointer<HSSRule> & rule = ruleStatus->rule;
-                Q_FOREACH(const QSharedPointer<HSSPropertyDefinition>& propertyDefinition, rule->getProperties())
+                std::vector<QSharedPointer<HSSPropertyDefinition> >::const_iterator it;
+                std::vector<QSharedPointer<HSSPropertyDefinition> > properties = rule->getProperties();
+                for (it = properties.begin(); it != properties.end(); ++it)
                 {
+                    const QSharedPointer<HSSPropertyDefinition>& propertyDefinition = *it;
                     specificity += 1.0;
-                    QVector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
-                    Q_FOREACH(QSharedPointer<HSSPropertyPath> path, propertyPaths){
+                    std::vector<QSharedPointer<HSSPropertyPath> > propertyPaths = propertyDefinition->getPaths();
+                    std::vector<QSharedPointer<HSSPropertyPath> >::const_iterator it2;
+                    for (it2 = propertyPaths.begin(); it2 != propertyPaths.end(); it2++)
+                    {
+                        const QSharedPointer<HSSPropertyPath> & path = *it2;
                         QSharedPointer<HSSParserNode> node = propertyDefinition->getValue();
                         if (!node) {
                             continue;
