@@ -71,7 +71,6 @@ namespace AXR
      */
     class AXR_API AXRController
     {
-        Q_DISABLE_COPY(AXRController)
     public:
         /**
          *  Creates a new instance of a controller.

@@ -107,6 +107,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSKeywordConstant>)
-
 #endif

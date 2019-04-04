@@ -53,7 +53,6 @@ namespace AXR
 
     class AXR_API HSSInputEvent
     {
-        Q_DISABLE_COPY(HSSInputEvent)
 
     public:
         HSSInputEvent(HSSEventType type);

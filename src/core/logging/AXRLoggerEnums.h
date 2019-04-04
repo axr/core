@@ -177,13 +177,9 @@ namespace AXR
         LoggerChannelAll = 0x7fffffff
     };
 
-    Q_DECLARE_FLAGS(AXRLoggerChannels, AXRLoggerChannel)
-
     AXR_API QList<AXRLoggerChannel> loggerFlagsToList(AXRLoggerChannels channels);
     AXR_API AXRString loggerChannelToString(AXRLoggerChannel channel);
     AXR_API AXRLoggerChannel stringToLoggerChannel(const AXRString &channelName);
 }
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(AXR::AXRLoggerChannels)
 
 #endif // AXRLOGGERENUMS_H

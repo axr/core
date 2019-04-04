@@ -53,8 +53,6 @@ namespace AXR
 
     class AXR_API AXRAbstractLogger
     {
-        Q_DISABLE_COPY(AXRAbstractLogger)
-
     public:
         virtual ~AXRAbstractLogger();
 
@@ -80,7 +78,5 @@ namespace AXR
         AXRAbstractLoggerPrivate *d;
     };
 }
-
-Q_DECLARE_METATYPE(AXR::AXRAbstractLogger*)
 
 #endif // AXRABSTRACTLOGGER_H

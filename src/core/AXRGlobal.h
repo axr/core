@@ -173,16 +173,7 @@ namespace AXR
     typedef double HSSUnit;
 }
 
-Q_DECLARE_METATYPE(bool*)
-Q_DECLARE_METATYPE(unsigned int*)
-
-#if defined(AXR_EXPORTS)
-#define AXR_API Q_DECL_EXPORT
-#elif defined(AXR_IMPORTS)
-#define AXR_API Q_DECL_IMPORT
-#else
 #define AXR_API
-#endif
 
 #if defined(AXR_NO_DEPRECATED)
 #define AXR_DEPRECATED

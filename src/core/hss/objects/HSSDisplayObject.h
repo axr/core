@@ -455,7 +455,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSFont> > *)
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSMargin> > *)
-
 #endif

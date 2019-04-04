@@ -54,8 +54,6 @@ namespace AXR
 
     class AXR_API AXRLoggerManager
     {
-        Q_DISABLE_COPY(AXRLoggerManager)
-
     public:
         static AXRLoggerManager& instance();
         ~AXRLoggerManager();

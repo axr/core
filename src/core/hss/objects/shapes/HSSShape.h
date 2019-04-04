@@ -134,7 +134,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSShape>)
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSShape>*)
-
 #endif

@@ -46,8 +46,6 @@
 
 using namespace AXR;
 
-Q_DECLARE_METATYPE(AXR::HSSTextAlignType *)
-
 AXRString HSSObject::objectTypeToString(HSSObjectType type)
 {
     static QMap<HSSObjectType, AXRString> typestrings;

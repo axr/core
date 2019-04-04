@@ -90,7 +90,6 @@ namespace AXR
 
     class AXR_API HSSCodeParser
     {
-        Q_DISABLE_COPY(HSSCodeParser)
     public:
         /**
          *  Creates a new HSSCodeParser object.

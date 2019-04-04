@@ -66,7 +66,6 @@ namespace AXR
 
     class AXR_API HSSTokenizer
     {
-        Q_DISABLE_COPY(HSSTokenizer)
     public:
         HSSTokenizer();
         ~HSSTokenizer();

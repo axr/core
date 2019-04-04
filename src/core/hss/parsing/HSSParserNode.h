@@ -285,7 +285,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSParserNode>)
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSParserNode>*)
-
 #endif

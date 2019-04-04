@@ -77,7 +77,6 @@ namespace AXR
 
     class AXR_API HSSAbstractVisitor
     {
-        Q_DISABLE_COPY(HSSAbstractVisitor)
     public:
         HSSAbstractVisitor();
         virtual ~HSSAbstractVisitor();

@@ -115,7 +115,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAction> >)
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAction> >*)
-
 #endif

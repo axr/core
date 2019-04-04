@@ -55,8 +55,6 @@ namespace AXR
 
     class AXR_API AXRGenericLogger : public AXRAbstractLogger
     {
-        Q_DISABLE_COPY(AXRGenericLogger)
-
     public:
         AXRGenericLogger(const AXRString &name = AXRString());
         ~AXRGenericLogger();

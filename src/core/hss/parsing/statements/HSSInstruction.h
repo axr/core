@@ -44,7 +44,6 @@
 #ifndef HSSINSTRUCTION_H
 #define HSSINSTRUCTION_H
 
-#include <QSharedPointer>
 #include "HSSStatement.h"
 
 namespace AXR

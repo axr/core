@@ -449,17 +449,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSObject>)
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSObject> >)
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSObject> >*)
-Q_DECLARE_METATYPE(AXR::HSSEventType)
-
-// Necessary because the comma in the type name would cause it to
-// be passed to the below macro as two parameters instead of one
-typedef QMap<AXR::HSSEventType, std::vector<QSharedPointer<AXR::HSSObject> > > QMapHSSEventTypeVectorHSSObjectp;
-Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp)
-Q_DECLARE_METATYPE(QMapHSSEventTypeVectorHSSObjectp*)
-Q_DECLARE_METATYPE(AXR::HSSUnit*)
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSObject>*)
-
 #endif

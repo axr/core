@@ -43,10 +43,6 @@
 
 #include "HSSRect.h"
 
-#ifdef Q_OS_WIN
-#include <qt_windows.h>
-#endif
-
 using namespace AXR;
 
 #ifdef Q_OS_WIN

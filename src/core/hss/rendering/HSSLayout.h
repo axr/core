@@ -59,7 +59,6 @@ namespace AXR
 
     class AXR_API HSSLayout : public HSSAbstractVisitor
     {
-        Q_DISABLE_COPY(HSSLayout)
     public:
         HSSLayout();
         virtual ~HSSLayout();

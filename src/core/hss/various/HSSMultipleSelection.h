@@ -124,7 +124,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSMultipleSelection>)
-Q_DECLARE_METATYPE(QSharedPointer<AXR::HSSMultipleSelection>*)
-
 #endif

@@ -99,8 +99,4 @@ namespace AXR
     };
 }
 
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAbstractStroke> >)
-Q_DECLARE_METATYPE(std::vector<QSharedPointer<AXR::HSSAbstractStroke> >*)
-Q_DECLARE_METATYPE(AXR::HSSStrokePosition*)
-
 #endif

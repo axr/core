@@ -56,7 +56,6 @@ namespace AXR
 
     class AXR_API HSSCascader : public HSSAbstractVisitor
     {
-        Q_DISABLE_COPY(HSSCascader)
     public:
         HSSCascader();
         virtual ~HSSCascader();

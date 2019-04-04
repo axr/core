@@ -55,7 +55,6 @@ namespace AXR
 
     class AXR_API XMLParser
     {
-        Q_DISABLE_COPY(XMLParser)
     public:
         XMLParser(AXRController *controller);
         virtual ~XMLParser();
