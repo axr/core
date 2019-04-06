@@ -55,7 +55,7 @@ namespace AXR
         AXRDocumentPrivate()
         : delegate(NULL), isHSSOnly(), hasLoadedFile(), showLayoutSteps(), currentLayoutStep(), currentLayoutTick(),
           currentLayoutChild(), needsDisplay(true), windowWidth(), windowHeight(), visitorManager(),
-        controller(), file(), directory(), parserXML(), parserHSS(), customFunctions()
+        controller(), xmlfile(), directory(), parserXML(), parserHSS(), customFunctions()
         , cascadeVisitor(new HSSCascader)
         , layoutVisitor(new HSSLayout)
         , renderVisitor(new HSSRenderer)
@@ -77,8 +77,8 @@ namespace AXR
 
         QSharedPointer<HSSVisitorManager> visitorManager;
         QSharedPointer<AXRController> controller;
-        QSharedPointer<AXRBuffer> file;
         QDir directory;
+        QSharedPointer<AXRBuffer> xmlfile;
 
         QSharedPointer<XMLParser> parserXML;
         QSharedPointer<HSSCodeParser> parserHSS;
@@ -155,9 +155,9 @@ void AXRDocument::run()
 {
     axr_log(LoggerChannelOverview, "AXRDocument: running");
 
-    bool loadingSuccess = d->parserXML->loadFile(d->file);
+    bool loadingSuccess = d->parserXML->loadFile(d->xmlfile);
 
-    axr_log(LoggerChannelOverview, "AXRDocument: finished parsing " + d->file->sourceUrl().toString());
+    axr_log(LoggerChannelOverview, "AXRDocument: finished parsing " + d->xmlfile->sourceUrl());
 
     if (!loadingSuccess)
     {
@@ -191,7 +191,7 @@ void AXRDocument::run()
                 AXRError("AXRDocument", "Could not load the HSS file").raise();
             }
         }
-        axr_log(LoggerChannelOverview, "AXRDocument: finished loading stylesheets for " + d->file->sourceUrl().toString());
+        axr_log(LoggerChannelOverview, "AXRDocument: finished loading stylesheets for " + d->xmlfile->sourceUrl());
 
         axr_log(LoggerChannelOverview, "AXRDocument: matching rules to the content tree");
         //assign the rules to the objects
@@ -250,7 +250,7 @@ void AXRDocument::reset()
     d->parserXML.clear();
     d->parserXML = QSharedPointer<XMLParser>(new XMLParser(d->controller.data()));
     d->hasLoadedFile = false;
-    d->file.clear();
+    d->xmlfile.clear();
 }
 
 bool AXRDocument::isFileLoaded() const
@@ -278,16 +278,14 @@ void AXRDocument::setVisitorManager(QSharedPointer<HSSVisitorManager> visitorMan
     d->visitorManager = visitorManager;
 }
 
-QSharedPointer<AXRBuffer> AXRDocument::file() const
+QSharedPointer<AXRBuffer> AXRDocument::xmlFile() const
 {
-    return d->file;
+    return d->xmlfile;
 }
 
-void AXRDocument::setFile(QSharedPointer<AXRBuffer> file)
+void AXRDocument::setXmlFile(QSharedPointer<AXRBuffer> file)
 {
-    d->file = file;
-    QUrl filePath = file->sourceUrl();
-    d->directory = QDir(QFileInfo(filePath.toLocalFile()).canonicalPath());
+    d->xmlfile = file;
 }
 
 QDir AXRDocument::directory() const
@@ -512,7 +510,7 @@ bool AXRDocument::loadFileByPath(const QUrl &url)
     }
 }
 
-bool AXRDocument::loadXmlFile(const QUrl &url)
+bool AXRDocument::loadXmlFile(const AXRString &url)
 {
     axr_log(LoggerChannelOverview, HSSString::format("AXRDocument: opening XML document: %s", url.chardata()));
 
@@ -525,11 +523,11 @@ bool AXRDocument::loadXmlFile(const QUrl &url)
     try
     {
         QSharedPointer<AXRBuffer> theFile = this->createBufferFromUrl(url);
-        if (this->file())
+        if (this->xmlFile())
         {
             this->reset();
         }
-        this->setFile(theFile);
+        this->setXmlFile(theFile);
     }
     catch (const AXRError &e)
     {
@@ -561,14 +559,14 @@ bool AXRDocument::loadXmlFile(QSharedPointer<AXRBuffer> buffer)
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
 
-    if (this->file())
+    if (this->xmlFile())
     {
         this->reset();
     }
 
     try
     {
-        this->setFile(buffer);
+        this->setXmlFile(buffer);
     }
     catch (const AXRError &e)
     {
@@ -600,9 +598,9 @@ bool AXRDocument::reload()
 
     if (!d->isHSSOnly)
     {
-        if (this->file())
+        if (this->xmlFile())
         {
-            return this->loadXmlFile(this->file()->sourceUrl());
+            return this->loadXmlFile(this->xmlFile()->sourceUrl());
         }
         else
         {
@@ -673,12 +671,12 @@ bool AXRDocument::loadHssFile(const QUrl &url)
     d->currentLayoutTick = 0;
     d->currentLayoutChild = 0;
 
-    if (this->file())
+    if (this->xmlFile())
     {
         this->reset();
     }
 
-    this->setFile(this->createDummyXml(url));
+    this->setXmlFile(this->createDummyXml(url));
     this->run();
     return true;
 }

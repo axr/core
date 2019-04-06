@@ -119,19 +119,18 @@ namespace AXR
         bool isFileLoaded() const;
 
         /**
-         *  @return returns the current AXRBuffer that is opened. This can be either
-         *  an XML or an HSS file.
+         *  @return returns the current XML file that is opened.
          */
-        QSharedPointer<AXRBuffer> file() const;
+        QSharedPointer<AXRBuffer> xmlFile() const;
         /**
-         *  Sets the current AXRBuffer to be used as the base document.
+         *  Sets the current XML file to be used as the base document.
          *  @param file     The AXRBuffer to store for later use.
          */
-        void setFile(QSharedPointer<AXRBuffer> file);
+        void setXmlFile(QSharedPointer<AXRBuffer> file);
         /**
          *  @return the path to the directory in which 'file' is stored
          */
-        QDir directory() const;
+        AXRString directory() const;
         /**
          *  Getter for shared pointer to the AXRController that is managing the
          *  object tree.
@@ -206,7 +205,9 @@ namespace AXR
          *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
-        virtual QSharedPointer<AXRBuffer> createBufferFromUrl(const QUrl &resourceUrl);
+        QSharedPointer<AXRBuffer> createBufferFromUrl(const HSSString &url);
+        HSSString getDirectory(QSharedPointer<AXRBuffer> theFile) const;
+
         virtual bool needsDisplay() const;
         /**
          *  This is to be called when something happens that needs to trigger a redraw.
@@ -226,7 +227,7 @@ namespace AXR
          *  @param  xmlfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadXmlFile(const QUrl &url);
+        bool loadXmlFile(const AXRString &url);
         bool loadXmlFile(QSharedPointer<AXRBuffer> buffer);
         /**
          *  Loads the file you provide, and then handles it according to its file extension.
