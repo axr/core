@@ -46,21 +46,21 @@
 
 #include "HSSAbstractVisitor.h"
 
-class QPainterPath;
 template <class T> class QSharedPointer;
 
 #ifdef __APPLE__
 typedef struct CGImage *CGImageRef;
 #import <CoreGraphics/CoreGraphics.h>
 #endif
-class QLinearGradient;
 
 namespace AXR
 {
     class AXRDocument;
     class HSSColorStop;
     class HSSLinearGradient;
+    class HSSPath;
     class HSSRadialGradient;
+    class HSSRenderGradient;
     class HSSRect;
     class HSSRgb;
 
@@ -76,23 +76,9 @@ namespace AXR
         virtual void finalizeVisit();
         virtual void reset();
 
-        QImage getFinalFrame() const;
-
-#ifdef __APPLE__
-        // TODO: Temporary
-        CGImageRef getFinalFrameAsCGImageRef() const;
-        CGDataProviderRef qt_mac_CGDataProvider(const QImage &image) const;
-        CGImageRef qt_mac_toCGImage(const QImage &inImage) const;
-#endif
-
         void setDirtyRect(const HSSRect &dirtyRect);
 
         void setDocument(AXRDocument* document);
-
-        bool isGlobalAntialiasingEnabled() const;
-        void setGlobalAntialiasingEnabled(bool enable);
-
-        void setOutputBoundsToObject(QSharedPointer<HSSDisplayObject> outputBoundsObject);
 
     private:
         void regeneratePainter(int width, int height);
@@ -101,17 +87,18 @@ namespace AXR
 
         void drawBackground(HSSContainer &container);
 
-        void drawLinearGradient(HSSLinearGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY);
+        void drawLinearGradient(const QSharedPointer<HSSLinearGradient> &gradient, const QSharedPointer<HSSPath> &path, HSSUnit posX, HSSUnit posY);
 
-        void drawRadialGradient(HSSRadialGradient &gradient, const QPainterPath &path, HSSUnit posX, HSSUnit posY);
+        void drawRadialGradient(const QSharedPointer<HSSRadialGradient> &gradient, const QSharedPointer<HSSPath> &path, HSSUnit posX, HSSUnit posY);
 
         void drawStrokes(HSSContainer &container);
+        void drawStrokes(QSharedPointer<HSSShape> shape, std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);
 
         void drawForeground(HSSTextBlock &textBlock);
 
-        void _addColorStops(QLinearGradient & pat, HSSLinearGradient &gradient, QSharedPointer<HSSRgb> & prevColor, QList<HSSUnit> & positions, QSharedPointer<HSSObject> theStopObj, const QSharedPointer<HSSObject> &colorStops);
-        static HSSUnit _nextFreePosition(QList<HSSUnit> &positions, HSSUnit position);
-        void _drawBackground(QPainterPath & path, QSharedPointer<HSSObject> theobj, HSSUnit globalX, HSSUnit globalY);
+        void _addColorStops(const QSharedPointer<HSSRenderGradient> & pat, const QSharedPointer<HSSLinearGradient> & gradient, QSharedPointer<HSSRgb> & prevColor, std::vector<HSSUnit> & positions, QSharedPointer<HSSObject> theStopObj, const QSharedPointer<HSSObject> &colorStops);
+        static HSSUnit _nextFreePosition(std::vector<HSSUnit> &positions, HSSUnit position);
+        void _drawBackground(QSharedPointer<HSSPath> & path, QSharedPointer<HSSObject> theobj, HSSUnit globalX, HSSUnit globalY);
 
         class Private;
         Private *d;

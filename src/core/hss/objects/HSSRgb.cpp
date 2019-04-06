@@ -209,18 +209,6 @@ void HSSRgb::setAlpha(HSSUnit value, HSSUnit specificity)
     this->setComputedValue("alpha", value, specificity);
 }
 
-QColor HSSRgb::toQColor() const
-{
-    return QColor(static_cast<int>(this->getRed()), static_cast<int>(this->getGreen()), static_cast<int>(this->getBlue()), static_cast<int>(this->getAlpha()));
-}
-
-QColor HSSRgb::toQColorWithAlpha(int alpha) const
-{
-    QColor color = toQColor();
-    color.setAlpha(alpha);
-    return color;
-}
-
 QSharedPointer<HSSValue> HSSRgb::_computeChannelValue(QSharedPointer<HSSParserNode> parserNode) const
 {
     HSSUnit ret = 0.;

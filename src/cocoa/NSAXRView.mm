@@ -45,6 +45,16 @@
 #import "NSAXRDocument.h"
 #import "NSAXRView.h"
 
+#import "axr_platform_config.h"
+
+#ifdef AXR_PLATFORM_QT
+#import "AXRPlatformDriverQt.h"
+#endif
+
+#ifdef AXR_PLATFORM_MAC
+#import "AXRPlatformDriverMac.h"
+#endif
+
 using namespace AXR;
 
 @interface NSAXRView (Private)
@@ -89,6 +99,16 @@ using namespace AXR;
     return YES;
 }
 
+- (BOOL)isFlipped
+{
+#ifdef AXR_PLATFORM_QT
+    return NO;
+#endif
+#ifdef AXR_PLATFORM_MAC
+    return YES;
+#endif
+}
+
 - (void)drawRect:(NSRect)dirtyRect
 {
     if (!document)
@@ -125,11 +145,26 @@ using namespace AXR;
             root->setComputedValue("width", doc->windowWidth(), std::numeric_limits<int>::max());
             root->setComputedValue("height", doc->windowHeight(), std::numeric_limits<int>::max());
 
+#ifdef AXR_PLATFORM_QT
+            AXRPlatformDriverQt * driver = static_cast<AXRPlatformDriverQt *>(doc->platform()->getDriver());
+            
             // Render the final image to the screen
             doc->getRenderVisitor()->setDirtyRect(dirtyRect);
             visitorManager->runVisitors();
 
-            CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, doc->getRenderVisitor()->getFinalFrameAsCGImageRef());
+            CGContextDrawImage((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort], paintRect, driver->getFinalFrameAsCGImageRef());
+#endif
+            
+#ifdef AXR_PLATFORM_MAC
+            AXRPlatformDriverMac * driver = static_cast<AXRPlatformDriverMac *>(doc->platform()->getDriver());
+            
+            driver->setGraphicsContext((CGContextRef)[[NSGraphicsContext currentContext] graphicsPort]);
+            
+            // Render the stuff to the context
+            doc->getRenderVisitor()->setDirtyRect(dirtyRect);
+            visitorManager->runVisitors();
+#endif
+            
         }
         else
         {
@@ -203,9 +238,16 @@ using namespace AXR;
 {
     HSSPoint thePoint;
     NSPoint sysPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    NSRect bounds = [self bounds];
     thePoint.x = sysPoint.x;
-    thePoint.y = bounds.size.height - sysPoint.y;
+    if([self isFlipped])
+    {
+        thePoint.y = sysPoint.y;
+    }
+    else
+    {
+        NSRect bounds = [self bounds];
+        thePoint.y = bounds.size.height - sysPoint.y;
+    }
     return thePoint;
 }
 

@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,48 +41,38 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
+#include "axr.h"
+#include "HSSPathAddEllipse.h"
 
-@class NSAXRDocument;
-
-#ifdef __cplusplus
-namespace AXR { }
 using namespace AXR;
-#endif
 
-/**
- *  @brief (OS X only) This is a NSView subclass, for using inside a window in
- *  Apple's Cocoa framework.
- */
-@interface NSAXRView : NSView
+namespace AXR
 {
-@private
-    NSAXRDocument *document;
+    class HSSPathAddEllipsePrivate
+    {
+        friend class HSSPathAddEllipse;
+        
+        HSSPathAddEllipsePrivate()
+        : rect(0, 0, 0, 0)
+        {
+        }
+        HSSRect rect;
+    };
 }
 
-/**
- * The AXR document being rendered by the view.
- */
-@property (retain) NSAXRDocument* document;
+HSSPathAddEllipse::HSSPathAddEllipse(HSSRect rect)
+: HSSPathCommand(HSSPathCommandTypeAddEllipse)
+, d(new HSSPathAddEllipsePrivate)
+{
+    d->rect = rect;
+}
 
-/**
- *  @return YES. This is for optimizing the drawing.
- */
-- (BOOL)isOpaque;
+HSSPathAddEllipse::~HSSPathAddEllipse()
+{
+    delete d;
+}
 
-- (BOOL)isFlipped;
-
-/**
- *  Method that is called to draw on OS X. From within this, we can get access to the current
- *  AXR compositor output graphics port, which is then blitted onto the NSView.
- */
-- (void)drawRect:(NSRect)dirtyRect;
-
-/**
- *  @return YES. This allows the view to receive events from the system.
- */
-- (BOOL)acceptsFirstResponder;
-
-- (NSString *)adjustEventChar:(NSString *)chars;
-
-@end
+HSSRect HSSPathAddEllipse::getRect() const
+{
+    return d->rect;
+}

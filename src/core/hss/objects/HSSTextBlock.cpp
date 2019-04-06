@@ -47,52 +47,6 @@
 
 using namespace AXR;
 
-static int weightClassFromKeyword(AXRString keyword)
-{
-    if (keyword == "thin")
-        return 100;
-    if (keyword == "ultralight")
-        return 200;
-    if (keyword == "light")
-        return 300;
-    if (keyword == "normal")
-        return 400;
-    if (keyword == "medium")
-        return 500;
-    if (keyword == "semibold")
-        return 600;
-    if (keyword == "bold")
-        return 700;
-    if (keyword == "heavy")
-        return 800;
-    if (keyword == "black")
-        return 900;
-
-    return 400;
-}
-
-// From qfontconfigdatabase.cpp
-static int getQtWeight(int fc_weight)
-{
-    int qtweight = QFont::Black;
-
-    if (fc_weight <= (weightClassFromKeyword("light") + weightClassFromKeyword("medium")) / 2)
-        qtweight = QFont::Light;
-    else if (fc_weight <= (weightClassFromKeyword("medium") + weightClassFromKeyword("semibold")) / 2)
-        qtweight = QFont::Normal;
-    else if (fc_weight <= (weightClassFromKeyword("semibold") + weightClassFromKeyword("bold")) / 2)
-        qtweight = QFont::DemiBold;
-    else if (fc_weight <= (weightClassFromKeyword("bold") + weightClassFromKeyword("black")) / 2)
-        qtweight = QFont::Bold;
-
-    return qtweight;
-}
-
-static int getQtWeight(AXRString keyword)
-{
-    return getQtWeight(weightClassFromKeyword(keyword));
-}
-
 HSSTextTransformType HSSTextBlock::textTransformTypeFromString(AXRString value)
 {
     static std::map<AXRString, HSSTextTransformType> types;
@@ -230,34 +184,6 @@ bool HSSTextBlock::isKeyword(AXRString value, AXRString property)
 AXRString HSSTextBlock::toString()
 {
     return "Text block with content:\n" + this->getText();
-}
-
-QFont HSSTextBlock::getQFont() const
-{
-    QFont font_description;
-
-    // Get the first font available
-    QSharedPointer<HSSFont> theFont;
-    QSharedPointer<HSSObject> fontObj = this->getFont();
-    if (fontObj && fontObj->isA(HSSObjectTypeFont))
-    {
-        theFont = qSharedPointerCast<HSSFont>(fontObj);
-    }
-
-    if (theFont && !theFont->getFace().isEmpty())
-        font_description.setFamily(theFont->getFace());
-    else
-        font_description.setFamily("monospace");
-
-    // Set the weight of the font (bold, italic, etc.) if available
-    if (theFont && theFont->getWeight() != "")
-        font_description.setWeight(getQtWeight(theFont->getWeight()));
-    else
-        font_description.setWeight(QFont::Normal);
-
-    font_description.setPointSize(theFont ? theFont->getSize() : HSSFont::DEFAULT_SIZE);
-
-    return font_description;
 }
 
 void HSSTextBlock::accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags)

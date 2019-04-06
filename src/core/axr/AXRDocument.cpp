@@ -77,8 +77,8 @@ namespace AXR
 
         QSharedPointer<HSSVisitorManager> visitorManager;
         QSharedPointer<AXRController> controller;
-        QDir directory;
         QSharedPointer<AXRBuffer> xmlfile;
+        AXRString directory;
 
         QSharedPointer<XMLParser> parserXML;
         QSharedPointer<HSSCodeParser> parserHSS;
@@ -88,6 +88,8 @@ namespace AXR
         HSSCascader* cascadeVisitor;
         HSSLayout* layoutVisitor;
         HSSRenderer* renderVisitor;
+        
+        AXRPlatform * platform;
     };
 }
 
@@ -110,6 +112,8 @@ AXRDocument::AXRDocument()
     vm->addVisitor(d->cascadeVisitor);
     vm->addVisitor(d->layoutVisitor);
     vm->addVisitor(d->renderVisitor);
+    d->platform = new AXRPlatform();
+    d->platform->setDocument(this);
 }
 
 AXRDocument::~AXRDocument()
@@ -130,25 +134,7 @@ void AXRDocument::setDelegate(AXRDocumentDelegate * delegate)
 
 AXRString AXRDocument::resourcesPath() const
 {
-    // TODO: it's best to do this in a different way entirely... the library
-    // shouldn't be using the client process's directory to determine where
-    // to load resources from. For example, two different browsers will be
-    // at different file paths, while the resources path will be independent
-    // of either of them. Perhaps an AXR configuration file at a standard
-    // location? /etc/axr.conf on Unix and %WINDIR%/axr.ini on Windows?
-    QDir dir(QCoreApplication::applicationDirPath());
-#ifdef Q_OS_MAC
-#ifndef Q_OS_IOS
-    dir.cdUp();
-#endif
-    dir.cd("Resources");
-#elif defined(Q_OS_UNIX)
-    dir.cdUp();
-    dir.cd("share");
-    dir.cd("axr");
-#endif
-    dir.cd("resources");
-    return dir.canonicalPath();
+    return d->platform->resourcesPath();
 }
 
 void AXRDocument::run()
@@ -212,7 +198,7 @@ void AXRDocument::run()
     axr_log(LoggerChannelOverview, "AXRDocument: run complete, entering event loop\n\n\n");
 }
 
-void AXRDocument::runHSS(const QUrl & url)
+void AXRDocument::runHSS(const AXRString & url)
 {
     //needs reset on next load
     d->hasLoadedFile = true;
@@ -286,9 +272,10 @@ QSharedPointer<AXRBuffer> AXRDocument::xmlFile() const
 void AXRDocument::setXmlFile(QSharedPointer<AXRBuffer> file)
 {
     d->xmlfile = file;
+    d->directory = d->platform->getDirectory(file);
 }
 
-QDir AXRDocument::directory() const
+AXRString AXRDocument::directory() const
 {
     return d->directory;
 }
@@ -313,9 +300,14 @@ void AXRDocument::setHssParser(QSharedPointer<HSSCodeParser> parser)
     d->parserHSS = parser;
 }
 
+AXRPlatform * AXRDocument::platform() const
+{
+    return d->platform;
+}
+
 bool AXRDocument::isCustomFunction(const AXRString &name) const
 {
-    return d->customFunctions.contains(name);
+    return d->customFunctions.count(name);
 }
 
 void AXRDocument::registerCustomFunction(const AXRString &name, HSSAbstractValueChangedCallback* fn)
@@ -336,123 +328,69 @@ HSSRenderer * AXRDocument::getRenderVisitor() const
     return d->renderVisitor;
 }
 
-/*!
- * \brief sanitizeUrlPath
- * Sanitize a URL path so that it is safe for joining with a local directory
- * path to read resources from the local file system.
- *
- * This forces the path to become relative if it is absolute. A leading slash
- * will be removed and any attempt to cdup outside the root simply resolves
- * back to root.
- *
- * All backslashes in the path are replaced with forward slashes. Then all
- * multiple directory separators are removed and any "." or ".."s found in
- * the path are resolved. Any leading "."s or ".."s are removed such that
- * a URL path of "../foo.html" or "/../foo.html" is resolved to "foo.html"
- * in the same manner that /../ resolves to / on a UNIX system.
- *
- * An example usage might be: \code QFileInfo(getPathToResources(), sanitizeRelativePath(resourceUrl.path())).canonicalFilePath() \endcode
- * which would allow a URL with a custom protocol to refer to resources within
- * a special directory on the local filesystem, or allow a web server to safely
- * map HTTP URLs to the corresponding directory from which they should be served,
- * on the local filesystem.
- *
- * \param path The path to sanitize.
- */
-QString sanitizeRelativePath(const QString &path)
-{
-    // Swap backslashes for forward slashes
-    QString canonicallySlashedPath = path;
-    canonicallySlashedPath = canonicallySlashedPath.replace('\\', '/');
-
-    // Get a list of all path components after switching backslashes for slashes and resolving
-    // "."s and ".."s and removing redundant directory separators
-    QStringList pathParts = QDir::cleanPath(canonicallySlashedPath).split('/', QString::SkipEmptyParts);
-
-    // Remove any leading "."s or ".."s that were not resolved by QDir::cleanPath
-    pathParts.removeAll(".");
-    pathParts.removeAll("..");
-
-    // Rejoin the path components into a URL that is guaranteed relative and has no "."s or ".."s
-    // or redundant slashes
-    return pathParts.join(QDir::separator());
-}
-
-QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const QUrl &resourceUrl)
+QSharedPointer<AXRBuffer> AXRDocument::createBufferFromUrl(const AXRString &url)
 {
     QSharedPointer<AXRBuffer> errorState;
-    if (!resourceUrl.isValid())
+    if (!d->platform->urlIsValid(url))
     {
-        AXRError("AXRDocument", "Cannot load invalid URL - " + resourceUrl.toString()).raise();
-        return QSharedPointer<AXRBuffer>(new AXRBuffer());
+        AXRError("AXRDocument", "Cannot load invalid URL - " + url).raise();
+        return QSharedPointer<AXRBuffer>();
     }
-
-    // Map the URL into a local file path we can load
-    QFileInfo localResource;
-    if (resourceUrl.scheme() == "axr")
+    
+    HSSString filePath;
+    std::string urldata = url.data();
+    if (url.data().substr(0, 6) == "axr://")
     {
-        localResource = QFileInfo(this->resourcesPath(), sanitizeRelativePath(resourceUrl.path()));
+        filePath = this->resourcesPath() + "/" + url;
     }
-    else if (resourceUrl.scheme() == "file")
+    else if (urldata.substr(0, 7) == "file://")
     {
-        // This is a workaround for a QUrl bug where QUrl::toLocalFile()
-        // for the URL file://localhost/Users/bob/example.xml => //localhost/Users/bob/example.xml,
-        // which cannot be opened directly as a file; we need to handle this centrally elsewhere
-        // If the host isn't localhost the we'll still get a non-loadable file path but at least
-        // we know that file://localhost/ is almost always going to be equal to file:///
-        // We should still perhaps look at alternative ways of handling this issue as it seems hacky
-        QUrl fixedUrl = resourceUrl;
-        if (resourceUrl.host() == "localhost")
-            fixedUrl.setHost(QString());
-
-        // TODO: Make sure this only unconditionally loads file URLs when appropriate
-        localResource = QFileInfo(fixedUrl.toLocalFile());
+        //skip the "file://" part
+        filePath = urldata.substr(7);
     }
-    else if (resourceUrl.scheme() == "http" || resourceUrl.scheme() == "https")
+    else if (urldata.substr(0, 7) == "http://" || urldata.substr(0, 8) == "https://")
     {
         // TODO: Download resource and cache at local path, then localResource = QFileInfo(<path to that>);
         AXRError("AXRDocument", "http/https not implemented yet").raise();
-        return QSharedPointer<AXRBuffer>(new AXRBuffer());
+        return QSharedPointer<AXRBuffer>();
     }
-    else if (resourceUrl.scheme() == "")
+    else if (urldata.find("//") == std::string::npos)
     {
-        QString fileScheme = this->file()->sourceUrl().scheme();
-        if (fileScheme == "file")
-        {
-            // TODO: this needs to be sanitized in another way, we can't break the usage of .. in
-            // relative paths for legal uses. We need something like a cross-origin policy or similar.
-            localResource = QFileInfo(this->directory(), sanitizeRelativePath(resourceUrl.path()));
-        }
-        else if (fileScheme == "http" || fileScheme == "https")
-        {
-            AXRError("AXRDocument", "http/https not implemented yet").raise();
-            return errorState;
-        }
+        filePath = this->getDirectory(this->xmlFile()) + "/" + url;
     }
     else
     {
-        AXRError("AXRDocument", "Unsupported URL scheme " + resourceUrl.scheme()).raise();
-        return QSharedPointer<AXRBuffer>(new AXRBuffer());
+        AXRError("AXRDocument", "Invalid URL " + url ).raise();
+        return QSharedPointer<AXRBuffer>();
     }
-
+    
     // Make sure the file at that path actually exists
-    if (!localResource.exists())
+    if (! d->platform->fileExists(filePath))
     {
-        AXRError("AXRDocument", "the file " + localResource.filePath() + " doesn't exist").raise();
+        AXRError("AXRDocument", "the file " + url + " doesn't exist").raise();
         return errorState;
     }
-
-    QSharedPointer<AXRBuffer> buffer = QSharedPointer<AXRBuffer>(new AXRBuffer(localResource));
+    
+    QSharedPointer<AXRBuffer> buffer = QSharedPointer<AXRBuffer>(new AXRBuffer(this, filePath));
     if (!buffer->isValid())
     {
-        AXRError("AXRDocument", "the file " + localResource.filePath() + " couldn't be read").raise();
+        AXRError("AXRDocument", "the file " + filePath + " couldn't be read").raise();
         return errorState;
     }
-
+    
     return buffer;
+}
 
-    // TODO: AXRDocument should be able to return an error code from an enum stating WHY a document
-    // failed to load so that failures can be handled programmatically depending on the reason
+HSSString AXRDocument::getDirectory(QSharedPointer<AXRBuffer> theFile) const
+{
+    std::string filepath = theFile->sourceUrl().data();
+    HSSString ret;
+    if (filepath.substr(filepath.length() - 1) == "/")
+    {
+        filepath = filepath.substr(0, filepath.length() - 1);
+    }
+    ret = filepath.substr(0, filepath.find_last_of("/"));
+    return ret;
 }
 
 bool AXRDocument::needsDisplay() const
@@ -467,39 +405,32 @@ void AXRDocument::setNeedsDisplay(bool newValue)
         d->delegate->setNeedsDisplay(newValue);
 }
 
-QSharedPointer<AXRBuffer> AXRDocument::createDummyXml(const QUrl &hssUrl)
+QSharedPointer<AXRBuffer> AXRDocument::createDummyXml(const AXRString &hssUrl)
 {
-    axr_log(LoggerChannelOverview, "AXRDocument: creating dummy XML file for HSS file " + hssUrl.toString());
+    axr_log(LoggerChannelOverview, "AXRDocument: creating dummy XML file for HSS file " + hssUrl);
 
-    if (hssUrl.isValid())
+    if (d->platform->urlIsValid(hssUrl))
     {
-        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" href=\"" + hssUrl.toString() + "\" version=\"1.0\"?><root></root>";
-        return QSharedPointer<AXRBuffer>(new AXRBuffer(dummyXML.toUtf8()));
+        AXRString dummyXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><?xml-stylesheet type=\"application/x-hss\" href=\"" + hssUrl + "\" version=\"1.0\"?><root></root>";
+        return QSharedPointer<AXRBuffer>(new AXRBuffer(dummyXML, "dummyXML"));
     }
     else
     {
         AXRError("AXRDocument", "Could not create dummy XML for invalid HSS file URL").raise();
-        return QSharedPointer<AXRBuffer>(new AXRBuffer());
+        return QSharedPointer<AXRBuffer>();
     }
 }
 
-bool AXRDocument::loadFileByPath(const QUrl &url)
+bool AXRDocument::loadFileByPath(const HSSString &url)
 {
-    if (url.isRelative() && !url.isLocalFile())
-    {
-        AXRError("AXRDocument", "Could not load relative URL as main file", url).raise();
-        return false;
-    }
+    axr_log(LoggerChannelOverview, "AXRDocument: loading file " + url);
 
-    axr_log(LoggerChannelOverview, "AXRDocument: loading file " + url.toString());
-
-    QFileInfo pathInfo(url.path());
-    if (pathInfo.suffix() == "xml")
+    if (url.substr(url.length() - 3) == "xml")
     {
         d->isHSSOnly = false;
         return this->loadXmlFile(url);
     }
-    else if (pathInfo.suffix() == "hss")
+    else if (url.substr(url.length() - 3) == "hss")
     {
         return this->loadHssFile(url);
     }
@@ -661,9 +592,9 @@ bool AXRDocument::hasTimer(AXRString timerName)
     return this->delegate()->hasTimer(timerName);
 }
 
-bool AXRDocument::loadHssFile(const QUrl &url)
+bool AXRDocument::loadHssFile(const AXRString &url)
 {
-    axr_log(LoggerChannelOverview, AXRString("AXRDocument: opening HSS document: %1").arg(url.toString()));
+    axr_log(LoggerChannelOverview, HSSString::format("AXRDocument: opening HSS document: %s", url.chardata()));
 
     d->isHSSOnly = true;
     d->showLayoutSteps = false;

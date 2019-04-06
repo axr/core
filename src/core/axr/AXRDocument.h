@@ -53,6 +53,7 @@ namespace AXR
 {
     class AXRBuffer;
     class AXRController;
+    class AXRPlatform;
     class HSSDisplayObject;
     class AXRDocumentDelegate;
     class AXRDocumentPrivate;
@@ -107,7 +108,7 @@ namespace AXR
         /**
          *  Loads only one HSS file and runs it
          */
-        void runHSS(const QUrl & url);
+        void runHSS(const AXRString & url);
         /**
          *  Reset everything to default values, so that we can start
          *  from fresh.
@@ -174,6 +175,8 @@ namespace AXR
          *  @param parser   A shared pointer to the HSS parser.
          */
         void setHssParser(QSharedPointer<HSSCodeParser> parser);
+        
+        AXRPlatform * platform() const;
 
         /**
          *  When a function name in HSS is checked for existence, this tells wether
@@ -198,11 +201,8 @@ namespace AXR
          */
         HSSRenderer * getRenderVisitor() const;
 
-        // From AXRWrapper
-    public:
         /**
          *  Creates a AXRBuffer representation from the url you provide.
-         *  Subclasses should override this method with the OS specific implementation.
          *  @param url  A string containing the url to the file
          */
         QSharedPointer<AXRBuffer> createBufferFromUrl(const HSSString &url);
@@ -221,7 +221,7 @@ namespace AXR
          *  It is used when a HSS file is loaded directly.
          *  @return A shared pointer to the AXRBuffer representation of the basic XML document.
          */
-        QSharedPointer<AXRBuffer> createDummyXml(const QUrl &hssUrl);
+        QSharedPointer<AXRBuffer> createDummyXml(const AXRString &hssUrl);
         /**
          *  Loads the XML file at the path you provide.
          *  @param  xmlfilepath A string containing the path to the file on the local system.
@@ -236,13 +236,13 @@ namespace AXR
          *
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadFileByPath(const QUrl &url);
+        bool loadFileByPath(const HSSString &url);
         /**
          *  Loads the HSS file at the path you provide.
          *  @param  hssfilepath A string containing the path to the file on the local system.
          *  @return Wether it has been loaded successfully or not.
          */
-        bool loadHssFile(const QUrl &url);
+        bool loadHssFile(const AXRString &url);
 
         bool loadHssFile(QSharedPointer<AXRBuffer> buffer);
         void receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HSSParserNode> node);
@@ -261,8 +261,6 @@ namespace AXR
         void stopTimer(AXRString timerName);
         bool hasTimer(AXRString timerName);
 
-        // Layout stuff from AXRWrapper
-    public:
         bool showLayoutSteps() const;
         void setShowLayoutSteps(bool value);
         void previousLayoutStep();

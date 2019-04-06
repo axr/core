@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,48 +41,46 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
+#include "axr.h"
+#include "HSSPathLineTo.h"
 
-@class NSAXRDocument;
-
-#ifdef __cplusplus
-namespace AXR { }
 using namespace AXR;
-#endif
 
-/**
- *  @brief (OS X only) This is a NSView subclass, for using inside a window in
- *  Apple's Cocoa framework.
- */
-@interface NSAXRView : NSView
+namespace AXR
 {
-@private
-    NSAXRDocument *document;
+    class HSSPathLineToPrivate
+    {
+        friend class HSSPathLineTo;
+        
+        HSSPathLineToPrivate()
+        : x(0)
+        , y(0)
+        {
+        }
+        HSSUnit x;
+        HSSUnit y;
+    };
 }
 
-/**
- * The AXR document being rendered by the view.
- */
-@property (retain) NSAXRDocument* document;
+HSSPathLineTo::HSSPathLineTo(HSSUnit x, HSSUnit y)
+: HSSPathCommand(HSSPathCommandTypeLineTo)
+, d(new HSSPathLineToPrivate)
+{
+    d->x = x;
+    d->y = y;
+}
 
-/**
- *  @return YES. This is for optimizing the drawing.
- */
-- (BOOL)isOpaque;
+HSSPathLineTo::~HSSPathLineTo()
+{
+    delete d;
+}
 
-- (BOOL)isFlipped;
+HSSUnit HSSPathLineTo::getX() const
+{
+    return d->x;
+}
 
-/**
- *  Method that is called to draw on OS X. From within this, we can get access to the current
- *  AXR compositor output graphics port, which is then blitted onto the NSView.
- */
-- (void)drawRect:(NSRect)dirtyRect;
-
-/**
- *  @return YES. This allows the view to receive events from the system.
- */
-- (BOOL)acceptsFirstResponder;
-
-- (NSString *)adjustEventChar:(NSString *)chars;
-
-@end
+HSSUnit HSSPathLineTo::getY() const
+{
+    return d->y;
+}

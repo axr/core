@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,48 +41,42 @@
  *
  ********************************************************************/
 
-#import <Cocoa/Cocoa.h>
+#include "axr.h"
+#include "AXRPlatformDriver.h"
 
-@class NSAXRDocument;
-
-#ifdef __cplusplus
-namespace AXR { }
 using namespace AXR;
-#endif
 
-/**
- *  @brief (OS X only) This is a NSView subclass, for using inside a window in
- *  Apple's Cocoa framework.
- */
-@interface NSAXRView : NSView
+namespace AXR
 {
-@private
-    NSAXRDocument *document;
+    class AXRPlatformDriverPrivate
+    {
+        friend class AXRPlatformDriver;
+        
+        AXRPlatformDriverPrivate()
+        : document(NULL)
+        {
+        }
+        AXRDocument * document;
+    };
 }
 
-/**
- * The AXR document being rendered by the view.
- */
-@property (retain) NSAXRDocument* document;
+AXRPlatformDriver::AXRPlatformDriver()
+: d(new AXRPlatformDriverPrivate)
+{
+    
+}
 
-/**
- *  @return YES. This is for optimizing the drawing.
- */
-- (BOOL)isOpaque;
+AXRPlatformDriver::~AXRPlatformDriver()
+{
+    delete d;
+}
 
-- (BOOL)isFlipped;
+void AXRPlatformDriver::setDocument(AXRDocument * document)
+{
+    d->document  = document;
+}
 
-/**
- *  Method that is called to draw on OS X. From within this, we can get access to the current
- *  AXR compositor output graphics port, which is then blitted onto the NSView.
- */
-- (void)drawRect:(NSRect)dirtyRect;
-
-/**
- *  @return YES. This allows the view to receive events from the system.
- */
-- (BOOL)acceptsFirstResponder;
-
-- (NSString *)adjustEventChar:(NSString *)chars;
-
-@end
+AXRDocument * AXRPlatformDriver::getDocument() const
+{
+    return d->document;
+}

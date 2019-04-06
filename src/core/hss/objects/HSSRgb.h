@@ -180,9 +180,6 @@ namespace AXR
          */
         void setAlpha(HSSUnit value, HSSUnit specificity);
 
-        QColor toQColor() const;
-        QColor toQColorWithAlpha(int alpha) const;
-
     private:
         void _initialize();
         QSharedPointer<HSSValue> _computeChannelValue(QSharedPointer<HSSParserNode> parserNode) const;
