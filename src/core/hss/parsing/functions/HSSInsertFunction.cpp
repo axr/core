@@ -112,7 +112,7 @@ AXRString HSSInsertFunction::_getTextFromValue(QSharedPointer<HSSParserNode> val
             QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant>(value);
             return theString->getValue().stripQuotes();
         }
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
         {
             QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction>(value);
             if (fnct->isA(HSSFunctionTypeRef))
@@ -182,7 +182,7 @@ void HSSInsertFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)
             case HSSParserNodeTypeExpression:
                 qSharedPointerCast<HSSExpression>(this->value)->setScope(newScope);
                 break;
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
                 qSharedPointerCast<HSSFunction>(this->value)->setScope(newScope);
                 break;
             default:

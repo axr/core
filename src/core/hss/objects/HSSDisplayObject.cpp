@@ -687,7 +687,7 @@ void HSSDisplayObject::listenWidth(QSharedPointer<HSSObject> theObj)
         switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
         {
             case HSSParserNodeTypeExpression:
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
             {
                 theObj->observe("__impl_private__valueChanged", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
                 break;
@@ -778,7 +778,7 @@ void HSSDisplayObject::listenHeight(QSharedPointer<HSSObject> theObj)
     {
         switch (qSharedPointerCast<HSSValue>(theObj)->getValue()->getType())
         {
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
             case HSSParserNodeTypeExpression:
             {
                 theObj->observe("__impl_private__valueChanged", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));

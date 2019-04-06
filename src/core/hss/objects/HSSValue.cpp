@@ -148,7 +148,7 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
     this->value = parserNode;
     switch (parserNode->getType())
     {
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
             parserNode->observe("__impl_private__remoteValue", "__impl_private__valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
         case HSSParserNodeTypeExpression:
@@ -169,7 +169,7 @@ HSSUnit HSSValue::getNumber() const
 {
     switch (this->value->getType())
     {
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
         {
             QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
             if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
@@ -215,7 +215,7 @@ bool HSSValue::getBool() const
 {
     switch (this->value->getType())
     {
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
         {
             QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
             if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
@@ -257,7 +257,7 @@ AXRString HSSValue::getString() const
 {
     switch (this->value->getType())
     {
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
         {
             QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
             if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
@@ -299,7 +299,7 @@ QSharedPointer<HSSObject> HSSValue::getObject() const
 {
     switch (this->value->getType())
     {
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
         {
             return qSharedPointerCast<HSSFunction>(this->value)->evaluate();
         }
@@ -320,7 +320,7 @@ void HSSValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
             case HSSParserNodeTypeExpression:
                 qSharedPointerCast<HSSExpression>(this->value)->setScope(newScope);
                 break;
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
                 qSharedPointerCast<HSSFunction>(this->value)->setScope(newScope);
                 break;
             default:
@@ -354,7 +354,7 @@ void HSSValue::replace(QSharedPointer<HSSObject> theObj)
     {
         switch (this->value->getType())
         {
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
             {
                 if (this->value->isA(HSSFunctionTypeRef))
                 {

@@ -137,14 +137,14 @@ HSSUnit HSSExpression::evaluate()
         //left
         QSharedPointer<HSSValue> left = this->getLeft();
         this->leftval = left->getNumber();
-        if (this->left->getValue()->isA(HSSParserNodeTypeExpression) || this->left->getValue()->isA(HSSParserNodeTypeFunctionCall))
+        if (this->left->getValue()->isA(HSSParserNodeTypeExpression) || this->left->getValue()->isA(HSSParserNodeTypeFunction))
         {
             left->observe("__impl_private__valueChanged", "left", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::leftChanged));
         }
         //right
         QSharedPointer<HSSValue> right = this->getRight();
         this->rightval = right->getNumber();
-        if (this->right->getValue()->isA(HSSParserNodeTypeExpression) || this->right->getValue()->isA(HSSParserNodeTypeFunctionCall))
+        if (this->right->getValue()->isA(HSSParserNodeTypeExpression) || this->right->getValue()->isA(HSSParserNodeTypeFunction))
         {
             right->observe("__impl_private__valueChanged", "right", this, new HSSValueChangedCallback<HSSExpression>(this, &HSSExpression::rightChanged));
         }
@@ -272,7 +272,7 @@ void HSSExpression::replace(QSharedPointer<HSSObject> theObj)
     {
         switch (this->_leftNode->getType())
         {
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
             {
                 if (this->_leftNode->isA(HSSFunctionTypeRef))
                 {
@@ -297,7 +297,7 @@ void HSSExpression::replace(QSharedPointer<HSSObject> theObj)
     {
         switch (this->_rightNode->getType())
         {
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
             {
                 if (this->_rightNode->isA(HSSFunctionTypeRef))
                 {

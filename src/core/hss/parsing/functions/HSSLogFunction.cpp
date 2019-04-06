@@ -120,7 +120,7 @@ void HSSLogFunction::_logParserNode(QSharedPointer<HSSParserNode> parserNode) co
 {
     switch (parserNode->getType())
     {
-        case HSSParserNodeTypeFunctionCall:
+        case HSSParserNodeTypeFunction:
         {
             QSharedPointer<HSSFunction> fnct = qSharedPointerCast<HSSFunction > (parserNode)->clone();
             if (fnct->isA(HSSFunctionTypeRef))

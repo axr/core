@@ -146,7 +146,7 @@ void HSSFlag::flagChanged(HSSRuleState newStatus)
             this->setPurging(HSSRuleStateOff);
         }
     }
-    else if (ruleNode->isA(HSSParserNodeTypeFunctionCall))
+    else if (ruleNode->isA(HSSParserNodeTypeFunction))
     {
         QSharedPointer<HSSFunction> functionNode = qSharedPointerCast<HSSFunction>(ruleNode);
         if(functionNode->isA(HSSFunctionTypeRef))
@@ -181,7 +181,7 @@ QSharedPointer<HSSSelection> HSSFlag::apply(QSharedPointer<HSSSelection> scope, 
                 }
             }
         }
-        else if(ruleNode->isA(HSSParserNodeTypeFunctionCall))
+        else if(ruleNode->isA(HSSParserNodeTypeFunction))
         {
             QSharedPointer<HSSFunction> functionNode = qSharedPointerCast<HSSFunction>(ruleNode);
             if(functionNode->isA(HSSFunctionTypeRef))

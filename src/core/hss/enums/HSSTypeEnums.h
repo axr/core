@@ -68,7 +68,7 @@ namespace AXR
         HSSParserNodeTypeStringConstant, /**< A literal string (single or double quotes) in the HSS source. */
         HSSParserNodeTypeKeywordConstant, /**< A keyword literal in the HSS source. */
         HSSParserNodeTypeObjectNameConstant, /**< Used to get the object definition by name. */
-        HSSParserNodeTypeFunctionCall, /**< Which function to call, and with what arguments. */
+        HSSParserNodeTypeFunction, /**< Type for abstract base class of functions. */
         HSSParserNodeTypeMultipleValueDefinition, /**< Encapsulates various values separated by commas. */
         HSSParserNodeTypeSelectorChain, /**< A group of selector nodes that define what elements will be selected. */
         HSSParserNodeTypeNegation, /**< Inverts the meaning of one or more selectors. */

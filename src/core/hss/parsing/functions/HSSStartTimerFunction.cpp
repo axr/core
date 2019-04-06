@@ -103,7 +103,7 @@ QSharedPointer<HSSObject> HSSStartTimerFunction::_evaluate()
 
 void HSSStartTimerFunction::fireTimer(AXRString timerName)
 {
-    if (this->function->getType() == HSSParserNodeTypeFunctionCall)
+    if (this->function->getType() == HSSParserNodeTypeFunction)
     {
         QSharedPointer<HSSFunction> fun = qSharedPointerCast<HSSFunction>(this->getFunction());
         fun->evaluate();
@@ -177,7 +177,7 @@ void HSSStartTimerFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope
             case HSSParserNodeTypeExpression:
                 qSharedPointerCast<HSSExpression>(this->function)->setScope(newScope);
                 break;
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
                 qSharedPointerCast<HSSFunction>(this->function)->setScope(newScope);
                 break;
             default:
@@ -191,7 +191,7 @@ void HSSStartTimerFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope
             case HSSParserNodeTypeExpression:
                 qSharedPointerCast<HSSExpression>(this->function)->setScope(newScope);
                 break;
-            case HSSParserNodeTypeFunctionCall:
+            case HSSParserNodeTypeFunction:
                 qSharedPointerCast<HSSFunction>(this->function)->setScope(newScope);
                 break;
             default:

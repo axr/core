@@ -297,7 +297,7 @@ HSSTextAlignType HSSTextBlock::_getTextAlign(QSharedPointer<HSSObject> theObj) c
                 {
                     return HSSTextBlock::textAlignTypeFromString(qSharedPointerCast<HSSKeywordConstant>(parserNode)->getValue());
                 }
-                case HSSParserNodeTypeFunctionCall:
+                case HSSParserNodeTypeFunction:
                 {
                     if (parserNode->isA(HSSFunctionTypeRef))
                     {

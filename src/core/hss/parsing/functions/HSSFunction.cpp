@@ -47,7 +47,7 @@
 using namespace AXR;
 
 HSSFunction::HSSFunction(HSSFunctionType type, AXRController * controller)
-: HSSParserNode(HSSParserNodeTypeFunctionCall, controller)
+: HSSParserNode(HSSParserNodeTypeFunction, controller)
 {
     this->functionType = type;
     this->_isDirty = true;
