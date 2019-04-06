@@ -312,6 +312,7 @@ namespace AXR
     {
         HSSObjectTypeNone = 0, /**< Error state. */
         HSSObjectTypeGeneric, /**< Abstract type for generic objects, probably error state. */
+        HSSObjectTypeNull, /**< An object representing the absence of a value. */
         HSSObjectTypeValue, /**< Values store values. */
         HSSObjectTypeMultipleValue, /**< Multiple values separated by commas passed to a property are wrapped in these. */
         HSSObjectTypeContainer, /**< Containers can contain other display objects. */

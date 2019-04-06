@@ -1007,8 +1007,16 @@ QSharedPointer<HSSObject> HSSObject::computeValue(AXRString propertyName, QShare
         }
         else
         {
-            AXRError("HSSObject", AXRString("Object with name ") + namestring + " was not found").raise();
-            return errorState;
+            QSharedPointer<HSSObject> searchResult2 = this->getController()->getGlobalVariable(namestring);
+            if (searchResult2)
+            {
+                return searchResult2->clone();
+            }
+            else
+            {
+                AXRError("HSSObject", AXRString("Object with name ") + namestring + " was not found").raise();
+                return errorState;
+            }
         }
     }
 

@@ -299,6 +299,9 @@ namespace AXR
          */
         int ruleCount() const;
 
+        void setGlobalVariable(AXRString name, QSharedPointer<HSSObject> node);
+        QSharedPointer<HSSObject> getGlobalVariable(AXRString name);
+        
         /**
          *  Set the given selector chain as the current one. It will set the new current chain size,
          *  reset the current chain count to 0 and make the current selector node the first node in the chain.

@@ -60,6 +60,8 @@ namespace AXR
         std::vector<AXRString> styleSheetUrls;
         std::list<QSharedPointer<HSSParserNode> > parserTree;
         std::vector<QSharedPointer<HSSRule> > rules;
+        
+        std::map<AXRString, QSharedPointer<HSSObject> > globals;
 
         QSharedPointer<HSSSelectorChain> currentChain;
         QSharedPointer<HSSParserNode> currentSelectorNode;
@@ -1243,6 +1245,19 @@ void AXRController::_recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> 
             this->_recursiveGetDescendants(ret, cont->getChildren());
         }
     }
+}
+
+void AXRController::setGlobalVariable(AXRString name, QSharedPointer<HSSObject> obj)
+{
+    if (obj)
+    {
+        d->globals[name] = obj;
+    }
+}
+
+QSharedPointer<HSSObject> AXRController::getGlobalVariable(AXRString name)
+{
+    return d->globals[name];
 }
 
 void AXRController::setLogsSelections(bool newValue)
