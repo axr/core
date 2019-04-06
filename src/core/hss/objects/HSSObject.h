@@ -403,6 +403,7 @@ namespace AXR
         std::map<AXRString, QSharedPointer<HSSObject> > _defaultValues;
         std::map<AXRString, QSharedPointer<HSSObject> > _computedValues;
         std::map<AXRString, QSharedPointer<HSSObject> > _stackValues;
+        std::map<AXRString, QSharedPointer<HSSPropertyDefinition> > _overrides;
         std::vector<AXRString> shorthandProperties;
         std::map<AXRString, bool> skipShorthand;
         size_t shorthandIndex;

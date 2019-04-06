@@ -1601,13 +1601,26 @@ void HSSObject::setOverrides(std::vector<QSharedPointer<HSSPropertyDefinition> >
     std::vector<QSharedPointer<HSSPropertyDefinition> >::iterator it;
     for (it = overrides.begin(); it != overrides.end(); ++it) {
         QSharedPointer<HSSPropertyDefinition> item = *it;
-        this->addOverride(item);
+        this->addOverride(item->clone());
     }
 }
 
 void HSSObject::addOverride(QSharedPointer<HSSPropertyDefinition> item)
 {
-    this->_overrides.push_back(item);
+    AXRString key = item->getKeyString();
+    
+    QSharedPointer<HSSParserNode> parserNode = item->getValue();
+    if (parserNode->isA(HSSParserNodeTypeUnaryExpression))
+    {
+        QSharedPointer<HSSUnaryExpression> uExp = qSharedPointerCast<HSSUnaryExpression>(parserNode);
+        if (this->_overrides.count(key))
+        {
+            QSharedPointer<HSSPropertyDefinition> existingOverride = this->_overrides[key];
+            uExp->merge(existingOverride->getValue());
+            item->setValue(uExp);
+        }
+    }
+    this->_overrides[key] = item;
 }
 
 std::map<AXRString, QSharedPointer<HSSPropertyDefinition> > HSSObject::getOverrides() const

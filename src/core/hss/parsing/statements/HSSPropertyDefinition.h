@@ -108,6 +108,8 @@ namespace AXR
         ~HSSPropertyDefinition();
 
         AXRString toString();
+        
+        AXRString getKeyString() const;
 
         /**
          *  Setter for the names of the property.

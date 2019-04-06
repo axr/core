@@ -99,6 +99,24 @@ AXRString HSSPropertyDefinition::toString()
     return ret;
 }
 
+AXRString HSSPropertyDefinition::getKeyString() const
+{
+    AXRString ret;
+    std::vector<QSharedPointer<HSSPropertyPath> >::const_iterator it;
+    bool first = true;
+    for (it = this->paths.begin(); it != this->paths.end(); ++it)
+    {
+        if (!first)
+        {
+            ret.append(",");
+        }
+        const QSharedPointer<HSSPropertyPath> & path = *it;
+        ret.append(path->toKeyString());
+        if (first) first = false;
+    }
+    return ret;
+}
+
 void HSSPropertyDefinition::setPaths(std::vector< QSharedPointer<HSSPropertyPath> > paths)
 {
     this->paths = paths;
