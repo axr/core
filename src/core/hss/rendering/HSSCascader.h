@@ -67,6 +67,7 @@ namespace AXR
 
         void applyOverrides(HSSContainer &container, HSSUnit &specificity);
         void applyStack(HSSContainer &container, HSSUnit &specificity);
+        void applyIsARules(HSSContainer &container, HSSUnit &specificity);
 
         void setDocument(AXRDocument* document);
 

@@ -84,9 +84,10 @@ void HSSCascader::visit(HSSContainer &container)
         {
             container._needsRereadRules = false;
             this->applyStack(container, specificity);
-            this->applyOverrides(container, specificity);
-            container.commitStackValues();
+            this->applyIsARules(container, specificity);
         }
+        this->applyOverrides(container, specificity);
+        container.commitStackValues();
         container.fillWithDefaults();
     }
     container.raiseFlagEventIfNeeded();
@@ -190,6 +191,87 @@ void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
                 break;
         }
     }
+}
+
+void HSSCascader::applyIsARules(HSSContainer & container, HSSUnit & specificity)
+{
+    if (!container._objDefRulesChanged) {
+        return;
+    }
+
+    QSharedPointer<HSSContainer> thisContainer = qSharedPointerCast<HSSContainer>(container.shared_from_this());
+    std::vector<QSharedPointer<HSSRule> > currentRules(container._appliedIsARules);
+    std::vector<QSharedPointer<HSSRule> > newRules;
+    
+    //find the new rules to add
+    const std::deque<QSharedPointer<HSSRule> > & objDefRules = container.getObjDefRules();
+    std::deque<QSharedPointer<HSSRule> >::const_iterator it;
+    for (it = objDefRules.begin(); it != objDefRules.end(); ++it)
+    {
+        const QSharedPointer<HSSRule> & rule = *it;
+        bool found = false;
+        
+        std::vector<QSharedPointer<HSSRule> >::const_iterator it2;
+        for (it2 = currentRules.begin(); it2 != currentRules.end(); ++it2)
+        {
+            const QSharedPointer<HSSRule> & tmprule = *it2;
+            if (tmprule->equalTo(rule))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            newRules.push_back(rule);
+        }
+    }
+    //remove obsolete rules
+    std::vector<QSharedPointer<HSSRule> >::const_iterator it3;
+    for (it3 = currentRules.begin(); it3 != currentRules.end(); ++it3)
+    {
+        const QSharedPointer<HSSRule> & tmprule = *it3;
+        bool found = false;
+        
+        std::deque<QSharedPointer<HSSRule> >::const_iterator it4;
+        for (it4 = objDefRules.begin(); it4 != objDefRules.end(); ++it4)
+        {
+            const QSharedPointer<HSSRule> & tmprule2 = *it4;
+            if (tmprule->equalTo(tmprule2))
+            {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            tmprule->removeFromDisplayObjects();
+            for (size_t i = 0, size = container._appliedIsARules.size(); i<size; ++i)
+            {
+                if (container._appliedIsARules[i] == tmprule)
+                {
+                    container._appliedIsARules.erase(container._appliedIsARules.begin() + i);
+                    container.setNeedsRereadRules(true);
+                    --i;
+                    --size;
+                }
+            }
+        }
+    }
+    std::vector<QSharedPointer<HSSRule> >::iterator it5;
+    for (it5 = newRules.begin(); it5 != newRules.end(); ++it5)
+    {
+        const QSharedPointer<HSSRule> & rule = *it5;
+        rule->setSpecificity(specificity);
+        container._appliedIsARules.push_back(rule);
+        container.objDefRulesPrepend(rule);
+        AXRController * controller = container.getController();
+        controller->currentContextPush(thisContainer);
+        controller->recursiveMatchRulesToDisplayObjects(rule, thisContainer->getChildren(), thisContainer, true);
+        controller->recursiveSetRuleState(rule, thisContainer->getChildren(), thisContainer, HSSRuleStateOn);
+        controller->currentContextPop();
+    }
+    container._objDefRulesChanged = false;
 }
 
 
