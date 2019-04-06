@@ -95,11 +95,13 @@ AXRController::~AXRController()
 {
     axr_log(LoggerChannelGeneralSpecific, "AXRController: destructing controller");
 
+    d->currentContext.clear();
     d->objectTree.clear();
     d->styleSheetUrls.clear();
     d->rules.clear();
     d->parserTree.clear();
     d->lastSelection.clear();
+    d->root.clear();
     delete d;
 }
 
