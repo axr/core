@@ -66,7 +66,6 @@ namespace AXR
 
         // Shared pointer to the data source and stream to read from it
         QSharedPointer<AXRBuffer> file;
-        QTextStream *textStream;
 
         // The Unicode character that is currently being processed
         HSSChar currentChar;
@@ -104,24 +103,15 @@ HSSTokenizer::HSSTokenizer()
 
 HSSTokenizer::~HSSTokenizer()
 {
-    if (d->textStream)
-        delete d->textStream;
-
     delete d;
 }
 
 /*!
  * Resets all properties of the tokenizer to their defaults,
- * and sets the input buffer to \c NULL.
+ * and clears the file
  */
 void HSSTokenizer::reset()
 {
-    if (d->textStream)
-    {
-        delete d->textStream;
-        d->textStream = NULL;
-    }
-
     if (d->file)
         d->file.clear();
 
@@ -185,7 +175,7 @@ size_t HSSTokenizer::currentColumn() const
 
 bool HSSTokenizer::atEndOfSource()
 {
-    return d->textStream ? d->textStream->atEnd() : true;
+    return d->iterator == d->bufferEnd;
 }
 
 /*!
@@ -199,11 +189,13 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
     }
     else
     {
-        *d->textStream >> d->currentChar;
+        d->currentChar = HSSChar(utf8::next(d->iterator, d->bufferEnd));
     }
 
     axr_log(LoggerChannelHSSTokenizer, HSSString::format("Read character %c (line %d, col %d)", d->currentChar.data(), d->currentLine, d->currentColumn));
 
+    d->index += 1;
+    
     d->currentColumn++;
 
     return HSSTokenizerOK;
@@ -313,8 +305,6 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
 QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
 {
     QSharedPointer<HSSToken> ret;
-    if (!d->textStream)
-        return ret;
 
     // Store the current position in the buffer
     size_t savedPosition = d->index;
@@ -345,15 +335,21 @@ QSharedPointer<HSSToken> HSSTokenizer::peekNextToken()
  */
 void HSSTokenizer::resetPeek()
 {
-    if (!d->textStream)
-        return;
-
     // Restore the saved position in the buffer
     // We start one character before we were before, since we are re-reading the character
-    d->textStream->seek(d->textStream->pos() - (d->peekPositionOffset + 1));
+    size_t delta = (d->peekPositionOffset + 1);
+
+    d->index -= delta;
     d->currentLine -= d->peekLineOffset;
     d->currentColumn -= (d->peekColumnOffset + 1);
 
+    if (d->currentChar == '\0')
+        delta -= 1;
+        
+    for (int i = 0; i<delta; ++i)
+    {
+        HSSChar currentChar = utf8::prior(d->iterator, d->bufferBegin);
+    }
     this->readNextChar();
 
     // Reset the peek offsets
