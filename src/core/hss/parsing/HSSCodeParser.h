@@ -138,6 +138,7 @@ namespace AXR
         
         bool readNextStatement();
         void readNextToken();
+        QSharedPointer<HSSParserNode> readStringArgument();
         bool atEndOfSource();
         void skip(HSSTokenType type);
 

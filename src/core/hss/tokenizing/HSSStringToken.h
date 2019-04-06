@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,32 +41,39 @@
  *
  ********************************************************************/
 
-#ifndef HSSVALUETOKEN_H
-#define HSSVALUETOKEN_H
+#ifndef HSSSTRINGTOKEN_H
+#define HSSSTRINGTOKEN_H
 
 #include "AXRGlobal.h"
 #include "HSSToken.h"
 
-#define VALUE_TOKEN(thetoken) (qSharedPointerCast<HSSValueToken>(thetoken))
-
 namespace AXR
 {
-    class AXR_API HSSValueToken : public HSSToken
+    class HSSParserNode;
+
+    class AXR_API HSSStringToken : public HSSToken
     {
     public:
-        HSSValueToken(HSSTokenType type, AXRString value, qint64 line, qint64 column);
-        HSSValueToken(HSSTokenType type, HSSUnit value, qint64 line, qint64 column);
-        virtual ~HSSValueToken();
+        HSSStringToken(HSSTokenType type, qint64 line, qint64 column);
+        virtual ~HSSStringToken();
+        void setValue(AXRString newValue);
         AXRString getString();
-        HSSUnit getLong();
         bool equals(HSSTokenType otherType, AXRString otherValue);
-        bool equals(HSSTokenType otherType, HSSUnit otherValue);
         AXRString toString();
-        bool isNumeric();
+        
+        void setHasArguments(bool newValue);
+        bool hasArguments() const;
+        
+        void addArgument(QSharedPointer<HSSParserNode> parserNode);
+        const std::vector<QSharedPointer<HSSParserNode> > & getArguments() const;
+        void addIndex(size_t index);
+        const std::vector<size_t> & getIndexes() const;
 
     private:
         AXRString stringValue;
-        HSSUnit longValue;
+        bool _hasArguments;
+        std::vector<QSharedPointer<HSSParserNode> > _arguments;
+        std::vector<size_t> _indexes;
     };
 }
 

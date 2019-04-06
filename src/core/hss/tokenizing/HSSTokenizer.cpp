@@ -60,7 +60,7 @@ namespace AXR
         HSSTokenizerPrivate()
         : file(), currentChar(), index(0), bufferLength(0), currentTokenText(),
           currentLine(), currentColumn(), peekPositionOffset(),
-          peekLineOffset(), peekColumnOffset(), preferHex()
+          peekLineOffset(), peekColumnOffset(), preferHex(), isReadingString(false)
         {
         }
 
@@ -92,6 +92,10 @@ namespace AXR
         // If you are expecting a hexadecimal number, set this to true
         // don't forget to reset it afterwards
         bool preferHex;
+        
+        //when reading a string, we need to know this state to continue reading it
+        //after an argument is closed
+        bool isReadingString;
     };
 }
 
@@ -560,39 +564,95 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
     const size_t line = d->currentLine;
     const size_t column = d->currentColumn - 1;
 
-    QSharedPointer<HSSToken> ret;
-    if (d->currentChar == '"')
+    if (d->currentChar != '"' && d->currentChar != '\'')
+        return errorState;
+
+    bool isDoubleQuote = d->currentChar == '"';
+    const char compareChar = isDoubleQuote ? '"' : '\'';
+    
+    QSharedPointer<HSSStringToken> strToken(new HSSStringToken((isDoubleQuote ?HSSDoubleQuoteString : HSSSingleQuoteString), line, column));
+    
+    size_t index = 1;
+    
+    this->storeCurrentCharAndReadNext();
+    bool stringDone = false;
+    while (!stringDone)
     {
-        this->storeCurrentCharAndReadNext();
-        while (d->currentChar != '"')
+        stringDone = true;
+        if (this->atEndOfSource())
         {
-            if (this->atEndOfSource())
-            {
-                break;
-            }
+            break;
+        }
+        if (d->currentChar == '%')
+        {
+            strToken->setHasArguments(true);
+            strToken->addIndex(index);
+            //stop here
+        }
+        else if (d->currentChar != compareChar)
+        {
+            //continue
+            stringDone = false;
+            this->storeCurrentCharAndReadNext();
+            ++index;
+        }
+        else
+        {
+            //read end quotes
             this->storeCurrentCharAndReadNext();
         }
-
-        this->storeCurrentCharAndReadNext();
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSDoubleQuoteString, this->extractCurrentTokenText(), line, column));
     }
-    else if (d->currentChar == '\'')
+
+    strToken->setValue(this->extractCurrentTokenText());
+    return strToken;
+}
+
+QSharedPointer<HSSStringToken> HSSTokenizer::readString(QSharedPointer<HSSStringToken> strToken, bool & done)
+{
+    done = true;
+
+    HSSString currentStr = strToken->getString();
+    bool isDoubleQuote = strToken->getType() == HSSDoubleQuoteString;
+    const char compareChar = isDoubleQuote ? '"' : '\'';
+
+    size_t index = currentStr.length();
+
+    bool stringDone = false;
+    while (!stringDone)
     {
-        this->storeCurrentCharAndReadNext();
-        while (d->currentChar != '\'')
+        stringDone = true;
+        if (this->atEndOfSource())
         {
-            if (this->atEndOfSource())
-            {
-                break;
-            }
+            break;
+        }
+        if (d->currentChar == '%')
+        {
+            //communicate to outside
+            done = false;
+            strToken->addIndex(index);
+            //stop here
+        }
+        else if (d->currentChar != compareChar)
+        {
+            //continue
+            stringDone = false;
+            this->storeCurrentCharAndReadNext();
+            ++index;
+        }
+        else
+        {
+            //read end quotes
             this->storeCurrentCharAndReadNext();
         }
-
-        this->storeCurrentCharAndReadNext();
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSingleQuoteString, this->extractCurrentTokenText(), line, column));
     }
-
-    return ret;
+    
+    AXRString endStr = this->extractCurrentTokenText();
+    QSharedPointer<HSSStringToken> endToken = QSharedPointer<HSSStringToken>(new HSSStringToken(strToken->getType(), strToken->line, strToken->column));
+    endToken->setValue(endStr);
+    
+    strToken->setValue(currentStr + endStr);
+    
+    return endToken;
 }
 
 /*!

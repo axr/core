@@ -44,7 +44,7 @@
 #ifndef HSSSTRINGCONSTANT_H
 #define HSSSTRINGCONSTANT_H
 
-#include "HSSParserNode.h"
+#include "HSSScopedParserNode.h"
 
 namespace AXR
 {
@@ -54,16 +54,22 @@ namespace AXR
      *  Text literals that are encolsed by single quotes ' or double quotes " in HSS.
      *  This class provides storage for that text.
      */
-    class AXR_API HSSStringConstant : public HSSParserNode
+    class AXR_API HSSStringConstant : public HSSScopedParserNode
     {
     public:
-        static QSharedPointer<HSSStringConstant> stringToConstant(AXRString value, AXRController * controller);
+        static QSharedPointer<HSSStringConstant> stringToConstant(HSSString value, AXRController * controller);
 
         /**
          *  Creates a new instance of a string constant node which holds the given value.
          *  @param value    A string containing the value for the constant.
          */
-        HSSStringConstant(AXRString value, AXRController * controller);
+        HSSStringConstant(HSSString value, AXRController * controller);
+        
+        /**
+         *  Copy constructor
+         *  @param orig    The instante from which to copy.
+         */
+        HSSStringConstant(const HSSStringConstant & orig);
 
         /**
          *  Clones an instance of HSSStringConstant and gives a shared pointer of the
@@ -81,15 +87,15 @@ namespace AXR
          *  Setter for the value.
          *  @param newValue     A string containing the new value for this constant.
          */
-        void setValue(AXRString newValue);
+        void setValue(HSSString newValue);
 
         /**
          *  Getter for the value.
          */
-        AXRString getValue();
+        HSSString getValue();
 
-        AXRString toString();
-        AXRString stringRep();
+        HSSString toString();
+        HSSString stringRep();
 
         /**
          *  Each node overrides this method to compare against another node
@@ -97,12 +103,41 @@ namespace AXR
          *  @return Wether the node is equal to the given one.
          */
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+        
+        void setHasArguments(bool newValue);
+        bool hasArguments() const;
+        void setArguments(const std::vector<QSharedPointer<HSSParserNode> > & args);
+        void addArgument(QSharedPointer<HSSParserNode> parserNode);
+        void setIndexes(const std::vector<size_t> &indexes);
+        HSSString evaluate();
+        bool hasStartQuote() const;
+        void setHasStartQuote(bool newValue);
+        bool hasEndQuote() const;
+        void setHasEndQuote(bool newValue);
+        
+        void setThisObj(QSharedPointer<HSSDisplayObject> value);
+        void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+        
+        /**
+         *  Method to be passed as callback when observing changes that will affect value.
+         *  @param source   The property which we are observing.
+         *  @param data     A pointer to the data that is sent along the notification.
+         */
+        void valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> theObj);
 
     protected:
-        AXRString value;
+        HSSString value;
 
     private:
+        bool _hasArguments;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        std::vector<QSharedPointer<HSSParserNode> > _arguments;
+        std::vector<size_t> _indexes;
+        bool _hasStartQuote;
+        bool _hasEndQuote;
+
+        AXRString _evaluateNode(QSharedPointer<HSSParserNode> parserNode);
+        void _bindToArguments();
     };
 }
 

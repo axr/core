@@ -73,6 +73,7 @@ namespace AXR
         std::stack<QSharedPointer<HSSObject> > currentObjectContext;
         AXRString _lastObjectType;
         QSharedPointer<HSSContainer> _containerContextObj;
+        bool ignoreTokenReadCalls;
     };
 }
 
@@ -84,6 +85,7 @@ HSSCodeParser::HSSCodeParser(HSSParserReceiver * receiver)
     d->currentContext.push_back(HSSParserContextRoot);
     d->_containerContextObj = QSharedPointer<HSSContainer>(new HSSContainer(NULL));
     d->receiver = receiver;
+    d->ignoreTokenReadCalls = false;
 }
 
 HSSCodeParser::~HSSCodeParser()
@@ -1771,29 +1773,102 @@ bool HSSCodeParser::readValues(const QSharedPointer<HSSParserNode> &target, AXRS
         }
         else if (d->currentToken->isA(HSSSingleQuoteString) || d->currentToken->isA(HSSDoubleQuoteString))
         {
-            AXRString theString = VALUE_TOKEN(d->currentToken)->getString();
-            target->addValue(QSharedPointer<HSSStringConstant>(new HSSStringConstant(theString, d->controller)));
-            hasValue = true;
-
-            //notify the receiver
-            if (d->currentToken->isA(HSSSingleQuoteString))
+            QSharedPointer<HSSStringToken> strToken = qSharedPointerCast<HSSStringToken>(d->currentToken);
+            AXRString theString;
+            QSharedPointer<HSSStringConstant> ret;
+            
+            if (strToken->hasArguments())
             {
-                d->receiver->receiveParserEvent(HSSParserEventStringConstant, HSSStringConstant::stringToConstant(theString, d->controller));
+                if (d->notifiesReceiver)
+                {
+                    QSharedPointer<HSSStringConstant> firstChunk = HSSStringConstant::stringToConstant(strToken->getString(), d->controller);
+                    firstChunk->setHasEndQuote(false);
+                    //notify the receiver
+                    d->receiver->receiveParserEvent(HSSParserEventStringConstant, firstChunk);
+                }
+                this->readNextToken();
+                if (this->atEndOfSource())
+                    return errorState;
+                
+                QSharedPointer<HSSParserNode> arg = this->readStringArgument();
+                strToken->addArgument(arg);
+                
+                if (d->currentToken->isA(HSSBlockClose) && d->notifiesReceiver)
+                {
+                    //notify the receiver
+                    d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol("}", d->controller));
+                    if (this->atEndOfSource())
+                        return errorState;
+                }
+                
+                bool stringDone = false;
+                QSharedPointer<HSSStringToken> strChunk;
+                while(!stringDone){
+                    //readString() will set stringDone to false, and re-set it to true if needed
+                    strChunk = d->tokenizer->readString(strToken, stringDone);
+                    
+                    this->readNextToken();
+                    if (this->atEndOfSource())
+                        return errorState;
+                    
+                    if (!stringDone)
+                    {
+                        //notify the mid chunk of the string
+                        if (d->notifiesReceiver)
+                        {
+                            QSharedPointer<HSSStringConstant> midChunk = HSSStringConstant::stringToConstant(strChunk->getString(), d->controller);
+                            midChunk->setHasStartQuote(false);
+                            midChunk->setHasEndQuote(false);
+                            //notify the receiver
+                            d->receiver->receiveParserEvent(HSSParserEventStringConstant, midChunk);
+                        }
+                        
+                        QSharedPointer<HSSParserNode> arg = this->readStringArgument();
+                        strToken->addArgument(arg);
+                        
+                        if (d->currentToken->isA(HSSBlockClose) && d->notifiesReceiver)
+                        {
+                            //notify the receiver
+                            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol("}", d->controller));
+                        }
+                        if (this->atEndOfSource())
+                            return errorState;
+                    }
+                }
+                //notify the end chunk of the string
+                if (d->notifiesReceiver)
+                {
+                    QSharedPointer<HSSStringConstant> endChunk = HSSStringConstant::stringToConstant(strChunk->getString(), d->controller);
+                    endChunk->setHasStartQuote(false);
+                    //notify the receiver
+                    d->receiver->receiveParserEvent(HSSParserEventStringConstant, endChunk);
+                }
+                
+                //strToken now contains the full string
+                ret = QSharedPointer<HSSStringConstant>(new HSSStringConstant(strToken->getString(), d->controller));
+                ret->setArguments(strToken->getArguments());
+                ret->setIndexes(strToken->getIndexes());
+                
             }
             else
             {
-                d->receiver->receiveParserEvent(HSSParserEventStringConstant, HSSStringConstant::stringToConstant(theString, d->controller));
+                theString = strToken->getString();
+                ret = QSharedPointer<HSSStringConstant>(new HSSStringConstant(theString, d->controller));
+                if (d->notifiesReceiver)
+                {
+                    //notify the receiver
+                    d->receiver->receiveParserEvent(HSSParserEventStringConstant, ret);
+                }
+                this->readNextToken();
+                if (this->atEndOfSource())
+                    return errorState;
             }
-            
-            this->readNextToken();
-            if (this->atEndOfSource())
-                return false;
             
             this->skip(HSSWhitespace);
             if (this->atEndOfSource())
-                return false;
+                return errorState;
             
-            //number literal
+            return ret;
         }
         else if (d->currentToken->isA(HSSNumber) || d->currentToken->isA(HSSPercentageNumber) || d->currentToken->isA(HSSParenthesisOpen))
         {
@@ -3849,6 +3924,49 @@ void HSSCodeParser::readNextToken()
         d->line = d->tokenizer->currentLine();
         d->column = d->tokenizer->currentColumn() - 1;
     }
+}
+
+
+QSharedPointer<HSSParserNode> HSSCodeParser::readStringArgument()
+{
+    QSharedPointer<HSSParserNode> errorState;
+    QSharedPointer<HSSParserNode> ret;
+    
+    //skip the %
+    if (d->currentToken->isA(HSSSymbol) && VALUE_TOKEN(d->currentToken)->getString() == "%") {
+        this->skip(HSSSymbol);
+        if (this->atEndOfSource())
+            return errorState;
+    }
+    
+    bool hasBlock = false;
+    if (d->currentToken->isA(HSSBlockOpen))
+    {
+        hasBlock = true;
+        this->skip(HSSBlockOpen);
+        if (this->atEndOfSource())
+            return errorState;
+        
+        this->skip(HSSWhitespace);
+        if (this->atEndOfSource())
+            return errorState;
+    }
+    
+    bool valueValid = true;
+    bool currentIgnoresTokenReadCallsValue = d->ignoreTokenReadCalls;
+    if (!hasBlock)
+    {
+        //read the value, but du not advance the current token yet
+        this->setIgnoreTokenReadCalls(true);
+    }
+    ret = this->readVal("argument", valueValid);
+    if (!hasBlock)
+    {
+        this->setIgnoreTokenReadCalls(currentIgnoresTokenReadCallsValue);
+    }
+    if (!valueValid || this->atEndOfSource())
+        return errorState;
+    return ret;
 }
 
 bool HSSCodeParser::atEndOfSource()

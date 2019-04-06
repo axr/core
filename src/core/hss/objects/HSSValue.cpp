@@ -154,7 +154,15 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
         case HSSParserNodeTypeExpression:
             parserNode->observe("__impl_private__expressionResult", "__impl_private__valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
             break;
-
+        case HSSParserNodeTypeStringConstant:
+        {
+            QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant>(parserNode);
+            if (theString->hasArguments())
+            {
+                parserNode->observe("__impl_private__remoteValue", "__impl_private__valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+            }
+            break;
+        }
         default:
             break;
     }
@@ -322,6 +330,9 @@ void HSSValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
                 break;
             case HSSParserNodeTypeFunction:
                 qSharedPointerCast<HSSFunction>(this->value)->setScope(newScope);
+                break;
+            case HSSParserNodeTypeStringConstant:
+                qSharedPointerCast<HSSStringConstant>(this->value)->setScope(newScope);
                 break;
             default:
                 break;

@@ -27,7 +27,7 @@
  *
  *      AUTHORS: see AUTHORS file
  *
- *      COPYRIGHT: ©2013 - All Rights Reserved
+ *      COPYRIGHT: ©2019 - All Rights Reserved
  *
  *      LICENSE: see LICENSE file
  *
@@ -41,33 +41,69 @@
  *
  ********************************************************************/
 
-#ifndef HSSVALUETOKEN_H
-#define HSSVALUETOKEN_H
+#include "axr.h"
+#include "HSSStringToken.h"
 
-#include "AXRGlobal.h"
-#include "HSSToken.h"
+using namespace AXR;
 
-#define VALUE_TOKEN(thetoken) (qSharedPointerCast<HSSValueToken>(thetoken))
-
-namespace AXR
+HSSStringToken::HSSStringToken(HSSTokenType type, qint64 line, qint64 column)
+: HSSToken(type, line, column)
+, _hasArguments(false)
 {
-    class AXR_API HSSValueToken : public HSSToken
-    {
-    public:
-        HSSValueToken(HSSTokenType type, AXRString value, qint64 line, qint64 column);
-        HSSValueToken(HSSTokenType type, HSSUnit value, qint64 line, qint64 column);
-        virtual ~HSSValueToken();
-        AXRString getString();
-        HSSUnit getLong();
-        bool equals(HSSTokenType otherType, AXRString otherValue);
-        bool equals(HSSTokenType otherType, HSSUnit otherValue);
-        AXRString toString();
-        bool isNumeric();
-
-    private:
-        AXRString stringValue;
-        HSSUnit longValue;
-    };
+    this->type = type;
 }
 
-#endif
+HSSStringToken::~HSSStringToken()
+{
+}
+
+void HSSStringToken::setValue(AXRString newValue)
+{
+    this->stringValue = newValue;
+}
+
+AXRString HSSStringToken::getString()
+{
+    return this->stringValue;
+}
+
+bool HSSStringToken::equals(HSSTokenType otherType, AXRString otherValue)
+{
+    return otherType == this->type && otherValue == this->stringValue;
+}
+
+AXRString HSSStringToken::toString()
+{
+    HSSString tokenstr = this->tokenStringRepresentation(this->type);
+    return "HSSStringToken of type: " + tokenstr + " and value: " + this->stringValue;
+}
+
+void HSSStringToken::setHasArguments(bool newValue)
+{
+    this->_hasArguments = newValue;
+}
+
+bool HSSStringToken::hasArguments() const
+{
+    return this->_hasArguments;
+}
+
+void HSSStringToken::addArgument(QSharedPointer<AXR::HSSParserNode> parserNode)
+{
+    this->_arguments.push_back(parserNode);
+}
+
+const std::vector<QSharedPointer<HSSParserNode> > & HSSStringToken::getArguments() const
+{
+    return this->_arguments;
+}
+
+void HSSStringToken::addIndex(size_t index)
+{
+    this->_indexes.push_back(index);
+}
+
+const std::vector<size_t> & HSSStringToken::getIndexes() const
+{
+    return this->_indexes;
+}

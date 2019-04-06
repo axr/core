@@ -52,6 +52,7 @@ namespace AXR
 {
     class AXRBuffer;
     class HSSToken;
+    class HSSStringToken;
     class HSSTokenizerPrivate;
 
     /*!
@@ -88,6 +89,7 @@ namespace AXR
         QSharedPointer<HSSToken> readNextToken();
         QSharedPointer<HSSToken> peekNextToken();
         void resetPeek();
+        QSharedPointer<HSSStringToken> readString(QSharedPointer<HSSStringToken> strToken, bool & done);
 
     private:
         HSS_TOKENIZING_STATUS skipWhitespace();

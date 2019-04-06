@@ -1202,7 +1202,7 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
     if (currentValue && currentValue->equalTo(theObj))
     {
         currentValue->setSpecificity(theObj->getSpecificity());
-        
+
         //set this object and scope
         ///@todo this should target any subclass of display object
         if (this->isA(HSSObjectTypeContainer) || this->isA(HSSObjectTypeTextBlock))
@@ -1275,6 +1275,8 @@ void HSSObject::setComputed(AXRString propertyName, QSharedPointer<HSSObject> th
                     {
                         case HSSParserNodeTypeExpression:
                         case HSSParserNodeTypeFunction:
+                        case HSSParserNodeTypeStringConstant:
+                        case HSSParserNodeTypePropertyPath:
                         {
                             theObj->observe("__impl_private__valueChanged", propertyName, this, new HSSValueChangedCallback<HSSObject>(this, &HSSObject::propertyChanged));
                             break;
