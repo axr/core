@@ -72,12 +72,6 @@ QSharedPointer<HSSClonable> HSSFunction::cloneImpl() const
 {
     QSharedPointer<HSSFunction> clone = QSharedPointer<HSSFunction>(new HSSFunction(*this));
 
-    for (std::deque<QSharedPointer<HSSParserNode> >::const_iterator it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
-    {
-        QSharedPointer<HSSParserNode> clonedArgument = (*it)->clone();
-        clone->_arguments.push_back(clonedArgument);
-    }
-
     return clone;
 }
 
@@ -117,28 +111,13 @@ QSharedPointer<HSSObject> HSSFunction::evaluate()
 
 QSharedPointer<HSSObject> HSSFunction::evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
 {
-    if (this->_isDirty)
-    {
-        this->_isDirty = false;
-
-        this->_value = this->_evaluate();
-    }
-
-    return this->_value;
+    //override this
+    return QSharedPointer<HSSObject>();
 }
 
 QSharedPointer<HSSObject> HSSFunction::_evaluate()
 {
-    AXRDocument* document = this->getController()->document();
-    QSharedPointer<HSSMultipleValue> multiValue = QSharedPointer<HSSMultipleValue>(new HSSMultipleValue(this->getController()));
-    Q_FOREACH(QSharedPointer<HSSParserNode> node, this->getArguments())
-    {
-        multiValue->add(HSSValue::valueFromParserNode(this->getController(), node, 0, this->getThisObj(), this->scope));
-    }
-    multiValue->setThisObj(this->getThisObj());
-    document->evaluateCustomFunction(this->getName(), multiValue);
-    //next time we call this custom function we want to reevaluate
-    this->setDirty(true);
+    //override this
     return QSharedPointer<HSSObject>();
 }
 
@@ -150,54 +129,11 @@ void HSSFunction::propertyChanged(const AXRString property, const AXRString targ
 void HSSFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
-    std::deque<QSharedPointer<HSSParserNode> >::const_iterator it;
-    for (it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
-    {
-        const QSharedPointer<HSSParserNode> node = (*it);
-        switch (node->getType())
-        {
-        case HSSParserNodeTypeFunctionCall:
-        {
-            QSharedPointer<HSSFunction> func = qSharedPointerCast<HSSFunction > (node);
-            func->setScope(newScope);
-            break;
-        }
-
-        case HSSParserNodeTypeExpression:
-        {
-            QSharedPointer<HSSExpression> exp = qSharedPointerCast<HSSExpression > (node);
-            exp->setScope(newScope);
-            break;
-        }
-
-        default:
-            break;
-        }
-
-        switch (node->getStatementType())
-        {
-        case HSSStatementTypeObjectDefinition:
-        {
-            QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (node);
-            objdef->setScope(newScope);
-            break;
-        }
-
-        default:
-            break;
-        }
-    }
 }
 
 void HSSFunction::setThisObj(QSharedPointer<HSSDisplayObject> newThis)
 {
     HSSParserNode::setThisObj(newThis);
-    std::deque<QSharedPointer<HSSParserNode> >::const_iterator it;
-    for (it = this->_arguments.begin(); it != this->_arguments.end(); ++it)
-    {
-        const QSharedPointer<HSSParserNode> node = (*it);
-        node->setThisObj(newThis);
-    }
 }
 
 void HSSFunction::setDirty(bool value)
@@ -223,21 +159,6 @@ bool HSSFunction::isA(HSSFunctionType type) const
 HSSFunctionType HSSFunction::getFunctionType() const
 {
     return this->functionType;
-}
-
-void HSSFunction::setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments)
-{
-    this->_arguments = arguments;
-}
-
-void HSSFunction::addArgument(QSharedPointer<HSSParserNode> argument)
-{
-    this->_arguments.push_back(argument);
-}
-
-std::deque<QSharedPointer<HSSParserNode> > HSSFunction::getArguments()
-{
-    return this->_arguments;
 }
 
 void HSSFunction::setName(AXRString newName)

@@ -3889,7 +3889,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readCustomFunction()
                 return errorState;
         }
     }
-    QSharedPointer<HSSFunction> theFunction = QSharedPointer<HSSFunction>(new HSSFunction(HSSFunctionTypeCustom, d->controller));
+    QSharedPointer<HSSCustomFunction> theFunction = QSharedPointer<HSSCustomFunction>(new HSSCustomFunction(d->controller));
     theFunction->setArguments(arguments);
     theFunction->setName(name);
     this->readNextToken();
