@@ -48,6 +48,7 @@
 
 namespace AXR
 {
+    class HSSArgument;
     class HSSSimpleSelection;
 
     /**
@@ -85,11 +86,8 @@ namespace AXR
          *  data is expected.
          */
         QSharedPointer<HSSObject> evaluate();
-
-        /**
-         *  @todo I think this one is not used
-         */
-        QSharedPointer<HSSObject> evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments);
+        
+        virtual QSharedPointer<HSSObject> evaluate(const std::vector<QSharedPointer<HSSArgument> > & arguments);
 
         /**
          *  @todo make protected or private

@@ -109,10 +109,10 @@ QSharedPointer<HSSObject> HSSFunction::evaluate()
     return this->_value;
 }
 
-QSharedPointer<HSSObject> HSSFunction::evaluate(std::deque<QSharedPointer<HSSParserNode> > arguments)
+QSharedPointer<HSSObject> HSSFunction::evaluate(const std::vector<QSharedPointer<HSSArgument> > & arguments)
 {
     //override this
-    return QSharedPointer<HSSObject>();
+    return this->evaluate();
 }
 
 QSharedPointer<HSSObject> HSSFunction::_evaluate()
