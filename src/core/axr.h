@@ -162,6 +162,7 @@
 #include "HSSToggleTimerFunction.h"
 #include "HSSInsertFunction.h"
 #include "HSSIfFunction.h"
+#include "HSSEvaluableFunction.h"
 #include "HSSArgument.h"
 #include "HSSFunctionFunction.h"
 #include "HSSReturnFunction.h"

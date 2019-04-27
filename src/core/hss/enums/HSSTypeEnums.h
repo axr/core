@@ -82,6 +82,7 @@ namespace AXR
         HSSParserNodeTypeWhitespaceNode, /**< Whitespace. */
         HSSParserNodeTypeCommentNode, /**< Comments. */
         HSSParserNodeTypeSymbolNode, /**< Other symbols. */
+        HSSParserNodeTypeArgument, /**< Arguments of a function call. */
         HSSParserNodeTypeInvalidNode /**< Node type for holding invalid code. */
     };
     /** @} */
@@ -131,7 +132,9 @@ namespace AXR
         HSSStatementTypePropertyDefinition, /**< Define a value for a property name. */
         HSSStatementTypeObjectDefinition, /**< Define a reusable group of property definitions under a name. */
         HSSStatementTypeComment,
-        HSSStatementTypeInstruction
+        HSSStatementTypeInstruction,
+        HSSStatementTypeVarDeclaration,
+        HSSStatementTypeAssignment
     };
     /** @} */
 
@@ -263,7 +266,10 @@ namespace AXR
         HSSFunctionTypeStartTimer, /**< Adds a timer of repeating execution. */
         HSSFunctionTypeStopTimer, /**< Removes a timer of repeating execution. */
         HSSFunctionTypeToggleTimer, /**< Adds or removes a timer of repeating execution. */
-        HSSFunctionTypeInsert /**< Inserts text into a container. */
+        HSSFunctionTypeInsert, /**< Inserts text into a container. */
+        HSSFunctionTypeFunction, /**< User defined functions. */
+        HSSFunctionTypeCall, /**< What user defined function to call and with which arguments. */
+        HSSFunctionTypeReturn, /**< Set the functions return value. */
     };
     /** @} */
 

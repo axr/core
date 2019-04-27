@@ -679,6 +679,24 @@ void AXRDocument::receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HS
                     }
                     break;
                 }
+                    
+                case HSSStatementTypeVarDeclaration:
+                {
+                    QSharedPointer<HSSVarDeclaration> varDecl = qSharedPointerCast<HSSVarDeclaration>(node);
+                    d->controller->setGlobalVariable(varDecl->name(), varDecl->assignment()->evaluate());
+                    break;
+                }
+                case HSSStatementTypeAssignment:
+                {
+                    QSharedPointer<HSSAssignment> asgmt = qSharedPointerCast<HSSAssignment>(node);
+                    QSharedPointer<HSSPropertyPath> ppath = asgmt->propertyPath();
+                    if (ppath->size() == 1)
+                    {
+                        QSharedPointer<HSSPropertyPathNode> pnode = ppath->front();
+                        d->controller->setGlobalVariable(pnode->evaluate(), asgmt->evaluate());
+                    }
+                    break;
+                }
 
                 default:
                 {

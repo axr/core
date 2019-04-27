@@ -308,6 +308,8 @@ bool HSSObject::isFunction(AXRString value, AXRString property)
             || value == "stopTimer"
             || value == "toggleTimer"
             || value == "insert"
+            || value == "function"
+            || value == "return"
             )
     {
         return true;

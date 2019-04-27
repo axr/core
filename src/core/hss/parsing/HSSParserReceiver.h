@@ -66,7 +66,9 @@ namespace AXR
         HSSParserEventPercentageConstant,
         HSSParserEventStringConstant,
         HSSParseEventKeywordConstant,
-        HSSParseEventObjectNameConstant,
+        HSSParserEventVar,
+        HSSParserEventVariableDeclaration,
+        HSSParserEventVariableName,
         HSSParserEventObjectDefinition,
         HSSParserEventObjectType,
         HSSParserEventObjectName,
@@ -74,6 +76,7 @@ namespace AXR
         HSSParserEventFlagName,
         HSSParserEventFunctionName,
         HSSParserEventFunctionModifier,
+        HSSParserEventAssignment,
         HSSParserEventOther,
         HSSParserEventInvalid
     };
