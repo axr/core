@@ -946,19 +946,43 @@ void HSSContainer::setContent(QSharedPointer<HSSObject> theObj)
     if (theObj->isA(HSSObjectTypeValue))
     {
         QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
-        if (parserNode->isA(HSSParserNodeTypeStringConstant))
+        switch (parserNode->getType())
         {
-//            AXRString text = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-//            this->setContentText(text);
-        } else if (parserNode->isA(HSSParserNodeTypeFunctionCall))
-        {
-            QSharedPointer<HSSFunction> function = qSharedPointerCast<HSSFunction>(parserNode);
-            QSharedPointer<HSSObject> remoteObj = function->evaluate();
-            if(remoteObj && remoteObj->isA(HSSObjectTypeValue)){
-                QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
-                AXRString text = valueObj->getString();
-                this->setContentText(HSSObject::stripQuotes(text));
+            case HSSParserNodeTypeNumberConstant:
+            {
+                QSharedPointer<HSSNumberConstant> theNum = qSharedPointerCast<HSSNumberConstant>(parserNode);
+                theObj = this->computeValue("content", HSSStringConstant::string(HSSString::number(theNum->getValue()), this->getController()));
+                break;
             }
+            case HSSParserNodeTypeFunction:
+            {
+                QSharedPointer<HSSFunction> function = qSharedPointerCast<HSSFunction>(parserNode);
+                QSharedPointer<HSSObject> remoteObj = function->evaluate();
+                if(remoteObj && remoteObj->isA(HSSObjectTypeValue)){
+                    QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(remoteObj);
+                    AXRString text = valueObj->getString();
+                    this->setContentText(text.stripQuotes());
+                }
+                break;
+            }
+            case HSSParserNodeTypePropertyPath:
+            {
+                QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath> (parserNode);
+                QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+                ppath->observe();
+                if (searchResult && searchResult->isA(HSSObjectTypeValue))
+                {
+                    QSharedPointer<HSSValue> valueObj = qSharedPointerCast<HSSValue>(searchResult);
+                    AXRString text = valueObj->getString();
+                    this->setContentText(text.stripQuotes());
+                }
+                else
+                {
+                    AXRWarning("HSSContainer", "Path " + ppath->stringRep() + " did not yield any results.").raise();
+                }
+            }
+            default:
+                break;
         }
     }
     this->_simpleInsertComputed("content", theObj);
@@ -971,13 +995,30 @@ void HSSContainer::notifyContent(QSharedPointer<HSSObject> theObj)
         if (theObj->isA(HSSObjectTypeValue))
         {
             QSharedPointer<HSSParserNode> parserNode = qSharedPointerCast<HSSValue>(theObj)->getValue();
-            if (parserNode->isA(HSSParserNodeTypeStringConstant))
+            switch (parserNode->getType())
             {
-                AXRString textWithQuotes = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
-                this->setContentText(HSSObject::stripQuotes(textWithQuotes));
-                this->setNeedsLayout(true);
-                this->setDirty(true);
-                this->getController()->document()->setNeedsDisplay(true);
+                case HSSParserNodeTypeStringConstant:
+                {
+                    QSharedPointer<HSSStringConstant> theString = qSharedPointerCast<HSSStringConstant>(parserNode);
+                    AXRString strWithQuotes = theString->getValue();
+                    AXRString newStr = strWithQuotes.stripQuotes();
+                    this->setContentText(newStr);
+                    this->setNeedsLayout(true);
+                    this->setDirty(true);
+                    this->getController()->document()->setNeedsDisplay(true);
+                    break;
+                }
+                case HSSParserNodeTypeNumberConstant:
+                {
+                    QSharedPointer<HSSNumberConstant> theNum = qSharedPointerCast<HSSNumberConstant>(parserNode);
+                    this->setContentText(HSSString::number(theNum->getValue()));
+                    this->setNeedsLayout(true);
+                    this->setDirty(true);
+                    this->getController()->document()->setNeedsDisplay(true);
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
