@@ -200,7 +200,7 @@ HSS_TOKENIZING_STATUS HSSTokenizer::readNextChar()
 
     d->index += 1;
     
-    d->currentColumn++;
+    d->currentColumn += 1;
 
     return HSSTokenizerOK;
 }
@@ -717,7 +717,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
     }
     else
     {
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, '/', line, column));
+        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, "/", line, column));
     }
 
     return ret;

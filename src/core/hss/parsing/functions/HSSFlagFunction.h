@@ -72,7 +72,7 @@ namespace AXR
         HSSFlagFunction(HSSFlagFunctionType flagFunctionType, AXRController * controller);
 
         /**
-         *  Copy constructor for HSSAction objects. Do not call directly, use clone() instead.
+         *  Copy constructor for this class. Do not call directly, use clone() instead.
          */
         HSSFlagFunction(const HSSFlagFunction & orig);
 

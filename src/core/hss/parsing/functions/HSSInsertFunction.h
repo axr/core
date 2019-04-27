@@ -48,13 +48,8 @@
 
 namespace AXR
 {
-    class HSSPropertyDefinition;
-    class HSSSelectorChain;
-    
     /**
-     *  @brief Implementation of the override(<selector chains>]){ <property definition>,... } function in HSS.
-     *
-     *  Set up a an action that repeats by default
+     *  @brief Implementation of the insert() function in HSS.
      */
     class AXR_API HSSInsertFunction : public HSSTargetedFunction
     {

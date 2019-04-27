@@ -80,9 +80,9 @@ namespace AXR
         HSSInstruction(const HSSInstruction &orig);
 
         /**
-         *  Clones an instance of HSSAction and gives a shared pointer of the
+         *  Clones an instance of this class and gives a shared pointer of the
          *  newly instanciated object.
-         *  @return A shared pointer to the new HSSAction
+         *  @return A shared pointer to the new instance
          */
         QSharedPointer<HSSInstruction> clone() const;
 

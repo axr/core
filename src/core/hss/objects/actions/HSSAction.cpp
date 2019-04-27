@@ -52,9 +52,6 @@ AXRString HSSAction::actionTypeStringRepresentation(HSSActionType actionType)
     if (types.empty())
     {
         types[HSSActionTypeRequest] = "HSSActionTypeRequest";
-        types[HSSActionTypeSetProperty] = "HSSActionTypeSetProperty";
-        types[HSSActionTypeJavascript] = "HSSActionTypeJavascript";
-        types[HSSActionTypeJsFunction] = "HSSActionTypeJsFunction";
         types[HSSActionTypeAlert] = "HSSActionTypeAlert";
         types[HSSActionTypeLog] = "HSSActionTypeLog";
         types[HSSActionTypeFlag] = "HSSActionTypeFlag";

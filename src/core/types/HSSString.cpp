@@ -80,6 +80,8 @@ unsigned int HSSString::_count_decimals(HSSUnit num)
     while (std::abs(num) >= 0.0000001)
     {
         num = num * 10;
+        if (std::isinf(num))
+            return 0;
         count += 1;
         num = num - int(num);
     }

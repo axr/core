@@ -52,9 +52,9 @@ namespace AXR
     class HSSSelectorChain;
     
     /**
-     *  @brief Implementation of the override(<selector chains>]){ <property definition>,... } function in HSS.
+     *  @brief Implementation of the stopTimer(<timer name>]) function in HSS.
      *
-     *  Set up a an action that repeats by default
+     *  Stops an action that is repeating
      */
     class AXR_API HSSStopTimerFunction : public HSSFunction
     {

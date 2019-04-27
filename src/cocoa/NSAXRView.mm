@@ -180,13 +180,6 @@ using namespace AXR;
     return YES;
 }
 
-- (void)viewDidMoveToWindow
-{
-    if ([self window] != nil)
-    {
-        [[self window] setAcceptsMouseMovedEvents:TRUE];
-    }
-}
 
 - (void)mouseDown:(NSEvent *)theEvent
 {

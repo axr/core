@@ -437,9 +437,6 @@ namespace AXR
     {
         HSSActionTypeNone = 0, /**< Error state. */
         HSSActionTypeRequest, /**< Requests load another xml files into the current one. */
-        HSSActionTypeSetProperty, /**< This will probably not be used, it's based on an old idea. */
-        HSSActionTypeJavascript, /**< HSS object representation of a piece of JS code. */
-        HSSActionTypeJsFunction, /**< This will probably not be used, it's based on an old idea. */
         HSSActionTypeAlert, /**< Shows an alert box (not implemented yet). */
         HSSActionTypeLog, /**< Logs a value (where it appears is specific to the client application. */
         HSSActionTypeFlag, /**< All flagging functions have their corresponding HSS object representation. */

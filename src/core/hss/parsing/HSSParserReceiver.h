@@ -65,7 +65,7 @@ namespace AXR
         HSSParserEventNumberConstant,
         HSSParserEventPercentageConstant,
         HSSParserEventStringConstant,
-        HSSParseEventKeywordConstant,
+        HSSParserEventKeywordConstant,
         HSSParserEventVar,
         HSSParserEventVariableDeclaration,
         HSSParserEventVariableName,
