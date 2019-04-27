@@ -184,6 +184,9 @@ QSharedPointer<HSSPropertyDefinition> HSSPropertyDefinition::shared_from_this()
 QSharedPointer<HSSClonable> HSSPropertyDefinition::cloneImpl() const
 {
     QSharedPointer<HSSPropertyDefinition> clone = QSharedPointer<HSSPropertyDefinition>(new HSSPropertyDefinition(*this));
-    clone->setValue(this->value->clone());
+    if (this->value)
+    {
+        clone->setValue(this->value->clone());
+    }
     return clone;
 }

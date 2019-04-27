@@ -61,12 +61,7 @@ HSSLogFunction::~HSSLogFunction()
 HSSLogFunction::HSSLogFunction(const HSSLogFunction & orig)
 : HSSFunction(orig)
 {
-    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
-    for (it = orig.values.begin(); it != orig.values.end(); ++it)
-    {
-        const QSharedPointer<HSSParserNode> & parserNode = *it;
-        this->add(parserNode);
-    }
+    
 }
 
 QSharedPointer<HSSFunction> HSSLogFunction::clone() const
@@ -87,11 +82,18 @@ std::vector<QSharedPointer<HSSParserNode> > HSSLogFunction::getValues()
 
 void HSSLogFunction::setValues(std::vector<QSharedPointer<HSSParserNode> > newValues)
 {
+    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
+    QSharedPointer<HSSParserNode> parentNode = this->shared_from_this();
+    for (it = newValues.begin(); it != newValues.end(); ++it)
+    {
+        (*it)->setParentNode(parentNode);
+    }
     this->values = newValues;
 }
 
 void HSSLogFunction::add(QSharedPointer<HSSParserNode> newValue)
 {
+    newValue->setParentNode(this->shared_from_this());
     this->values.push_back(newValue);
 }
 
@@ -189,6 +191,46 @@ void HSSLogFunction::_logObject(QSharedPointer<HSSObject> theObj) const
 QSharedPointer<HSSClonable> HSSLogFunction::cloneImpl() const
 {
     QSharedPointer<HSSLogFunction> clone = QSharedPointer<HSSLogFunction>(new HSSLogFunction(*this));
-
+    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
+    for (it = this->values.begin(); it != this->values.end(); ++it)
+    {
+        const QSharedPointer<HSSParserNode> & parserNode = *it;
+        clone->add(parserNode->clone());
+    }
     return clone;
+}
+
+void HSSLogFunction::setScope(QSharedPointer<HSSSimpleSelection> newScope)
+{
+    HSSFunction::setScope(newScope);
+    //propagate values
+    std::vector<QSharedPointer<HSSParserNode> >::iterator it;
+    for (it = this->values.begin(); it != this->values.end(); ++it)
+    {
+        QSharedPointer<HSSParserNode> value = *it;
+        switch (value->getType())
+        {
+            case HSSParserNodeTypeExpression:
+                qSharedPointerCast<HSSExpression>(value)->setScope(newScope);
+                break;
+            case HSSParserNodeTypeFunction:
+                qSharedPointerCast<HSSFunction>(value)->setScope(newScope);
+                break;
+            case HSSParserNodeTypeStringConstant:
+                qSharedPointerCast<HSSStringConstant>(value)->setScope(newScope);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void HSSLogFunction::setThisObj(QSharedPointer<HSSDisplayObject> newThis)
+{
+    HSSFunction::setThisObj(newThis);
+    std::vector<QSharedPointer<HSSParserNode> >::iterator it;
+    for (it = this->values.begin(); it != this->values.end(); ++it)
+    {
+        (*it)->setThisObj(newThis);
+    }
 }

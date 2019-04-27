@@ -114,6 +114,9 @@ namespace AXR
          */
         virtual QSharedPointer<HSSObject> _evaluate();
 
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+        virtual void setThisObj(QSharedPointer<HSSDisplayObject> newThis);
+
     protected:
         std::vector<QSharedPointer<HSSParserNode> > values;
 

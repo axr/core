@@ -61,7 +61,7 @@ HSSInsertFunction::~HSSInsertFunction()
 HSSInsertFunction::HSSInsertFunction(const HSSInsertFunction & orig)
 : HSSTargetedFunction(orig)
 {
-    this->value = orig.value;
+    
 }
 
 QSharedPointer<HSSFunction> HSSInsertFunction::clone() const
@@ -73,6 +73,7 @@ QSharedPointer<HSSClonable> HSSInsertFunction::cloneImpl() const
 {
     QSharedPointer<HSSInsertFunction> clone = QSharedPointer<HSSInsertFunction>(new HSSInsertFunction(*this));
     this->cloneSelectorChains(clone);
+    clone->addValue(this->value->clone());
     return clone;
 }
 
@@ -171,6 +172,7 @@ QSharedPointer<HSSParserNode> HSSInsertFunction::getValue() const
 
 void HSSInsertFunction::addValue(QSharedPointer<HSSParserNode> parserNode)
 {
+    parserNode->setParentNode(this->shared_from_this());
     this->value = parserNode;
 }
 
