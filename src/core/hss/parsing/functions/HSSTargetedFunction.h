@@ -51,29 +51,11 @@ namespace AXR
     class HSSSelectorChain;
     
     /**
-     *  @brief Function type to manipulate the activation status of a flag.
-     *  All of the flagging functions [flag(), unflag() addTargeted and replaceTargeted()] are handled by this class.
+     *  @brief Abstract superclass for functions that use selector chains.
      */
     class AXR_API HSSTargetedFunction : public HSSFunction
     {
     public:
-        /**
-         *  Creates a new instance of a targeted function.
-         */
-        HSSTargetedFunction(HSSFunctionType type, AXRController * controller);
-        
-        /**
-         *  Copy constructor for the function. Do not call directly, use clone() instead.
-         */
-        HSSTargetedFunction(const HSSTargetedFunction & orig);
-        
-        /**
-         *  Clones an instance of HSSTargetedFunction and gives a shared pointer of the
-         *  newly instanciated object.
-         *  @return A shared pointer to the new HSSTargetedFunction
-         */
-        QSharedPointer<HSSFunction> clone() const;
-        
         /**
          *  Destructor for this class.
          */
@@ -134,11 +116,18 @@ namespace AXR
         
         void cloneSelectorChains(const QSharedPointer<HSSTargetedFunction> & clone) const;
 
-    protected:;
+    protected:
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
-
-    private:
-        virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        
+        /**
+         *  Creates a new instance of a targeted function.
+         */
+        HSSTargetedFunction(HSSFunctionType type, AXRController * controller);
+        
+        /**
+         *  Copy constructor for the function. Do not call directly, use clone() instead.
+         */
+        HSSTargetedFunction(const HSSTargetedFunction & orig);
     };
 }
 

@@ -57,11 +57,6 @@ HSSTargetedFunction::HSSTargetedFunction(const HSSTargetedFunction & orig)
     
 }
 
-QSharedPointer<HSSFunction> HSSTargetedFunction::clone() const
-{
-    return qSharedPointerCast<HSSFunction> (this->cloneImpl());
-}
-
 HSSTargetedFunction::~HSSTargetedFunction()
 {
     axr_log(LoggerChannelGeneralSpecific, "HSSTargetedFunction: destructing targeted function");
@@ -133,14 +128,6 @@ QSharedPointer<HSSSelectorChain> & HSSTargetedFunction::selectorChainsLast()
 size_t HSSTargetedFunction::selectorChainsSize() const
 {
     return this->selectorChains.size();
-}
-
-QSharedPointer<HSSClonable> HSSTargetedFunction::cloneImpl() const
-{
-    QSharedPointer<HSSTargetedFunction> clone = QSharedPointer<HSSTargetedFunction>(new HSSTargetedFunction(*this));
-    this->cloneSelectorChains(clone);
-    
-    return clone;
 }
 
 void HSSTargetedFunction::cloneSelectorChains(const QSharedPointer<HSSTargetedFunction> & clone) const
