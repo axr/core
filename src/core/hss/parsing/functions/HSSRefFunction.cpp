@@ -51,6 +51,7 @@ HSSRefFunction::HSSRefFunction(AXRController * controller)
 {
     this->_isAttached = false;
     this->_logsSelections = true;
+    this->_evaluatesReturnValue = true;
 
 }
 
@@ -61,6 +62,7 @@ HSSRefFunction::HSSRefFunction(const HSSRefFunction & orig)
     this->propertyPath = orig.propertyPath;
     this->_isAttached = orig._isAttached;
     this->_logsSelections = orig._logsSelections;
+    this->_evaluatesReturnValue = orig._evaluatesReturnValue;
 }
 
 QSharedPointer<HSSFunction> HSSRefFunction::clone() const
@@ -360,14 +362,21 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
     remoteObj = object->getComputedValue(propertyName);
     if (remoteObj)
     {
-        if (path->size() != 0)
-        {
-            ret = this->_getValueByPath(remoteObj, path);
+        if (this->evaluatesReturnValue()) {
+            if (path->size() != 0)
+            {
+                ret = this->_getValueByPath(remoteObj, path);
+            }
+            else
+            {
+                ret = this->_evaluateObj(remoteObj);
+            }
         }
         else
         {
-            ret = this->_evaluateObj(remoteObj);
+            return remoteObj;
         }
+        
     }
     return ret;
 }
@@ -447,4 +456,14 @@ void HSSRefFunction::setLogsSelections(bool newValue)
 const bool HSSRefFunction::logsSelections() const
 {
     return this->_logsSelections;
+}
+
+void HSSRefFunction::setEvaluatesReturnValue(bool newValue)
+{
+    this->_evaluatesReturnValue = newValue;
+}
+
+const bool HSSRefFunction::evaluatesReturnValue() const
+{
+    return this->_evaluatesReturnValue;
 }

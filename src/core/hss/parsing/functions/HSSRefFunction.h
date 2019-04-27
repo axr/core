@@ -195,12 +195,15 @@ namespace AXR
         void replaceChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> remoteObj);
         void setLogsSelections(bool newValue);
         const bool logsSelections() const;
+        void setEvaluatesReturnValue(bool newValue);
+        const bool evaluatesReturnValue() const;
 
     private:
         AXRString modifier;
         QSharedPointer<HSSPropertyPath> propertyPath;
         std::vector<QSharedPointer<HSSSelectorChain> > selectorChains;
         bool _isAttached;
+        bool _evaluatesReturnValue;
 
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
         QSharedPointer<HSSObject> _getValueByPath(QSharedPointer<HSSObject> object, QSharedPointer<HSSPropertyPath> path);
