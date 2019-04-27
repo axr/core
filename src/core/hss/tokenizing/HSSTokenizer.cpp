@@ -591,8 +591,19 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
         }
         if (d->currentChar == '%')
         {
-            strToken->setHasArguments(true);
-            strToken->addIndex(index);
+            HSSChar peekChar = utf8::peek_next(d->iterator, d->bufferEnd);
+            if (isLatin1Letter(peekChar) || peekChar == '_' || peekChar == '{') {
+                strToken->setHasArguments(true);
+                strToken->addIndex(index);
+            }
+            else
+            {
+                //it is a regular char of the string
+                //continue
+                stringDone = false;
+                this->storeCurrentCharAndReadNext();
+                ++index;
+            }
             //stop here
         }
         else if (d->currentChar != compareChar)
