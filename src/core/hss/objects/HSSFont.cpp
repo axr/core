@@ -102,7 +102,7 @@ void HSSFont::setDefaults()
     this->setDefault("size", DEFAULT_SIZE);
     this->setDefault("face", "Helvetica");
     this->setDefaultKw("color", "black");
-    this->setDefaultKw("weight", "normal");
+    this->setDefaultKw("weight", "regular");
 }
 
 AXRString HSSFont::toString()
@@ -139,12 +139,14 @@ bool HSSFont::isKeyword(AXRString value, AXRString property)
     if (property == "weight")
     {
         if (
-                value == "normal"
+                value == "regular"
+                || value == "normal"
                 || value == "bold"
                 || value == "medium"
                 || value == "thin"
                 || value == "light"
                 || value == "book"
+                || value == "black"
                 || value == "heavy"
                 || value == "ultralight"
                 || value == "semibold"

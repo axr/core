@@ -435,7 +435,7 @@ int AXRPlatformDriverQt::_weightClassFromKeyword(AXRString keyword)
         return 200;
     if (keyword == "light")
         return 300;
-    if (keyword == "normal")
+    if (keyword == "regular")
         return 400;
     if (keyword == "medium")
         return 500;
