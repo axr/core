@@ -59,6 +59,17 @@ HSSExpression::HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNod
     this->_isDirty = true;
 }
 
+HSSExpression::HSSExpression(HSSExpressionType type, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeExpression, controller)
+{
+    this->expressionType = type;
+    
+    this->leftval = 0;
+    this->rightval = 0;
+    this->_value = 0;
+    this->_isDirty = true;
+}
+
 HSSExpression::HSSExpression(const HSSExpression &orig)
 : HSSParserNode(orig)
 {

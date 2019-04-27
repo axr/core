@@ -182,6 +182,11 @@ namespace AXR
          *  @param type     The type of this expression subclass for identification purposes.
          */
         HSSExpression(HSSExpressionType type, QSharedPointer<HSSParserNode> _left, QSharedPointer<HSSParserNode> _right, AXRController * controller);
+        
+        /**
+         *  Constructor without nodes. Don't forget to assign them later
+         */
+        HSSExpression(HSSExpressionType type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSExpression objects. Do not call directly, use clone() instead.
