@@ -500,7 +500,10 @@ void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
         }
 
         default:
+        {
+            AXRWarning("HSSObject", "Unexpected parser node set to isA property").raise();
             break;
+        }
     }
     if (objdef)
     {

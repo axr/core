@@ -174,13 +174,16 @@ void HSSLogFunction::_logParserNode(QSharedPointer<HSSParserNode> parserNode) co
         }
 
         default:
+        {
+            AXRError("HSSLogFunction", "Unexpected parser node type in log function").raise();
             break;
+        }
     }
 }
 
 void HSSLogFunction::_logObject(QSharedPointer<HSSObject> theObj) const
 {
-    axr_log(LoggerChannelGeneral, "not implemented yet");
+    AXRError("HSSLogFunction", "Logging objects is not implemented yet").raise();
 }
 
 QSharedPointer<HSSClonable> HSSLogFunction::cloneImpl() const

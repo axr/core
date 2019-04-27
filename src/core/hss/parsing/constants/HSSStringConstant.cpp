@@ -256,7 +256,10 @@ AXRString HSSStringConstant::_evaluateNode(QSharedPointer<HSSParserNode> parserN
             }
         }
         default:
+        {
+            AXRError("HSSStringConstant", "Unexpected parser node type while evaluating argument").raise();
             break;
+        }
     }
     return ret;
 }

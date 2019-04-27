@@ -156,7 +156,10 @@ AXRString HSSInsertFunction::_getTextFromValue(QSharedPointer<HSSParserNode> val
         }
 
         default:
+        {
+            AXRError("HSSInsertFunction", "Unexpected parser node type while getting text from value").raise();
             break;
+        }
     }
     return AXRString("");
 }
