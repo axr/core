@@ -41,50 +41,59 @@
  *
  ********************************************************************/
 
-#ifndef HSSParserReceiver_h
-#define HSSParserReceiver_h
+#include "axr.h"
+#include "HSSBooleanConstant.h"
 
-#include "AXRGlobal.h"
+using namespace AXR;
 
-template <class T> class QSharedPointer;
-
-namespace AXR
+HSSBooleanConstant::HSSBooleanConstant(bool value, AXRController * controller)
+: HSSParserNode(HSSParserNodeTypeBooleanConstant, controller)
 {
-    enum AXR_API HSSParserEvent
-    {
-        HSSParserEventWhitespace,
-        HSSParserEventComment,
-        HSSParserEventStatement,
-        HSSParserEventRule,
-        HSSParserEventNameSelector,
-        HSSParserEventUniversalSelector,
-        HSSParserEventPropertyPath,
-        HSSParserEventColor,
-        HSSParserEventInstruction,
-        HSSParserEventBooleanConstant,
-        HSSParserEventNumberConstant,
-        HSSParserEventPercentageConstant,
-        HSSParserEventStringConstant,
-        HSSParseEventKeywordConstant,
-        HSSParseEventObjectNameConstant,
-        HSSParserEventObjectDefinition,
-        HSSParserEventObjectType,
-        HSSParserEventObjectName,
-        HSSParserEventFilterName,
-        HSSParserEventFlagName,
-        HSSParserEventFunctionName,
-        HSSParserEventFunctionModifier,
-        HSSParserEventOther,
-        HSSParserEventInvalid
-    };
-    
-    class HSSParserNode;
-    
-    class AXR_API HSSParserReceiver
-    {
-    public:
-        virtual void receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HSSParserNode> node) = 0;
-    };
+    this->value = value;
 }
 
-#endif /* HSSParserReceiver_h */
+QSharedPointer<HSSBooleanConstant> HSSBooleanConstant::clone() const
+{
+    return qSharedPointerCast<HSSBooleanConstant> (this->cloneImpl());
+}
+
+HSSBooleanConstant::~HSSBooleanConstant()
+{
+    
+}
+
+void HSSBooleanConstant::setValue(bool newValue)
+{
+    this->value = newValue;
+}
+
+bool HSSBooleanConstant::getValue()
+{
+    return this->value;
+}
+
+HSSString HSSBooleanConstant::toString()
+{
+    return HSSString("HSSBooleanConstant with value ") + (this->value ? "true" : "false");
+}
+
+HSSString HSSBooleanConstant::stringRep()
+{
+    return this->value ? "true" : "false";
+}
+
+bool HSSBooleanConstant::equalTo(QSharedPointer<HSSParserNode> otherNode)
+{
+    //check wether pointers are the same
+    if (this == otherNode.data()) return true;
+    //other checks
+    if ( ! HSSParserNode::equalTo(otherNode)) return false;
+    QSharedPointer<HSSBooleanConstant> castedNode = qSharedPointerCast<HSSBooleanConstant>(otherNode);
+    if ( this->value != castedNode->value ) return false;
+    return true;
+}
+
+QSharedPointer<HSSClonable> HSSBooleanConstant::cloneImpl() const
+{
+    return QSharedPointer<HSSBooleanConstant>(new HSSBooleanConstant(*this));
+}

@@ -64,10 +64,12 @@ namespace AXR
         HSSParserNodeTypeStatement, /**< Basic execution block. */
         HSSParserNodeTypeExpression, /**< Mathematic operation between two values (or other expressions). */
         HSSParserNodeTypeNumberConstant, /**< A basic number in the HSS source. */
+        HSSParserNodeTypeBooleanConstant, /**< A boolean (true or false) in the HSS source. */
         HSSParserNodeTypePercentageConstant, /**< A percentage number in the HSS source. */
         HSSParserNodeTypeStringConstant, /**< A literal string (single or double quotes) in the HSS source. */
         HSSParserNodeTypeKeywordConstant, /**< A keyword literal in the HSS source. */
         HSSParserNodeTypeObjectNameConstant, /**< Used to get the object definition by name. */
+        HSSParserNodeTypePropertyNameConstant, /**< Represents the name of a property of an object. */
         HSSParserNodeTypeFunction, /**< Type for abstract base class of functions. */
         HSSParserNodeTypeMultipleValueDefinition, /**< Encapsulates various values separated by commas. */
         HSSParserNodeTypeSelectorChain, /**< A group of selector nodes that define what elements will be selected. */

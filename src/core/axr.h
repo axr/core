@@ -115,6 +115,7 @@
 #include "HSSSymbolNode.h"
 #include "HSSWhitespaceNode.h"
 #include "HSSNumberConstant.h"
+#include "HSSBooleanConstant.h"
 #include "HSSKeywordConstant.h"
 #include "HSSPropertyNameConstant.h"
 #include "HSSObjectNameConstant.h"
