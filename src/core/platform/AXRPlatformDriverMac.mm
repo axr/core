@@ -113,6 +113,24 @@ inline NSRect AXRPlatformDriverMac__rectToNSRect(HSSRect input)
     return ret;
 }
 
+inline HSSRect AXRPlatformDriverMac__nsrectToRect(NSRect input)
+{
+    HSSRect ret;
+    ret.origin.x = input.origin.x;
+    ret.origin.y = input.origin.y;
+    ret.size.width = input.size.width;
+    ret.size.height = input.size.height;
+    return ret;
+}
+
+inline NSSize AXRPlatformDriverMac__sizeToNSSize(HSSSize input)
+{
+    NSSize ret;
+    ret.width = input.width;
+    ret.height = input.height;
+    return ret;
+}
+
 
 inline NSBezierPath * AXRPlatformDriverMac__pathToNSPath(QSharedPointer<HSSPath> path)
 {
@@ -219,12 +237,44 @@ inline NSGradient * AXRPlatformDriverMac__lgradientToNSlGradient(QSharedPointer<
     return ret;
 }
 
-//
-//inline NSFont * AXRPlatformDriverMac__fontToNSFont(QSharedPointer<HSSFont> theFont)
-//{
-//    
-//}
-//
+inline NSFont * AXRPlatformDriverMac__fontToNSFont(QSharedPointer<HSSFont> theFont)
+{
+    NSString * fontNameWithWeight;
+    NSString * fontName;
+    if (theFont && !theFont->getFace().isEmpty()){
+        
+        HSSString fontNameStr = theFont->getFace().stripQuotes();
+        HSSString weightStr = theFont->getWeight();
+        fontName = AXRPlatformDriverMac__stringToNSString(fontNameStr);
+        if (weightStr.length() > 0 && weightStr != "regular")
+        {
+            fontNameWithWeight = AXRPlatformDriverMac__stringToNSString(fontNameStr + " " + weightStr);
+        }
+        else
+        {
+            fontNameWithWeight = fontName;
+        }
+    }
+    else
+    {
+        fontName = @"monospace";
+        fontNameWithWeight = fontName;
+    }
+    NSFont * ret = [NSFont fontWithName:fontNameWithWeight size:theFont->getSize()];
+    
+    if (ret == nil)
+    {
+        ret = [NSFont fontWithName:fontName size:theFont->getSize()];
+    }
+    
+    if (ret == nil)
+    {
+        ret = [NSFont systemFontOfSize:theFont->getSize()];
+    }
+    
+    return ret;
+}
+
 //inline int AXRPlatformDriverMac_weightToNSWeight(AXRString keyword)
 //{
 //    
@@ -312,17 +362,80 @@ void AXRPlatformDriverMac::fillPathGradient(QSharedPointer<HSSPath> path, QShare
 
 void AXRPlatformDriverMac::strokePath(QSharedPointer<HSSPath> path, QSharedPointer<HSSAbstractStroke> stroke)
 {
-    
+    NSBezierPath * nspath = AXRPlatformDriverMac__pathToNSPath(path);
+    QSharedPointer<HSSObject> colorObj = stroke->getComputedObject("color");
+    if (colorObj->isA(HSSObjectTypeRgb))
+    {
+        QSharedPointer<HSSRgb> color = qSharedPointerCast<HSSRgb>(colorObj);
+        NSColor * nscolor = AXRPlatformDriverMac__colorToNSColor(color);
+        [nscolor set];
+        [nspath setLineWidth:stroke->getComputedNumber("size")];
+        [nspath stroke];
+    }
+}
+
+inline NSParagraphStyle * AXRPlatformDriverMac__textAlignmentTypeToNSParagraphStyle(HSSTextAlignType alignment)
+{
+    NSMutableParagraphStyle * ret = [[NSMutableParagraphStyle alloc] init];
+    switch (alignment)
+    {
+        case AXR::HSSTextAlignTypeLeft:
+        {
+            [ret setAlignment:NSLeftTextAlignment];
+            break;
+        }
+        case AXR::HSSTextAlignTypeRight:
+        {
+            [ret setAlignment:NSRightTextAlignment];
+            break;
+        }
+        case AXR::HSSTextAlignTypeCenter:
+        {
+            [ret setAlignment:NSCenterTextAlignment];
+            break;
+        }
+        case AXR::HSSTextAlignTypeJustify:
+        {
+            [ret setAlignment:NSTextAlignmentJustified];
+            break;
+        }
+        default:
+            [ret setAlignment:NSLeftTextAlignment];
+            break;
+    }
+    return ret;
 }
 
 void AXRPlatformDriverMac::renderText(AXRString text, HSSRect rect, HSSTextAlignType alignment, QSharedPointer<HSSFont> font)
 {
-    
+    NSTextStorage * textStorage = [[[NSTextStorage alloc] initWithString:AXRPlatformDriverMac__stringToNSString(text)] autorelease];
+    NSTextContainer * textContainer = [[[NSTextContainer alloc] initWithContainerSize:AXRPlatformDriverMac__sizeToNSSize(rect.size)] autorelease];
+    NSLayoutManager * layoutManager = [[[NSLayoutManager alloc] init] autorelease];
+    [layoutManager addTextContainer:textContainer];
+    [textStorage addLayoutManager:layoutManager];
+    [textStorage addAttribute:NSFontAttributeName value:AXRPlatformDriverMac__fontToNSFont(font) range:NSMakeRange(0, [textStorage length])];
+    NSRange glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+    NSPoint thePoint = AXRPlatformDriverMac__pointToNSPoint(rect.origin);
+    [textContainer setLineFragmentPadding:0];
+    [textStorage addAttribute:NSParagraphStyleAttributeName value:AXRPlatformDriverMac__textAlignmentTypeToNSParagraphStyle(alignment) range:glyphRange];
+    [textStorage addAttribute:NSForegroundColorAttributeName value:AXRPlatformDriverMac__colorToNSColor(font->getColor()) range:glyphRange];
+    [layoutManager drawGlyphsForGlyphRange:glyphRange atPoint:thePoint];
 }
 
 HSSRect AXRPlatformDriverMac::getTextBounds(AXRString text, QSharedPointer<AXR::HSSFont> font, HSSUnit allowedWidth, HSSTextAlignType alignment)
 {
     HSSRect ret;
+    
+    NSTextStorage * textStorage = [[[NSTextStorage alloc] initWithString:AXRPlatformDriverMac__stringToNSString(text)] autorelease];
+    NSTextContainer * textContainer = [[[NSTextContainer alloc] initWithContainerSize:NSMakeSize(allowedWidth, FLT_MAX)] autorelease];
+    NSLayoutManager * layoutManager = [[[NSLayoutManager alloc] init] autorelease];
+    [layoutManager addTextContainer:textContainer];
+    [textStorage addLayoutManager:layoutManager];
+    [textStorage addAttribute:NSFontAttributeName value:AXRPlatformDriverMac__fontToNSFont(font) range:NSMakeRange(0, [textStorage length])];
+    [textContainer setLineFragmentPadding:0];
+    (void) [layoutManager glyphRangeForTextContainer:textContainer];
+    ret = AXRPlatformDriverMac__nsrectToRect([layoutManager usedRectForTextContainer:textContainer]);
+    
     return ret;
 }
 
