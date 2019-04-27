@@ -80,6 +80,11 @@ AXRString HSSRootSelector::getElementName()
 QSharedPointer<HSSSelection> HSSRootSelector::filterSelection(QSharedPointer<HSSSelection> scope, QSharedPointer<HSSDisplayObject> thisObj, bool processing, bool subscribingToNotifications)
 {
     QSharedPointer<HSSSimpleSelection> ret(new HSSSimpleSelection(this->getController()));
+    if (!processing && scope->size() == 0)
+    {
+        //do not select if preceding selection was empty (i.e. when using flags)
+        return ret;
+    }
     ret->add(this->getController()->root());
     return ret;
 }
