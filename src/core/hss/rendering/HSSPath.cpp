@@ -118,6 +118,7 @@ void HSSPath::addRect(HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
     this->lineTo(x+width, y+height);
     this->lineTo(x, y+height);
     this->lineTo(x, y);
+    this->closeSubpath();
 }
 
 void HSSPath::addEllipse(HSSRect rect)
