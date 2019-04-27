@@ -78,3 +78,119 @@ QSharedPointer<HSSClonable> HSSSum::cloneImpl() const
 {
     return QSharedPointer<HSSSum>(new HSSSum(*this));
 }
+
+bool HSSSum::isStringOperation() const
+{
+    return this->isStringNode(this->_leftNode) || this->isStringNode(this->_rightNode);
+}
+
+bool HSSSum::isStringNode(QSharedPointer<HSSParserNode> parserNode) const
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeStringConstant:
+        {
+            return true;
+        }
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction>(parserNode);
+            rightFunction->setThisObj(this->getThisObj());
+            rightFunction->setScope(this->scope);
+            QSharedPointer<HSSObject> remoteObj = rightFunction->evaluate();
+            if(remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSParserNode> valueNode = qSharedPointerCast<HSSValue>(remoteObj)->getValue();
+                if (valueNode)
+                {
+                    return this->isStringNode(valueNode);
+                }
+            }
+            break;
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+            if (searchResult && searchResult->isA(HSSObjectTypeValue))
+            {
+                return this->isStringNode(qSharedPointerCast<HSSValue>(searchResult)->getValue());
+            }
+            else
+            {
+                AXRWarning("HSSValue", AXRString("The path ") + ppath->stringRep() + " did not yield any results.").raise();
+            }
+            break;
+        }
+        default:
+        {
+            AXRWarning("HSSSum", "Unknown node type while checking string operation mode.").raise();
+            break;
+        }
+    }
+    return false;
+}
+
+QSharedPointer<HSSStringConstant> HSSSum::appendString()
+{
+    //left
+    HSSString leftStr = this->_getString(this->_leftNode);
+    //right
+    HSSString rightStr = this->_getString(this->_rightNode);
+    QSharedPointer<HSSValue> right = this->getRight();
+    //calculate
+    QSharedPointer<HSSStringConstant> newStrConst(new HSSStringConstant(leftStr.stripQuotes() + rightStr.stripQuotes(), this->getController()));
+    newStrConst->setHasStartQuote(false);
+    newStrConst->setHasEndQuote(false);
+    return newStrConst;
+}
+
+HSSString HSSSum::_getString(QSharedPointer<HSSParserNode> parserNode)
+{
+    HSSString ret = "";
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeStringConstant:
+        {
+            QSharedPointer<HSSStringConstant> rightStr = qSharedPointerCast<HSSStringConstant>(parserNode);
+            ret = rightStr->getValue();
+            break;
+        }
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSFunction> rightFunction = qSharedPointerCast<HSSFunction>(parserNode);
+            rightFunction->setThisObj(this->getThisObj());
+            rightFunction->setScope(this->scope);
+            QSharedPointer<HSSObject> remoteObj = rightFunction->evaluate();
+            if(remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSParserNode> valueNode = qSharedPointerCast<HSSValue>(remoteObj)->getValue();
+                if (valueNode)
+                {
+                    return this->_getString(valueNode);
+                }
+            }
+            break;
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+            if (searchResult && searchResult->isA(HSSObjectTypeValue))
+            {
+                return this->_getString(qSharedPointerCast<HSSValue>(searchResult)->getValue());
+            }
+            else
+            {
+                AXRWarning("HSSValue", AXRString("The path ") + ppath->stringRep() + " did not yield any results.").raise();
+            }
+            break;
+        }
+        default:
+        {
+            AXRWarning("HSSSum", "Unknown node type while getting string.").raise();
+            break;
+        }
+    }
+    return ret;
+}

@@ -172,6 +172,8 @@ namespace AXR
 
         virtual void setHostProperty(AXRString newValue);
         virtual void replace(QSharedPointer<HSSObject> theObj);
+        
+        QSharedPointer<HSSParserNode> evaluateToConst();
 
     protected:
         /**

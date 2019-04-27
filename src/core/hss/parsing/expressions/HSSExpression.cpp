@@ -324,3 +324,24 @@ void HSSExpression::replace(QSharedPointer<HSSObject> theObj)
         }
     }
 }
+
+QSharedPointer<HSSParserNode> HSSExpression::evaluateToConst()
+{
+    this->setDirty(true);
+
+    //string mode
+    if (this->isA(HSSExpressionTypeSum))
+    {
+        HSSSum * theSum = static_cast<HSSSum *>(this);
+        if (theSum->isStringOperation())
+        {
+            QSharedPointer<HSSStringConstant> strConst = theSum->appendString();
+            return strConst;
+        }
+        //else fallthrough
+    }
+
+    //number mode
+    QSharedPointer<HSSNumberConstant> numConst = HSSNumberConstant::number(this->evaluate(), this->getController());
+    return numConst;
+}

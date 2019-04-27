@@ -91,8 +91,14 @@ namespace AXR
          *  @return A HSSUnit containing the addition of both members.
          */
         HSSUnit calculate(HSSUnit leftval, HSSUnit rightval);
+        
+        bool isStringOperation() const;
+        bool isStringNode(QSharedPointer<HSSParserNode> parserNode) const;
+        QSharedPointer<HSSStringConstant> appendString();
+
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        HSSString _getString(QSharedPointer<HSSParserNode> parserNode);
     };
 }
 
