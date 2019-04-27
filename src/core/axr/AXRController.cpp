@@ -1039,6 +1039,8 @@ void AXRController::reset()
     d->currentChainCount = 0;
     d->currentChainSize = 0;
     d->lastSelection.clear();
+
+    d->globals.clear();
 }
 
 QSharedPointer<HSSContainer> & AXRController::root() const
@@ -1247,13 +1249,46 @@ void AXRController::_recursiveGetDescendants(QSharedPointer<HSSSimpleSelection> 
     }
 }
 
-void AXRController::setGlobalVariable(AXRString name, QSharedPointer<HSSObject> obj)
+void AXRController::setGlobalVariable(AXRString name, QSharedPointer<HSSObject> theObj)
 {
-    if (obj)
+    if (!theObj) {
+        return;
+    }
+    
+    QSharedPointer<HSSObject> currentValue = this->getGlobalVariable(name);
+    
+    //prepare
+    theObj->setHostProperty(name);
+    theObj->commitStackValues();
+    //if the object is equal, reset the specificity
+    if (currentValue && currentValue->equalTo(theObj))
     {
-        d->globals[name] = obj;
+        currentValue->setSpecificity(theObj->getSpecificity());
+        
+        //set this object and scope
+        QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this));
+        rootScope->add(this->root());
+        theObj->setThisObj(this->root());
+        currentValue->setScope(rootScope);
+        return;
+    }
+    if (!currentValue || (currentValue->getSpecificity() <= theObj->getSpecificity()))
+    {
+        //replace
+        if (currentValue)
+        {
+            currentValue->replace(theObj);
+        }
+        QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(this));
+        rootScope->add(this->root());
+        theObj->setScope(rootScope);
+
+        d->globals[name] = theObj;
+
+        this->notifyObservers(name, theObj);
     }
 }
+
 
 QSharedPointer<HSSObject> AXRController::getGlobalVariable(AXRString name)
 {

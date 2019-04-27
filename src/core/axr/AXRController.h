@@ -45,6 +45,7 @@
 #define AXRCONTROLLER_H
 
 #include "AXRGlobal.h"
+#include "HSSObservable.h"
 #include "HSSTypeEnums.h"
 
 template <class T> class QSharedPointer;
@@ -70,7 +71,7 @@ namespace AXR
      *  @brief  This class holds trees of objects, sheets, rules and the parser tree. Also,
      *  it has methods to select object in those trees.
      */
-    class AXR_API AXRController
+    class AXR_API AXRController : public HSSObservable
     {
     public:
         /**
