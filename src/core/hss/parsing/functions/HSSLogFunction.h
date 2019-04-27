@@ -121,7 +121,7 @@ namespace AXR
         std::vector<QSharedPointer<HSSParserNode> > values;
 
     private:
-        void _logParserNode(QSharedPointer<HSSParserNode> parserNode) const;
+        void _logParserNode(QSharedPointer<HSSParserNode> parserNode);
         void _logObject(QSharedPointer<HSSObject> theObj) const;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
