@@ -275,6 +275,7 @@ namespace AXR
         HSSFunctionTypeFunction, /**< User defined functions. */
         HSSFunctionTypeCall, /**< What user defined function to call and with which arguments. */
         HSSFunctionTypeReturn, /**< Set the functions return value. */
+        HSSFunctionTypeToNum /**< Converts its argument into a number. */
     };
     /** @} */
 
