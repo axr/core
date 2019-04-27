@@ -505,6 +505,37 @@ namespace AXR
     /**
      *  @addtogroup typeEnums
      *  @{
+     *  @enum HSSStrokeType
+     *  The kind of stroke for drawing.
+     */
+    enum AXR_API HSSStrokeType
+    {
+        HSSStrokeTypeLine /**< Regular solid line. */
+    };
+    /** @} */
+    
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSPathCommandType
+     *  The kind command in a vector path.
+     */
+    enum AXR_API HSSPathCommandType
+    {
+        HSSPathCommandNone, /**< Error state */
+        HSSPathCommandTypeMoveTo, /**< Jumps to a point. */
+        HSSPathCommandTypeLineTo, /**< Creates a line to a point. */
+        HSSPathCommandTypeArcTo, /**< Creates an arc inside a rectangle */
+        HSSPathCommandTypeSubtract, /**< Punches a hole inside another path. */
+        HSSPathCommandTypeCloseSubpath, /**< Creates a line to the initial point. */
+        HSSPathCommandTypeAddPolygon, /**< Adds a polygon from a vector of points. */
+        HSSPathCommandTypeAddEllipse /**< Adds an ellipse inside a rectangle. */
+    };
+    /** @} */
+    
+    /**
+     *  @addtogroup typeEnums
+     *  @{
      *  @enum HSSComparisonType
      *  How to compare values in a comparison.
      */
