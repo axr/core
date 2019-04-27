@@ -193,19 +193,20 @@ namespace AXR
          */
         HSSExpression(const HSSExpression &orig);
 
-        QSharedPointer<HSSValue> left;
         HSSUnit leftval;
         HSSUnit rightval;
-        QSharedPointer<HSSValue> right;
 
         QSharedPointer<HSSSimpleSelection> scope;
 
         bool _isDirty;
         HSSUnit _value;
-
-    private:
+        
         QSharedPointer<HSSParserNode> _leftNode;
         QSharedPointer<HSSParserNode> _rightNode;
+
+    private:
+        QSharedPointer<HSSValue> left;
+        QSharedPointer<HSSValue> right;
         HSSExpressionType expressionType;
 
         void _nodesToValuesIfNeeded();

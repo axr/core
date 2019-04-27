@@ -74,8 +74,14 @@ HSSExpression::HSSExpression(const HSSExpression &orig)
 : HSSParserNode(orig)
 {
     this->expressionType = orig.expressionType;
-    this->_leftNode = orig._leftNode->clone();
-    this->_rightNode = orig._rightNode->clone();
+    if (orig._leftNode)
+    {
+        this->_leftNode = orig._leftNode->clone();
+    }
+    if (orig._rightNode)
+    {
+        this->_rightNode = orig._rightNode->clone();
+    }
     this->leftval = orig.leftval;
     this->rightval = orig.rightval;
     this->_value = 0;
