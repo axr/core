@@ -482,6 +482,7 @@ void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
             {
                 this->stackIsA(*it);
             }
+            break;
         }
         case HSSParserNodeTypePropertyPath:
         {
