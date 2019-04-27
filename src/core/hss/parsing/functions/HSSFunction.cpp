@@ -161,6 +161,11 @@ HSSFunctionType HSSFunction::getFunctionType() const
     return this->functionType;
 }
 
+void HSSFunction::setFunctionType(HSSFunctionType newType)
+{
+    this->functionType = newType;
+}
+
 void HSSFunction::setName(AXRString newName)
 {
     this->_name = newName;

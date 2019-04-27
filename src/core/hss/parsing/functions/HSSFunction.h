@@ -144,6 +144,12 @@ namespace AXR
          */
         HSSFunctionType getFunctionType() const;
 
+        /**
+         *  Change the function type to a new type
+         *  @param newType     A function type.
+         */
+        void setFunctionType(HSSFunctionType newType);
+
         std::deque<QSharedPointer<HSSParserNode> > getArguments();
         void setArguments(std::deque<QSharedPointer<HSSParserNode> > arguments);
         void addArgument(QSharedPointer<HSSParserNode> argument);
