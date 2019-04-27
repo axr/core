@@ -534,11 +534,6 @@ QSharedPointer<HSSObject> HSSObject::_setIsAPrepare(QSharedPointer<HSSObject> th
                 {
                     QSharedPointer<HSSObjectNameConstant> objname = qSharedPointerCast<HSSObjectNameConstant > (parserNode);
                     QSharedPointer<HSSObjectDefinition> objdef = this->getController()->objectTreeNodeNamed(objname->getValue());
-                    objdef->applyStack();
-                    objdef->applyRules();
-                    QSharedPointer<HSSObject> remoteObj = objdef->getObject();
-                    remoteObj->setSpecificity(theObj->getSpecificity());
-                    ret = remoteObj;
                 }
                 catch (const AXRError &e)
                 {
@@ -1100,10 +1095,11 @@ QSharedPointer<HSSObject> HSSObject::computeObject(QSharedPointer<HSSParserNode>
     if (parserNode->isA(HSSStatementTypeObjectDefinition))
     {
         QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (parserNode);
-        objdef->applyStack();
-        objdef->applyRules();
         theObj = objdef->getObject();
-        theObj->setSpecificity(objdef->getSpecificity());
+        if (theObj)
+        {
+            theObj->setSpecificity(objdef->getSpecificity());
+        }
     }
     else
     {

@@ -48,7 +48,6 @@
 
 namespace AXR
 {
-    class HSSObject;
     class HSSPropertyDefinition;
     class HSSRule;
     class HSSSimpleSelection;
@@ -65,7 +64,7 @@ namespace AXR
          *  Creates a new instance of an object definition, storing the given object, to which
          *   the properties will be applied by calling the apply() method.
          */
-        HSSObjectDefinition(QSharedPointer<HSSObject> prototype, AXRController * controller);
+        HSSObjectDefinition(HSSString type, AXRController * controller);
 
         /**
          *  Copy constructor for HSSObjectDefinition. Do not call directly, use clone() instead.
@@ -84,7 +83,7 @@ namespace AXR
          */
         ~HSSObjectDefinition();
 
-        virtual AXRString toString();
+        virtual HSSString toString();
 
         /**
          *  Each node overrides this method to compare against another node
@@ -93,8 +92,8 @@ namespace AXR
          */
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
-        void applyStack();
-        void applyRules();
+        void applyStack(QSharedPointer<HSSObject> theObj);
+        void applyRules(QSharedPointer<HSSObject> theObj);
 
         /**
          *  Adds a new property definition to the end of the properties list.
@@ -178,12 +177,6 @@ namespace AXR
         const std::vector<QSharedPointer<HSSObjectDefinition> > getChildren() const;
 
         /**
-         *  @return A shared pointer to the object that corresponds to the object type of the
-         *  object definition. Call apply() before using.
-         */
-        QSharedPointer<HSSObject> getObject();
-
-        /**
          *  Setter for the scope which to pass to members like references or selections.
          *  @param newScope     The new scope, a shared pointer to a simple selection.
          */
@@ -231,6 +224,12 @@ namespace AXR
          *  @param rule     A shared pointer to a rule, to be removed from the list of rules.
          */
         void rulesRemove(QSharedPointer<HSSRule> rule);
+        
+        void setType(HSSString newType);
+        const HSSString type() const;
+        void setName(HSSString newName);
+        const HSSString name() const;
+        QSharedPointer<HSSObject> getObject();
 
     protected:
         QSharedPointer<HSSObjectDefinition> shared_from_this();
@@ -243,8 +242,9 @@ namespace AXR
 
     private:
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
-        QSharedPointer<HSSObject> prototype;
         std::deque<QSharedPointer<HSSRule> > _rules;
+        HSSString _objType;
+        HSSString _objName;
     };
 }
 

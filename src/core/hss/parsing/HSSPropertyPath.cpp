@@ -336,7 +336,6 @@ void HSSPropertyPath::applyModifier(QSharedPointer<HSSObject> object, QSharedPoi
                     if (parserNode->isA(HSSStatementTypeObjectDefinition))
                     {
                         QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition>(parserNode);
-                        objdef->applyStack();
                         this->applyModifier(objdef->getObject(), value, false);
                     }
                     else if (parserNode->isA(HSSFunctionTypeRef))

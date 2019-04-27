@@ -371,6 +371,16 @@ QSharedPointer<HSSObject> HSSValue::_getObject(const QSharedPointer<HSSParserNod
             }
             break;
         }
+        default:
+            break;
+    }
+    switch (parserNode->getStatementType()) {
+        case HSSStatementTypeObjectDefinition:
+        {
+            QSharedPointer<HSSObjectDefinition> objDef = qSharedPointerCast<HSSObjectDefinition>(parserNode);
+            QSharedPointer<HSSObject> returnObj = objDef->getObject();
+            returnObj->commitStackValues();
+            return returnObj;
         }
         default:
             break;

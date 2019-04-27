@@ -46,17 +46,19 @@
 
 using namespace AXR;
 
-HSSObjectDefinition::HSSObjectDefinition(QSharedPointer<HSSObject> prototype, AXRController * controller)
+HSSObjectDefinition::HSSObjectDefinition(HSSString type, AXRController * controller)
 : HSSStatement(HSSStatementTypeObjectDefinition, controller)
+, _objType(type)
+, _objName()
 {
-    this->prototype = prototype;
+
 }
 
 HSSObjectDefinition::HSSObjectDefinition(const HSSObjectDefinition & orig)
 : HSSStatement(orig)
 {
-    this->prototype = orig.prototype->clone();
-
+    this->_objType = orig._objType;
+    this->_objName = orig._objName;
     for (std::deque<QSharedPointer<HSSPropertyDefinition> >::const_iterator p_it = orig.properties.begin(); p_it != orig.properties.end(); ++p_it)
     {
         this->properties.push_back((*p_it)->clone());
@@ -84,15 +86,14 @@ HSSObjectDefinition::~HSSObjectDefinition()
     this->cleanTrackedObservers();
 }
 
-AXRString HSSObjectDefinition::toString()
+HSSString HSSObjectDefinition::toString()
 {
-    AXRString tempstr = AXRString("HSSObjectDefinition with object of type:");
-    tempstr.append(this->prototype->toString());
+    HSSString tempstr = HSSString("HSSObjectDefinition");
 
     const size_t pccount = this->propertiesSize();
     if (pccount > 0)
     {
-        tempstr.append(" and the following properties: \n");
+        tempstr.append(" with the following properties: \n");
 
         for (size_t j = 0; j < pccount; ++j)
         {
@@ -110,16 +111,13 @@ bool HSSObjectDefinition::equalTo(QSharedPointer<HSSParserNode> otherNode)
     //other checks
     if ( ! HSSStatement::equalTo(otherNode)) return false;
     QSharedPointer<HSSObjectDefinition> castedNode = qSharedPointerCast<HSSObjectDefinition>(otherNode);
-    if ( ! this->prototype->equalTo(castedNode->prototype)) return false;
     return true;
 }
 
-void HSSObjectDefinition::applyStack()
+void HSSObjectDefinition::applyStack(QSharedPointer<HSSObject> theObj)
 {
     HSSUnit objDefSpecificity = this->getSpecificity();
     HSSUnit specificity = 0.;
-    this->prototype->clearProperties();
-    this->prototype->setDefaults();
     std::deque<QSharedPointer<HSSPropertyDefinition> >::iterator it;
     for (it = this->properties.begin(); it != this->properties.end(); ++it)
     {
@@ -131,18 +129,18 @@ void HSSObjectDefinition::applyStack()
             const QSharedPointer<HSSPropertyPath> & path = *it2;
             QSharedPointer<HSSParserNode> nodeValue = propertyDefinition->getValue()->clone();
             nodeValue->setSpecificity(objDefSpecificity + (specificity * 0.000001));
-            path->setStackNode(this->prototype, nodeValue);
+            path->setStackNode(theObj, nodeValue);
         }
         specificity += 1.;
     }
 }
 
-void HSSObjectDefinition::applyRules()
+void HSSObjectDefinition::applyRules(QSharedPointer<HSSObject> theObj)
 {
     ///@todo this should target all display object types
-    if (this->prototype->isA(HSSObjectTypeContainer))
+    if (theObj->isA(HSSObjectTypeContainer))
     {
-        QSharedPointer<HSSDisplayObject> theDO = qSharedPointerCast<HSSDisplayObject>(this->prototype);
+        QSharedPointer<HSSDisplayObject> theDO = qSharedPointerCast<HSSDisplayObject>(theObj);
         Q_FOREACH(QSharedPointer<HSSRule> rule, this->_rules)
         {
             rule->setSpecificity(this->getSpecificity());
@@ -166,7 +164,6 @@ void HSSObjectDefinition::propertiesAdd(const QSharedPointer<HSSPropertyDefiniti
     {
         newProperty->setParentNode(this->shared_from_this());
         this->properties.push_back(newProperty);
-        //this->prototype->setPropertyWithName(newProperty->getName(), newProperty->getValue());
     }
 }
 
@@ -246,23 +243,14 @@ const std::vector<QSharedPointer<HSSObjectDefinition> > HSSObjectDefinition::get
     return this->children;
 }
 
-QSharedPointer<HSSObject> HSSObjectDefinition::getObject()
-{
-    return this->prototype;
-}
-
 void HSSObjectDefinition::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
-    //propagate values
-    this->prototype->setScope(newScope);
 }
 
 void HSSObjectDefinition::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->thisObj = value;
-    //propagate values
-    this->prototype->setThisObj(value);
 }
 
 QSharedPointer<HSSDisplayObject> HSSObjectDefinition::getThisObj()
@@ -302,6 +290,39 @@ void HSSObjectDefinition::rulesRemove(QSharedPointer<HSSRule> rule)
     {
         this->_rules.erase(it);
     }
+}
+
+void HSSObjectDefinition::setType(HSSString newType)
+{
+    this->_objType = newType;
+}
+
+const HSSString HSSObjectDefinition::type() const
+{
+    return this->_objType;
+}
+
+void HSSObjectDefinition::setName(HSSString newName)
+{
+    this->_objName = newName;
+}
+
+const HSSString HSSObjectDefinition::name() const
+{
+    return this->_objName;
+}
+
+QSharedPointer<HSSObject> HSSObjectDefinition::getObject()
+{
+    QSharedPointer<HSSObject> ret = HSSObject::newObjectWithType(this->_objType, this->getController());
+    if (ret)
+    {
+        ret->clearProperties();
+        ret->setDefaults();
+        this->applyStack(ret);
+        ret->fillWithDefaults();
+    }
+    return ret;
 }
 
 QSharedPointer<HSSClonable> HSSObjectDefinition::cloneImpl() const
