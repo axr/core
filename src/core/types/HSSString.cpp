@@ -217,12 +217,22 @@ const bool HSSString::operator==(const HSSString &other) const
 
 const double HSSString::toDouble() const
 {
-    return std::stod(d->string);
+    HSSString val = this->stripQuotes();
+    try
+    {
+        double ret = std::stod(val.data());
+        return ret;
+    }
+    catch (const std::invalid_argument & ia)
+    {
+        AXRError("HSSString", "Failed to convert string into number").raise();
+    }
+    return 0;
 }
 
 unsigned int HSSString::toHex() const
 {
-    return std::stoi(d->string, nullptr, 16);
+    return std::stoi(this->stripQuotes().data(), nullptr, 16);
 }
 
 HSSString HSSString::trimmed() const
