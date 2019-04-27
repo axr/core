@@ -665,7 +665,18 @@ void AXRDocument::receiveParserEvent(HSSParserEvent eventType, QSharedPointer<HS
                 case HSSStatementTypeObjectDefinition:
                 {
                     QSharedPointer<HSSObjectDefinition> objDefNode = qSharedPointerCast<HSSObjectDefinition>(node);
-                    d->controller->addObjectTreeNode(objDefNode);
+                    HSSString objDefName = objDefNode->name();
+                    if (!objDefName.isEmpty())
+                    {
+                        QSharedPointer<HSSSimpleSelection> rootScope(new HSSSimpleSelection(d->controller.data()));
+                        rootScope->add(d->controller->root());
+                        QSharedPointer<HSSValue> theVal = HSSValue::valueFromParserNode(d->controller.data(), objDefNode, objDefNode->getSpecificity(), objDefNode->getThisObj(), rootScope);
+                        d->controller->setGlobalVariable(objDefName, theVal);
+                    }
+                    else
+                    {
+                        AXRWarning("HSSDocument", "Ignoring annonymous object definition.").raise();
+                    }
                     break;
                 }
 
