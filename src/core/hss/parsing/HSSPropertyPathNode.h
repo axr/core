@@ -56,9 +56,9 @@ namespace AXR
     public:
        /**
         *  Creates a new property path node.
-        *  @param propertyName A string with the name of the property.
+        *  @param value A parser node containing the path node value.
         */
-        HSSPropertyPathNode(AXRString propertyName, AXRController * controller);
+        HSSPropertyPathNode(QSharedPointer<HSSParserNode> value, AXRController * controller);
 
         /**
          *  Copy constructor for HSSPropertyPath objects
@@ -87,15 +87,24 @@ namespace AXR
          */
         virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
 
+        void setHasName(bool newValue);
+        const bool hasName() const;
         /**
-         *  Getter for the property name.
-         *  @return A string containing the property name.
+         *  Getter for the node value.
+         *  @return A parser node containing the node value.
          */
-        const AXRString getPropertyName() const;
+        const QSharedPointer<HSSParserNode> & getValue() const;
+        
+        AXRString evaluate();
+        
+        void setThisObj(QSharedPointer<AXR::HSSDisplayObject> value);
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
 
     private:
-        AXRString _propertyName;
+        bool _hasName;
+        QSharedPointer<HSSParserNode> _value;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
+        AXRString _evaluate(QSharedPointer<HSSParserNode> parserNode);
     };
 }
 

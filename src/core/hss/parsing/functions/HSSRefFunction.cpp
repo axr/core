@@ -112,7 +112,7 @@ const QSharedPointer<HSSPropertyPath> HSSRefFunction::getPropertyPath() const
 
 void HSSRefFunction::setPropertyName(AXRString newValue)
 {
-    QSharedPointer<HSSPropertyPathNode> ppn(new HSSPropertyPathNode(newValue, this->getController()));
+    QSharedPointer<HSSPropertyPathNode> ppn(new HSSPropertyPathNode(HSSPropertyNameConstant::createConstant(newValue, this->getController()), this->getController()));
     QSharedPointer<HSSPropertyPath> ppath(new HSSPropertyPath(this->getController()));
     ppath->add(ppn);
     this->propertyPath = ppath;
@@ -201,7 +201,7 @@ QSharedPointer<HSSObject> HSSRefFunction::_evaluate()
     else if (selection->size() == 1)
     {
         QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
-        AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
+        AXRString tlp = this->getPropertyPath()->front()->evaluate();
         QSharedPointer<HSSDisplayObject> container = selection->front();
         if (container->isA(HSSObjectTypeEvent))
         {
@@ -313,7 +313,7 @@ void HSSRefFunction::replace(QSharedPointer<HSSObject> theObj)
     QSharedPointer<HSSPropertyPath> ppath = this->getPropertyPath()->clone();
     this->_value = this->_getValueByPath(theObj, ppath);
 
-    AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
+    AXRString tlp = this->getPropertyPath()->front()->evaluate();
     if (theObj && (theObj != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != tlp))
     {
         theObj->observe(tlp, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
@@ -326,7 +326,7 @@ void HSSRefFunction::replaceChanged(const AXRString target, const AXRString sour
     ppath->popFront();
     this->_value = this->_getValueByPath(remoteObj, ppath);
 
-    AXRString tlp = this->getPropertyPath()->front()->getPropertyName();
+    AXRString tlp = this->getPropertyPath()->front()->evaluate();
     if (remoteObj && (remoteObj != this->getTrackedObserver("__impl_private__refValue") || this->getTrackedProperty("__impl_private__refValue") != tlp))
     {
         remoteObj->observe(tlp, "__impl_private__refValue", this, new HSSValueChangedCallback<HSSRefFunction > (this, &HSSRefFunction::valueChanged));
@@ -355,7 +355,7 @@ QSharedPointer<HSSObject> HSSRefFunction::_getValueByPath(QSharedPointer<HSSObje
 {
     QSharedPointer<HSSObject> ret;
     QSharedPointer<HSSPropertyPathNode> ppn = path->popFront();
-    AXRString propertyName = ppn->getPropertyName();
+    AXRString propertyName = ppn->evaluate();
     QSharedPointer<HSSObject> remoteObj;
     remoteObj = object->getComputedValue(propertyName);
     if (remoteObj)

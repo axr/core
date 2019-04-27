@@ -45,7 +45,7 @@
 #define HSSPROPERTYPATH_H
 
 #include <deque>
-#include "HSSParserNode.h"
+#include "HSSScopedParserNode.h"
 
 namespace AXR
 {
@@ -55,7 +55,7 @@ namespace AXR
     /**
      *  @brief A property path contains multiple property path nodes.
      */
-    class AXR_API HSSPropertyPath : public HSSParserNode
+    class AXR_API HSSPropertyPath : public HSSScopedParserNode
     {
     public:
         struct query
@@ -88,6 +88,9 @@ namespace AXR
         virtual ~HSSPropertyPath();
 
         virtual AXRString toString();
+        virtual AXRString stringRep();
+        
+        AXRString toKeyString() const;
 
         /**
          *  Each node overrides this method to compare against another node
@@ -95,6 +98,12 @@ namespace AXR
          *  @return Wether the node is equal to the given one.
          */
         bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+        
+        /**
+         *  Sets the initial and end iterators
+         */
+        void initialize();
+        void goToNext();
 
         void setStackNode(QSharedPointer<HSSObject> object, QSharedPointer<HSSParserNode> value,  bool initializing = true);
         void applyModifier(QSharedPointer<HSSObject> object, QSharedPointer<HSSParserNode> value, bool initializing = true);
@@ -126,6 +135,9 @@ namespace AXR
          */
         void add(AXRString newValue);
 
+        void prepend(QSharedPointer<HSSPropertyPathNode> newValue);
+        void prepend(AXRString newValue);
+
         /**
          *  Returns the first value from the nodes.
          *  @param newNode    A shared pointer to the first path node.
@@ -146,11 +158,21 @@ namespace AXR
 
         QSharedPointer<HSSPropertyPath> cloneFromCurrentIterator();
 
+        QSharedPointer<HSSObject> evaluate();
+        void observe();
+        void observeVar(HSSString varName);
+        void valueChanged(const AXRString target, const AXRString source, const QSharedPointer<HSSObject> remoteObj);
+        void evaluateSet(QSharedPointer<HSSObject> theObj);
+        
+        void setThisObj(QSharedPointer<AXR::HSSDisplayObject> value);
+        virtual void setScope(QSharedPointer<HSSSimpleSelection> newScope);
+
     private:
         void _setModifiers(QSharedPointer<HSSObject> theObj, AXRString propertyName, QSharedPointer<HSSParserNode> value, QSharedPointer<HSSObject> baseObj);
         std::deque<QSharedPointer<HSSPropertyPathNode> > _nodes;
         std::deque<QSharedPointer<HSSPropertyPathNode> >::iterator _iterator;
         std::deque<QSharedPointer<HSSPropertyPathNode> >::iterator _endIterator;
+        bool _initialized;
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };
 }

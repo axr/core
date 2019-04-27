@@ -46,21 +46,29 @@
 
 using namespace AXR;
 
-HSSPropertyPathNode::HSSPropertyPathNode(AXRString propertyName, AXRController * controller)
+HSSPropertyPathNode::HSSPropertyPathNode(QSharedPointer<HSSParserNode> value, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypePropertyPathNode, controller)
 {
-    this->_propertyName = propertyName;
+    this->_value = value;
+    this->_hasName = true;
 }
 
 HSSPropertyPathNode::HSSPropertyPathNode(const HSSPropertyPathNode & orig)
 : HSSParserNode(orig)
 {
-    this->_propertyName = orig._propertyName;
+    this->_hasName = orig._hasName;
 }
 
 QSharedPointer<HSSPropertyPathNode> HSSPropertyPathNode::clone() const
 {
     return qSharedPointerCast<HSSPropertyPathNode> (this->cloneImpl());
+}
+
+QSharedPointer<HSSClonable> HSSPropertyPathNode::cloneImpl() const
+{
+    QSharedPointer<HSSPropertyPathNode> clone(new HSSPropertyPathNode(*this));
+    clone->_value = this->_value->clone();
+    return clone;
 }
 
 HSSPropertyPathNode::~HSSPropertyPathNode()
@@ -70,12 +78,12 @@ HSSPropertyPathNode::~HSSPropertyPathNode()
 
 AXRString HSSPropertyPathNode::toString()
 {
-    return this->_propertyName;
+    return this->_value->toString();
 }
 
 AXRString HSSPropertyPathNode::stringRep()
 {
-    return this->_propertyName;
+    return this->_value->stringRep();
 }
 
 bool HSSPropertyPathNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
@@ -85,16 +93,87 @@ bool HSSPropertyPathNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
     //other checks
     if ( ! HSSParserNode::equalTo(otherNode)) return false;
     QSharedPointer<HSSPropertyPathNode> castedNode = qSharedPointerCast<HSSPropertyPathNode>(otherNode);
-    if (castedNode->_propertyName != this->_propertyName) return false;
+    if (castedNode->_value != this->_value) return false;
+    if (castedNode->_hasName != this->_hasName) return false;
     return true;
 }
 
-const AXRString HSSPropertyPathNode::getPropertyName() const
+void HSSPropertyPathNode::setHasName(bool newValue)
 {
-    return this->_propertyName;
+    this->_hasName = newValue;
 }
 
-QSharedPointer<HSSClonable> HSSPropertyPathNode::cloneImpl() const
+const bool HSSPropertyPathNode::hasName() const
 {
-    return QSharedPointer<HSSPropertyPathNode>(new HSSPropertyPathNode(*this));
+    return this->_hasName;
+}
+
+const QSharedPointer<HSSParserNode> & HSSPropertyPathNode::getValue() const
+{
+    return this->_value;
+}
+
+AXRString HSSPropertyPathNode::evaluate()
+{
+    if (this->_hasName)
+        return this->_evaluate(this->_value);
+    return "";
+}
+
+AXRString HSSPropertyPathNode::_evaluate(QSharedPointer<HSSParserNode> parserNode)
+{
+    switch (parserNode->getType())
+    {
+        case HSSParserNodeTypeStringConstant:
+        {
+            return qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
+        }
+        case HSSParserNodeTypePropertyNameConstant:
+        {
+            return qSharedPointerCast<HSSPropertyNameConstant>(parserNode)->getValue();
+        }
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSFunction> theFunc = qSharedPointerCast<HSSFunction>(parserNode);
+            QSharedPointer<HSSObject> remoteObj = theFunc->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSParserNode> valueNode = qSharedPointerCast<HSSValue>(remoteObj)->getValue();
+                if (valueNode)
+                {
+                    return this->_evaluate(valueNode);
+                }
+            }
+            break;
+        }
+        default:
+            break;
+    }
+    return "";
+}
+
+void HSSPropertyPathNode::setThisObj(QSharedPointer<AXR::HSSDisplayObject> value)
+{
+    HSSParserNode::setThisObj(value);
+    this->_value->setThisObj(value);
+}
+
+void HSSPropertyPathNode::setScope(QSharedPointer<HSSSimpleSelection> newScope)
+{
+    switch (this->_value->getType()) {
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSFunction> theFunc = qSharedPointerCast<HSSFunction>(this->_value);
+            theFunc->setScope(newScope);
+            break;
+        }
+        case HSSParserNodeTypeStringConstant:
+        {
+            QSharedPointer<HSSStringConstant> theStr = qSharedPointerCast<HSSStringConstant>(this->_value);
+            theStr->setScope(newScope);
+            break;
+        }
+        default:
+            break;
+    }
 }

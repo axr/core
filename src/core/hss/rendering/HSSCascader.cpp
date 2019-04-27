@@ -117,7 +117,7 @@ void HSSCascader::applyOverrides(HSSContainer & container, HSSUnit & specificity
             }
             if (path->size() == 1)
             {
-                container.setStackNode(path->front()->getPropertyName(), clonedNode);
+                container.setStackNode(path->front()->evaluate(), clonedNode);
             }
             else
             {
@@ -169,7 +169,7 @@ void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
                         }
                         if (path->size() == 1)
                         {
-                            container.setStackNode(path->front()->getPropertyName(), clonedNode);
+                            container.setStackNode(path->front()->evaluate(), clonedNode);
                         }
                         else
                         {

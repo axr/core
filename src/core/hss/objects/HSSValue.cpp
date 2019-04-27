@@ -163,6 +163,10 @@ void HSSValue::setValue(QSharedPointer<HSSParserNode> parserNode)
             }
             break;
         }
+        case HSSParserNodeTypePropertyPath:
+        {
+            parserNode->observe("__impl_private__remoteValue", "__impl_private__valueObj", this, new HSSValueChangedCallback<HSSValue>(this, &HSSValue::valueChanged));
+        }
         default:
             break;
     }
@@ -175,27 +179,36 @@ void HSSValue::valueChanged(const AXRString target, const AXRString source, cons
 
 HSSUnit HSSValue::getNumber() const
 {
-    switch (this->value->getType())
-    {
-        case HSSParserNodeTypeFunction:
-        {
-            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
-            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
-            {
-                return this->_getNumber(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
-            }
-            break;
-        }
-        default:
-            return this->_getNumber(this->value);
-    }
-    return 0.;
+    return this->_getNumber(this->value);
 }
 
 HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserNode) const
 {
     switch (parserNode->getType())
     {
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                return this->_getNumber(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
+            }
+            break;
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+            if (searchResult && searchResult->isA(HSSObjectTypeValue))
+            {
+                return this->_getNumber(qSharedPointerCast<HSSValue>(searchResult)->getValue());
+            }
+            else
+            {
+                AXRWarning("HSSValue", AXRString("The path ") + ppath->stringRep() + " did not yield any results.").raise();
+            }
+            break;
+        }
         case HSSParserNodeTypeNumberConstant:
             return qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
         case HSSParserNodeTypeExpression:
@@ -221,27 +234,36 @@ HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserNode) c
 
 bool HSSValue::getBool() const
 {
-    switch (this->value->getType())
-    {
-        case HSSParserNodeTypeFunction:
-        {
-            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
-            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
-            {
-                return this->_getBool(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
-            }
-            break;
-        }
-        default:
-            return this->_getBool(this->value);
-    }
-    return false;
+    return this->_getBool(this->value);
 }
 
 bool HSSValue::_getBool(const QSharedPointer<HSSParserNode> & parserNode) const
 {
     switch (parserNode->getType())
     {
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                return this->_getBool(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
+            }
+            break;
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+            if (searchResult && searchResult->isA(HSSObjectTypeValue))
+            {
+                return this->_getBool(qSharedPointerCast<HSSValue>(searchResult)->getValue());
+            }
+            else
+            {
+                AXRWarning("HSSValue", AXRString("The path ") + ppath->stringRep() + " did not yield any results.").raise();
+            }
+            break;
+        }
         case HSSParserNodeTypeNumberConstant:
             return qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue() > 0.;
         case HSSParserNodeTypeExpression:
@@ -263,27 +285,36 @@ bool HSSValue::_getBool(const QSharedPointer<HSSParserNode> & parserNode) const
 
 AXRString HSSValue::getString() const
 {
-    switch (this->value->getType())
-    {
-        case HSSParserNodeTypeFunction:
-        {
-            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(this->value)->evaluate();
-            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
-            {
-                return this->_getString(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
-            }
-            break;
-        }
-        default:
-            return this->_getString(this->value);
-    }
-    return "";
+    return this->_getString(this->value);
 }
 
 AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parserNode) const
 {
     switch (parserNode->getType())
     {
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSObject> remoteObj = qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                return this->_getString(qSharedPointerCast<HSSValue>(remoteObj)->getValue());
+            }
+            break;
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+            if (searchResult && searchResult->isA(HSSObjectTypeValue))
+            {
+                return this->_getString(qSharedPointerCast<HSSValue>(searchResult)->getValue());
+            }
+            else
+            {
+                AXRWarning("HSSValue", AXRString("The path ") + ppath->stringRep() + " did not yield any results.").raise();
+            }
+            break;
+        }
         case HSSParserNodeTypeStringConstant:
         {
             AXRString ret = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();
@@ -305,11 +336,39 @@ AXRString HSSValue::_getString(const QSharedPointer<HSSParserNode> & parserNode)
 
 QSharedPointer<HSSObject> HSSValue::getObject() const
 {
-    switch (this->value->getType())
+    return this->_getObject(this->value);
+}
+
+QSharedPointer<HSSObject> HSSValue::_getObject(const QSharedPointer<HSSParserNode> & parserNode) const
+{
+    switch (parserNode->getType())
     {
         case HSSParserNodeTypeFunction:
         {
-            return qSharedPointerCast<HSSFunction>(this->value)->evaluate();
+            return qSharedPointerCast<HSSFunction>(parserNode)->evaluate();
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> searchResult = ppath->evaluate();
+            if (searchResult)
+            {
+                if (searchResult->isA(HSSObjectTypeValue))
+                {
+                    QSharedPointer<HSSParserNode> valueNode = qSharedPointerCast<HSSValue>(searchResult)->getValue();
+                    if (valueNode)
+                    {
+                        return this->_getObject(valueNode);
+                    }
+                }
+                return searchResult;
+            }
+            else
+            {
+                AXRWarning("HSSValue", AXRString("The path ") + ppath->stringRep() + " did not yield any results.").raise();
+            }
+            break;
+        }
         }
         default:
             break;
@@ -333,6 +392,9 @@ void HSSValue::setScope(QSharedPointer<HSSSimpleSelection> newScope)
                 break;
             case HSSParserNodeTypeStringConstant:
                 qSharedPointerCast<HSSStringConstant>(this->value)->setScope(newScope);
+                break;
+            case HSSParserNodeTypePropertyPath:
+                qSharedPointerCast<HSSPropertyPath>(this->value)->setScope(newScope);
                 break;
             default:
                 break;

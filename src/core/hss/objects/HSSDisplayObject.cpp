@@ -688,6 +688,7 @@ void HSSDisplayObject::listenWidth(QSharedPointer<HSSObject> theObj)
         {
             case HSSParserNodeTypeExpression:
             case HSSParserNodeTypeFunction:
+            case HSSParserNodeTypePropertyPath:
             {
                 theObj->observe("__impl_private__valueChanged", "width", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::widthChanged));
                 break;
@@ -780,6 +781,7 @@ void HSSDisplayObject::listenHeight(QSharedPointer<HSSObject> theObj)
         {
             case HSSParserNodeTypeFunction:
             case HSSParserNodeTypeExpression:
+            case HSSParserNodeTypePropertyPath:
             {
                 theObj->observe("__impl_private__valueChanged", "height", this, new HSSValueChangedCallback<HSSDisplayObject>(this, &HSSDisplayObject::heightChanged));
                 break;
@@ -1315,10 +1317,22 @@ void HSSDisplayObject::_fireEventObject(QSharedPointer<HSSObject> theObj)
 
 void HSSDisplayObject::_fireEventNode(QSharedPointer<HSSParserNode> parserNode)
 {
-    if (parserNode->isA(HSSParserNodeTypeFunctionCall))
+    switch (parserNode->getType())
     {
-        QSharedPointer<HSSFunction> theFunction = qSharedPointerCast<HSSFunction>(parserNode);
-        theFunction->evaluate();
+        case HSSParserNodeTypeFunction:
+        {
+            QSharedPointer<HSSFunction> theFunction = qSharedPointerCast<HSSFunction>(parserNode);
+            theFunction->evaluate();
+            break;
+        }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            ppath->evaluate();
+            break;
+        }
+        default:
+            break;
     }
 }
 

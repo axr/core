@@ -54,6 +54,7 @@ namespace AXR
     class HSSDisplayObject;
     class HSSKeywordConstant;
     class HSSNumberConstant;
+    class HSSObject;
     class HSSPercentageConstant;
     class HSSStringConstant;
 
@@ -192,6 +193,9 @@ namespace AXR
         virtual bool isA(HSSExpressionType otherType) const;
         virtual HSSExpressionType getExpressionType() const;
 
+        virtual bool isA(HSSUnaryExpressionType otherType) const;
+        virtual HSSUnaryExpressionType getUnaryExpressionType() const;
+
         virtual bool isA(HSSStatementType otherType) const;
         virtual HSSStatementType getStatementType() const;
 
@@ -253,6 +257,15 @@ namespace AXR
         HSSUnit getSpecificity() const;
 
         virtual void addValue(QSharedPointer<HSSParserNode> value);
+
+        //searches itself and ancestors
+        QSharedPointer<HSSObject> getVar(HSSString name);
+        //only searches itself
+        virtual QSharedPointer<HSSObject> getVariable(HSSString name);
+        bool hasLocalVar(HSSString name);
+        virtual bool hasLocalVariable(HSSString name);
+        void setLocalVar(HSSString name, QSharedPointer<HSSObject> theObj);
+        virtual void setLocalVariable(HSSString name, QSharedPointer<HSSObject> theObj);
 
     protected:
         /**

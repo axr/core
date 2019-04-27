@@ -479,6 +479,21 @@ void HSSObject::stackIsA(QSharedPointer<HSSParserNode> parserNode)
                 this->stackIsA(*it);
             }
         }
+        case HSSParserNodeTypePropertyPath:
+        {
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> remoteObj = ppath->evaluate();
+            if (remoteObj && remoteObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSParserNode> valueNode = qSharedPointerCast<HSSValue>(remoteObj)->getValue();
+                if (valueNode)
+                {
+                    return this->stackIsA(valueNode);
+                }
+            }
+            break;
+        }
+
         default:
             break;
     }
@@ -606,6 +621,7 @@ void HSSObject::listenIsA(QSharedPointer<HSSObject> theObj)
         switch (theValue->getType())
         {
             case HSSParserNodeTypeFunction:
+            case HSSParserNodeTypePropertyPath:
             {
                 theObj->observe("__impl_private__valueChanged", "isA", this, new HSSValueChangedCallback<HSSObject>(this, &HSSObject::isAChanged));
                 break;
@@ -915,7 +931,7 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
         return;
     }
 
-    
+
     this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
 }
 
@@ -1616,7 +1632,7 @@ void HSSObject::setOverrides(std::vector<QSharedPointer<HSSPropertyDefinition> >
 void HSSObject::addOverride(QSharedPointer<HSSPropertyDefinition> item)
 {
     AXRString key = item->getKeyString();
-    
+
     QSharedPointer<HSSParserNode> parserNode = item->getValue();
     if (parserNode->isA(HSSParserNodeTypeUnaryExpression))
     {

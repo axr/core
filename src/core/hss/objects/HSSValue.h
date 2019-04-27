@@ -129,6 +129,7 @@ namespace AXR
         HSSUnit _getNumber(const QSharedPointer<HSSParserNode> & parserNode) const;
         bool _getBool(const QSharedPointer<HSSParserNode> & parserNode) const;
         AXRString _getString(const QSharedPointer<HSSParserNode> & parserNode) const;
+        QSharedPointer<HSSObject> _getObject(const QSharedPointer<HSSParserNode> & parserNode) const;
         void _initialize();
         virtual QSharedPointer<HSSClonable> cloneImpl() const;
     };

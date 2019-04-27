@@ -232,6 +232,16 @@ HSSExpressionType HSSParserNode::getExpressionType() const
     return HSSExpressionTypeNone;
 }
 
+bool HSSParserNode::isA(HSSUnaryExpressionType otherType) const
+{
+    return false;
+}
+
+HSSUnaryExpressionType HSSParserNode::getUnaryExpressionType() const
+{
+    return HSSUnaryExpressionTypeNone;
+}
+
 bool HSSParserNode::isA(HSSStatementType otherType) const
 {
     return false;
@@ -343,4 +353,84 @@ void HSSParserNode::setSpecificity(HSSUnit newValue)
 void HSSParserNode::addValue(QSharedPointer<AXR::HSSParserNode> value)
 {
     //override this if needed
+}
+
+QSharedPointer<HSSObject> HSSParserNode::getVar(HSSString name)
+{
+    //first look at its own locals
+    QSharedPointer<HSSObject> localVar = this->getVariable(name);
+    if (localVar)
+        return localVar;
+    
+    //not found, look at the parent
+    QSharedPointer<HSSParserNode> parentNode = this->getParentNode();
+    if (parentNode)
+    {
+        QSharedPointer<HSSObject> parentVar = parentNode->getVar(name);
+        if (parentVar)
+            return parentVar;
+    }
+    else
+    {
+        QSharedPointer<HSSObject> globalVar = this->getController()->getGlobalVariable(name);
+        if (globalVar)
+        {
+            return globalVar;
+        }
+    }
+    return QSharedPointer<HSSObject>();
+}
+
+QSharedPointer<HSSObject> HSSParserNode::getVariable(HSSString name)
+{
+    //override this if needed
+    return QSharedPointer<HSSObject>();
+}
+
+bool HSSParserNode::hasLocalVar(AXR::HSSString name)
+{
+    //first look at its own locals
+    bool hasLocal = this->hasLocalVariable(name);
+    if (hasLocal)
+        return hasLocal;
+    
+    //not found, look at the parent
+    QSharedPointer<HSSParserNode> parentNode = this->getParentNode();
+    if (parentNode)
+    {
+        bool hasParent = parentNode->hasLocalVar(name);
+        if (hasParent)
+            return hasParent;
+    }
+    return false;
+}
+
+bool HSSParserNode::hasLocalVariable(AXR::HSSString name)
+{
+    //override this if needed
+    return false;
+}
+
+void HSSParserNode::setLocalVar(AXR::HSSString name, QSharedPointer<HSSObject> theObj)
+{
+    //first look at its own locals
+    bool hasLocal = this->hasLocalVariable(name);
+    if (hasLocal)
+    {
+        this->setLocalVariable(name, theObj);
+        return;
+    }
+    
+    //not found, look at the parent
+    QSharedPointer<HSSParserNode> parentNode = this->getParentNode();
+    if (parentNode)
+    {
+        parentNode->setLocalVar(name, theObj);
+    }
+}
+
+void HSSParserNode::setLocalVariable(AXR::HSSString name, QSharedPointer<HSSObject> theObj)
+{
+    //override this if needed
+    return;
 }

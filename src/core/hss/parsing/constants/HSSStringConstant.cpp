@@ -244,20 +244,16 @@ AXRString HSSStringConstant::_evaluateNode(QSharedPointer<HSSParserNode> parserN
             }
             break;
         }
-        case HSSParserNodeTypeObjectNameConstant:
+        case HSSParserNodeTypePropertyPath:
         {
-            AXRString objName = qSharedPointerCast<HSSObjectNameConstant>(parserNode)->getValue();
-            QSharedPointer<HSSObject> globalVar = this->getController()->getGlobalVariable(objName);
-            if (globalVar)
+            QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(parserNode);
+            QSharedPointer<HSSObject> theVar = ppath->evaluate();
+            if (theVar && theVar->isA(HSSObjectTypeValue))
             {
-                if (globalVar->isA(HSSObjectTypeValue))
-                {
-                    QSharedPointer<HSSValue> theValue = qSharedPointerCast<HSSValue>(globalVar);
-                    QSharedPointer<HSSParserNode> valueNode = theValue->getValue();
-                    return this->_evaluateNode(valueNode);
-                }
+                QSharedPointer<HSSValue> theValue = qSharedPointerCast<HSSValue>(theVar);
+                QSharedPointer<HSSParserNode> valueNode = theValue->getValue();
+                return this->_evaluateNode(valueNode);
             }
-            break;
         }
         default:
             break;
