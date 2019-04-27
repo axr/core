@@ -1786,6 +1786,7 @@ bool HSSDisplayObject::handleEvent(HSSInputEvent *event)
         {
             case HSSEventTypeLoad:
             case HSSEventTypeFlag:
+            case HSSEventTypeUnflag:
             {
                 return this->fireEvent(event->type());
             }
