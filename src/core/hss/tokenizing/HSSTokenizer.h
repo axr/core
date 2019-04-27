@@ -105,6 +105,7 @@ namespace AXR
         QSharedPointer<HSSToken> readCommentOrSymbol();
         QSharedPointer<HSSToken> readSymbol();
         QSharedPointer<HSSToken> readDotChars();
+        QSharedPointer<HSSToken> readComparator();
 
         HSSTokenizerPrivate *d;
     };

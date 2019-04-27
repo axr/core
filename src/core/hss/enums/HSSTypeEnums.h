@@ -83,6 +83,8 @@ namespace AXR
         HSSParserNodeTypeCommentNode, /**< Comments. */
         HSSParserNodeTypeSymbolNode, /**< Other symbols. */
         HSSParserNodeTypeArgument, /**< Arguments of a function call. */
+        HSSParserNodeTypeComparison, /**< Comparison of two values. */
+        HSSParserNodeTypeNegatedVal, /**< Turns the value in a boolean and flips it. */
         HSSParserNodeTypeInvalidNode /**< Node type for holding invalid code. */
     };
     /** @} */
@@ -267,6 +269,9 @@ namespace AXR
         HSSFunctionTypeStopTimer, /**< Removes a timer of repeating execution. */
         HSSFunctionTypeToggleTimer, /**< Adds or removes a timer of repeating execution. */
         HSSFunctionTypeInsert, /**< Inserts text into a container. */
+        HSSFunctionTypeIf, /**< Evaluates what is inside the block if the condition is true. */
+        HSSFunctionTypeElseIf, /**< If the preceding if function had a falsy condition, evaluate its own. */
+        HSSFunctionTypeElse, /**< If the preceding if function had a falsy condition, evaluate what is in the block. */
         HSSFunctionTypeFunction, /**< User defined functions. */
         HSSFunctionTypeCall, /**< What user defined function to call and with which arguments. */
         HSSFunctionTypeReturn, /**< Set the functions return value. */
@@ -497,6 +502,26 @@ namespace AXR
         HSSDirectionRightToLeft, /**< From right to left. */
         HSSDirectionTopToBottom, /**< From top to bottom. */
         HSSDirectionBottomToTop /**< From bottom to top. */
+    };
+    /** @} */
+    
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSComparisonType
+     *  How to compare values in a comparison.
+     */
+    enum AXR_API HSSComparisonType
+    {
+        HSSComparisonTypeNone, /**< Error state */
+        HSSComparisonTypeEqual, /**< A == B */
+        HSSComparisonTypeNotEqual, /**< A != B */
+        HSSComparisonTypeBigger, /**< A > B */
+        HSSComparisonTypeBiggerOrEqual, /**< A >= B */
+        HSSComparisonTypeSmaller, /**< A < B */
+        HSSComparisonTypeSmallerOrEqual, /**< A <= B */
+        HSSComparisonTypeAnd, /**< A && B. */
+        HSSComparisonTypeOr, /**< A || B. */
     };
     /** @} */
 }

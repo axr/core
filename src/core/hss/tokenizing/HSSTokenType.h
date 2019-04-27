@@ -74,7 +74,13 @@ namespace AXR
         HSSAmpersand,
         HSSDot,
         HSSDoubleDot,
-        HSSEllipsis
+        HSSEllipsis,
+        HSSEqualSign,
+        HSSEqualComparator,
+        HSSBiggerComparator,
+        HSSBiggerOrEqualComparator,
+        HSSSmallerComparator,
+        HSSSmallerOrEqualComparator
     };
 }
 

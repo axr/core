@@ -98,6 +98,7 @@
 #include "HSSVarDeclaration.h"
 #include "HSSAssignment.h"
 #include "HSSComparison.h"
+#include "HSSNegatedVal.h"
 
 #include "HSSSelectorChain.h"
 #include "HSSSelector.h"
@@ -136,6 +137,7 @@
 #include "HSSDivision.h"
 #include "HSSUnarySum.h"
 #include "HSSUnarySubtraction.h"
+#include "HSSComparison.h"
 
 #include "HSSFilter.h"
 #include "HSSFlag.h"

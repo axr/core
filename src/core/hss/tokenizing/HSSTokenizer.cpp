@@ -294,6 +294,12 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
             return ret;
         case '.':
             return this->readDotChars();
+
+        case '=':
+        case '>':
+        case '<':
+            return this->readComparator();
+
         default:
             return this->readSymbol();
     }
@@ -763,6 +769,64 @@ QSharedPointer<HSSToken> HSSTokenizer::readDotChars()
         else
         {
             ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSDot, ".", line, column));
+            return ret;
+        }
+    }
+    return ret;
+}
+
+/*!
+ * Reads and returns a comparator
+ *
+ * NOTE: This function expects the current character to be a symbol
+ */
+QSharedPointer<HSSToken> HSSTokenizer::readComparator()
+{
+    const size_t line = d->currentLine;
+    const size_t column = d->currentColumn - 1;
+    QSharedPointer<HSSToken> ret;
+    if (d->currentChar == '=')
+    {
+        this->readNextChar();
+        if (d->currentChar == '=')
+        {
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSEqualComparator, "==", line, column));
+            this->readNextChar();
+            return ret;
+        }
+        else
+        {
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSEqualSign, "=", line, column));
+            return ret;
+        }
+    }
+    else if (d->currentChar == '>')
+    {
+        this->readNextChar();
+        if (d->currentChar == '=')
+        {
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBiggerOrEqualComparator, ">=", line, column));
+            this->readNextChar();
+            return ret;
+        }
+        else
+        {
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBiggerComparator, ">", line, column));
+            return ret;
+        }
+    }
+    else if (d->currentChar == '<')
+    {
+        this->readNextChar();
+        if (d->currentChar == '=')
+        {
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSmallerOrEqualComparator, "<=", line, column));
+            this->readNextChar();
+            return ret;
+        }
+        else
+        {
+            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSmallerComparator, "<", line, column));
             return ret;
         }
     }
