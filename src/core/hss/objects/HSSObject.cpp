@@ -931,7 +931,34 @@ void HSSObject::setStackNode(AXRString propertyName, QSharedPointer<AXR::HSSPars
         return;
     }
 
+    if (parserNode->isA(HSSParserNodeTypeUnaryExpression))
+    {
+        QSharedPointer<HSSUnaryExpression> uExp = qSharedPointerCast<HSSUnaryExpression>(parserNode);
+        if (this->_stackValues.count(propertyName))
+        {
+            QSharedPointer<HSSObject> currentStackObj = this->_stackValues[propertyName];
+            if (currentStackObj->isA(HSSObjectTypeValue))
+            {
+                QSharedPointer<HSSValue> currentValue = qSharedPointerCast<HSSValue>(currentStackObj);
+                QSharedPointer<HSSParserNode> valueNode = currentValue->getValue();
 
+                if (valueNode->isA(HSSParserNodeTypeUnaryExpression))
+                {
+                    QSharedPointer<HSSUnaryExpression> uExp2 =qSharedPointerCast<HSSUnaryExpression>(parserNode);
+                    uExp->merge(uExp2);
+                }
+                else
+                {
+
+                    uExp->setLeftNode(valueNode->clone());
+                }
+            }
+            else
+            {
+                //todo what here?
+            }
+        }
+    }
     this->setStackValue(propertyName, this->computeValue(propertyName, parserNode));
 }
 

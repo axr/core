@@ -213,6 +213,8 @@ HSSUnit HSSValue::_getNumber(const QSharedPointer<HSSParserNode> & parserNode) c
             return qSharedPointerCast<HSSNumberConstant>(parserNode)->getValue();
         case HSSParserNodeTypeExpression:
             return qSharedPointerCast<HSSExpression>(parserNode)->evaluate();
+        case HSSParserNodeTypeUnaryExpression:
+            return qSharedPointerCast<HSSUnaryExpression>(parserNode)->evaluate();
         case HSSParserNodeTypeStringConstant:
         {
             AXRString string = qSharedPointerCast<HSSStringConstant>(parserNode)->getValue();

@@ -63,6 +63,7 @@ namespace AXR
         HSSParserNodeTypeFilter, /**< Reduces or alters the selection. */
         HSSParserNodeTypeStatement, /**< Basic execution block. */
         HSSParserNodeTypeExpression, /**< Mathematic operation between two values (or other expressions). */
+        HSSParserNodeTypeUnaryExpression, /**< Mathematic operation on one value. */
         HSSParserNodeTypeNumberConstant, /**< A basic number in the HSS source. */
         HSSParserNodeTypeBooleanConstant, /**< A boolean (true or false) in the HSS source. */
         HSSParserNodeTypePercentageConstant, /**< A percentage number in the HSS source. */
@@ -98,6 +99,22 @@ namespace AXR
         HSSExpressionTypeSubtraction, /**< A-B. */
         HSSExpressionTypeMultiplication, /**< A*B. */
         HSSExpressionTypeDivision /**< A/B. */
+    };
+    /** @} */
+    
+    /**
+     *  @addtogroup typeEnums
+     *  @{
+     *  @enum HSSUnaryExpressionType
+     *  The type of the unary expression, specific for each subclass.
+     */
+    enum AXR_API HSSUnaryExpressionType
+    {
+        HSSUnaryExpressionTypeNone = 0, /**< Error state. */
+        HSSUnaryExpressionTypeSum, /**< +(A). */
+        HSSUnaryExpressionTypeSubtraction, /**< -(A). */
+        HSSUnaryExpressionTypeMultiplication, /**< *(A). */
+        HSSUnaryExpressionTypeDivision, /**< /(A). */
     };
     /** @} */
 
