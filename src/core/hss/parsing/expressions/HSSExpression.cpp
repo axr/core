@@ -225,28 +225,12 @@ HSSUnit HSSExpression::getValue()
 void HSSExpression::setScope(QSharedPointer<HSSSimpleSelection> newScope)
 {
     this->scope = newScope;
-    //propagate values
-    this->_nodesToValuesIfNeeded();
-    if (this->left)
-    {
-        this->left->setScope(newScope);
-    }
-    if (this->right)
-    {
-        this->right->setScope(newScope);
-    }
-
     this->setDirty(true);
 }
 
 void HSSExpression::setThisObj(QSharedPointer<HSSDisplayObject> value)
 {
     this->thisObj = value;
-    //propagate values
-    this->_nodesToValuesIfNeeded();
-    if (this->left) this->left->setThisObj(value);
-    if (this->right) this->right->setThisObj(value);
-
     HSSParserNode::setThisObj(value);
 }
 
@@ -258,6 +242,8 @@ void HSSExpression::_nodesToValuesIfNeeded()
         if(thisObj)
         {
             this->left = qSharedPointerCast<HSSValue>(thisObj->computeValueObject(this->_leftNode, this->getHostProperty()));
+            this->left->setThisObj(this->getThisObj());
+            this->left->setScope(this->scope);
         }
     }
     if (!this->right && this->_rightNode)
@@ -266,6 +252,8 @@ void HSSExpression::_nodesToValuesIfNeeded()
         if(thisObj)
         {
             this->right = qSharedPointerCast<HSSValue>(thisObj->computeValueObject(this->_rightNode, this->getHostProperty()));
+            this->right->setThisObj(this->getThisObj());
+            this->right->setScope(this->scope);
         }
     }
 }
