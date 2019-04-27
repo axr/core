@@ -72,10 +72,16 @@ namespace AXR
 
     class AXRBuffer;
     class AXRController;
+    class HSSArgument;
+    class HSSAssignment;
+    class HSSBooleanConstant;
     class HSSCodeParserPrivate;
+    class HSSComparison;
     class HSSParserReceiver;
     class HSSCombinator;
+    class HSSExpression;
     class HSSFilter;
+    class HSSFunctionCall;
     class HSSInstruction;
     class HSSNameSelector;
     class HSSObject;
@@ -83,10 +89,12 @@ namespace AXR
     class HSSParserNode;
     class HSSPropertyDefinition;
     class HSSPropertyPath;
+    class HSSRefFunction;
     class HSSRule;
     class HSSSelectorChain;
     class HSSSimpleSelector;
     class HSSToken;
+    class HSSVarDeclaration;
 
     class AXR_API HSSCodeParser
     {
@@ -136,8 +144,13 @@ namespace AXR
          */
         bool parseHssFile(QSharedPointer<AXRBuffer> buffer);
         
-        bool readNextStatement();
+        bool parseNext();
+        void parseIdentifierStatement();
+        void setIgnoreTokenReadCalls(bool value);
         void readNextToken();
+        void updateCurrentToken(QSharedPointer<HSSToken> theToken);
+        void skipInvalidToken();
+        void skipStringArgument();
         QSharedPointer<HSSParserNode> readStringArgument();
         bool atEndOfSource();
         void skip(HSSTokenType type);
@@ -147,6 +160,17 @@ namespace AXR
          *  call itself when reading an opening block, to balance them out.
          */
         void skipUntilEndOfStatement();
+        
+        QSharedPointer<HSSVarDeclaration> readVarDecl();
+        bool isBoolean();
+        bool isAssignment();
+        bool isPropertyPath();
+        QSharedPointer<HSSBooleanConstant> readBoolean();
+        QSharedPointer<HSSAssignment> readAssignment(QSharedPointer<HSSToken> identifier);
+        QSharedPointer<HSSAssignment> readAssignment(QSharedPointer<HSSPropertyPath> thePath);
+        bool isComparison();
+        const bool isComparisonSign() const;
+        QSharedPointer<HSSComparison> readComparison(HSSString propertyName, QSharedPointer<HSSParserNode> leftNode);
 
         /**
          *  Shorthand for readPropertyDefinition(bool shorhandChecked, bool isShorthand), passing
@@ -163,16 +187,16 @@ namespace AXR
          *                              we can avoid it to be checked again passing false to this parameter.
          *  @param isShorthand          If shorthand was checked, pass the value here.
          *
-         *  @todo should reading values go into a separate function, maybe called readValue()?
          */
         QSharedPointer<HSSPropertyDefinition> readPropertyDefinition(bool shorthandChecked, bool isShorthand);
-
-        /**
-         *  Reads one or more values, separated by comma.
-         *
-         *  @return Wether an error was found.
-         */
-        bool readValues(const QSharedPointer<HSSParserNode> &target, AXRString propertyName);
+        
+        bool readVals(const QSharedPointer<HSSParserNode> &target, AXRString propertyName);
+        bool readVals(const QSharedPointer<HSSParserNode> &target, AXRString propertyName, bool useComma, bool strict);
+        QSharedPointer<HSSParserNode> readSingleVal(AXRString propertyName, bool &valid);
+        QSharedPointer<HSSParserNode> readVal(AXRString propertyName, bool &valid);
+        QSharedPointer<HSSParserNode> readIdentifierValue();
+        const bool isExpressionSign() const;
+        QSharedPointer<HSSExpression> readExpression(AXRString propertyName, QSharedPointer<HSSParserNode> leftNode);
 
         /**
          *  Reads a property path, with all its nodes.
@@ -180,6 +204,7 @@ namespace AXR
          *  @return The property path that was read.
          */
         QSharedPointer<HSSPropertyPath> readPropertyPath();
+        QSharedPointer<HSSPropertyPath> readPropertyPath(bool firstNodeIsVariableName);
 
         /**
          *  Shorthand for readInstruction(bool preferHex), passing true to the parameter.
@@ -310,6 +335,18 @@ namespace AXR
          *  @param objDef   A shared pointer to the object definition to be added.
          */
         void recursiveAddObjectDefinition(QSharedPointer<HSSObjectDefinition> objDef);
+        
+        /**
+         *  Reads a reference using the shorthand version with dot notation.
+         *  @return A shared pointer to the resulting reference function.
+         */
+        QSharedPointer<HSSRefFunction> readObjectPath();
+
+        /**
+         *  Checks if we are dealing with a object path.
+         *  @return true if it is an object path and false otherwise.
+         */
+        bool isObjectPath();
 
         /**
          *  Reads an expression, or the value if it isn't one. If it contains parentheses it will recursively
@@ -337,7 +374,17 @@ namespace AXR
          */
         QSharedPointer<HSSParserNode> readBaseExpression();
 
-        QSharedPointer<HSSParserNode> readValue(AXRString propertyName, bool &valid);
+        /**
+         *  Wether we are reading a unary expression.
+         *  @return true if it is a unary expression, false otherwise
+         */
+        bool isUnaryExpression();
+
+        /**
+         *  Read a expression with only one operand.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readUnaryExpression();
 
         /**
          *  Creates a flag and sets its name with the value of the current token.
@@ -445,6 +492,42 @@ namespace AXR
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readInsertFunction();
+        
+        /**
+         *  Read a function of type if(<condition>) { <evaluables>; ... }.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readIfFunction();
+        
+        /**
+         *  Read a function of type else [if(<condition>)] { <evaluables>; ... }.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readElseFunction();
+
+        /**
+         *  Read an user defined function(<arg1>, ...) { <evaluables>; ... }.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readUserDefinedFunction();
+        
+        bool isFunctionCall();
+
+        /**
+         *  Read a call to a user defined function.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSFunctionCall> readFunctionCall();
+        QSharedPointer<HSSArgument> readArgument(bool & isValid);
+        
+        bool readEvaluables(QSharedPointer<HSSParserNode> target);
+        
+        /**
+         *  Reads the return function, which tells an user defined function to
+         *  use a value as the result of evaluating the function.
+         *  @return A shared pointer to the function node.
+         */
+        QSharedPointer<HSSParserNode> readReturnFunction();
 
         /**
          *  Reads a custom function.
