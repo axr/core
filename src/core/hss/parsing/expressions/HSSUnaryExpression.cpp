@@ -138,20 +138,30 @@ HSSUnit HSSUnaryExpression::evaluate()
         this->_nodesToValuesIfNeeded();
         //left
         QSharedPointer<HSSValue> left = this->getLeft();
-        if (!left)
-            return 0;
-
-        this->leftval = left->getNumber();
-        if (this->left->getValue()->isA(HSSParserNodeTypeExpression) || this->left->getValue()->isA(HSSParserNodeTypeFunction))
+        if (left){
+            this->leftval = left->getNumber();
+            if (this->left->getValue()->isA(HSSParserNodeTypeExpression) || this->left->getValue()->isA(HSSParserNodeTypeFunction))
+            {
+                left->observe("__impl_private__valueChanged", "left", this, new HSSValueChangedCallback<HSSUnaryExpression>(this, &HSSUnaryExpression::leftChanged));
+            }
+        }
+        else
         {
-            left->observe("__impl_private__valueChanged", "left", this, new HSSValueChangedCallback<HSSUnaryExpression>(this, &HSSUnaryExpression::leftChanged));
+            this->leftval = 0.;
         }
         //right
         QSharedPointer<HSSValue> right = this->getRight();
-        this->rightval = right->getNumber();
-        if (this->right->getValue()->isA(HSSParserNodeTypeExpression) || this->right->getValue()->isA(HSSParserNodeTypeFunction))
+        if (right)
         {
-            right->observe("__impl_private__valueChanged", "right", this, new HSSValueChangedCallback<HSSUnaryExpression>(this, &HSSUnaryExpression::rightChanged));
+            this->rightval = right->getNumber();
+            if (this->right->getValue()->isA(HSSParserNodeTypeExpression) || this->right->getValue()->isA(HSSParserNodeTypeFunction))
+            {
+                right->observe("__impl_private__valueChanged", "right", this, new HSSValueChangedCallback<HSSUnaryExpression>(this, &HSSUnaryExpression::rightChanged));
+            }
+        }
+        else
+        {
+            this->rightval = 0.;
         }
         //calculate
         this->setValue(this->calculate(this->leftval, this->rightval));
