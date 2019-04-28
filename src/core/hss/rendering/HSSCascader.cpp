@@ -195,10 +195,6 @@ void HSSCascader::applyStack(HSSContainer & container, HSSUnit & specificity)
 
 void HSSCascader::applyIsARules(HSSContainer & container, HSSUnit & specificity)
 {
-    if (!container._objDefRulesChanged) {
-        return;
-    }
-
     QSharedPointer<HSSContainer> thisContainer = qSharedPointerCast<HSSContainer>(container.shared_from_this());
     std::vector<QSharedPointer<HSSRule> > currentRules(container._appliedIsARules);
     std::vector<QSharedPointer<HSSRule> > newRules;
@@ -271,7 +267,6 @@ void HSSCascader::applyIsARules(HSSContainer & container, HSSUnit & specificity)
         controller->recursiveSetRuleState(rule, thisContainer->getChildren(), thisContainer, HSSRuleStateOn);
         controller->currentContextPop();
     }
-    container._objDefRulesChanged = false;
 }
 
 
