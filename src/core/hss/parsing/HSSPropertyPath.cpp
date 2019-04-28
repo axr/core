@@ -108,10 +108,16 @@ AXRString HSSPropertyPath::stringRep()
 AXRString HSSPropertyPath::toKeyString() const
 {
     AXRString tempstr;
+    bool first = true;
     for (std::deque<QSharedPointer<HSSPropertyPathNode> >::const_iterator it = this->_nodes.begin(); it != this->_nodes.end(); ++it)
     {
+        if (!first)
+        {
+            tempstr.append(".");
+        }
         QSharedPointer<HSSPropertyPathNode> value = *it;
-        tempstr.append(value->toString().append("."));
+        tempstr.append(value->stringRep());
+        if (first) first = false;
     }
     
     return tempstr;
