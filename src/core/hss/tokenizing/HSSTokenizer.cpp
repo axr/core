@@ -247,49 +247,49 @@ QSharedPointer<HSSToken> HSSTokenizer::readNextToken()
         case '\'':
             return this->readString();
         case '#':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSInstructionSign, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSInstructionSign, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '@':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSObjectSign, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSObjectSign, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '&':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSAmpersand, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSAmpersand, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '{':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBlockOpen, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockOpen, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '}':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBlockClose, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockClose, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ',':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSComma, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSComma, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ':':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSColon, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSColon, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ';':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSEndOfStatement, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSEndOfStatement, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '(':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSParenthesisOpen, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisOpen, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case ')':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSParenthesisClose, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSParenthesisClose, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '/':
             return this->readCommentOrSymbol();
         case '!':
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSNegator, cc, d->currentLine, d->currentColumn - 1));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSNegator, cc, d->currentLine, d->currentColumn - 1));
             this->readNextChar();
             return ret;
         case '.':
@@ -440,7 +440,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readWhitespace()
         this->storeCurrentCharAndReadNext();
     }
     
-    return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSWhitespace, this->extractCurrentTokenText(), line, column));
+    return QSharedPointer<HSSToken>(new HSSToken(HSSWhitespace, this->extractCurrentTokenText(), line, column));
 }
 
 /*!
@@ -456,7 +456,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readIdentifier()
         this->storeCurrentCharAndReadNext();
     }
 
-    return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
+    return QSharedPointer<HSSToken>(new HSSToken(HSSIdentifier, this->extractCurrentTokenText(), line, column));
 }
 
 /*!
@@ -504,7 +504,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readHexOrIdentifier()
                 }
                 else if (d->currentTokenText.length() > 0)
                 {
-                    return QSharedPointer<HSSValueToken>(new HSSValueToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
+                    return QSharedPointer<HSSToken>(new HSSToken(HSSHexNumber, this->extractCurrentTokenText(), line, column));
                 }
                 else
                 {
@@ -548,12 +548,12 @@ QSharedPointer<HSSToken> HSSTokenizer::readNumberOrPercentage()
     QSharedPointer<HSSToken> ret;
     if (d->currentChar == '%')
     {
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSToken>(new HSSToken(HSSPercentageNumber, this->extractCurrentTokenText(), line, column));
         this->readNextChar();
     }
     else
     {
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSNumber, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSToken>(new HSSToken(HSSNumber, this->extractCurrentTokenText(), line, column));
     }
 
     return ret;
@@ -682,7 +682,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
     const size_t line = d->currentLine;
     const size_t column = d->currentColumn - 1;
 
-    QSharedPointer<HSSValueToken> ret;
+    QSharedPointer<HSSToken> ret;
     this->readNextChar();
     if (d->currentChar == '/')
     {
@@ -694,7 +694,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
             this->storeCurrentCharAndReadNext();
         }
 
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSLineComment, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSToken>(new HSSToken(HSSLineComment, this->extractCurrentTokenText(), line, column));
     }
     else if (d->currentChar == '*')
     {
@@ -723,12 +723,12 @@ QSharedPointer<HSSToken> HSSTokenizer::readCommentOrSymbol()
             this->storeCurrentCharAndReadNext();
         }
 
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
+        ret = QSharedPointer<HSSToken>(new HSSToken(HSSBlockComment, this->extractCurrentTokenText(), line, column));
         readNextChar();
     }
     else
     {
-        ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, "/", line, column));
+        ret = QSharedPointer<HSSToken>(new HSSToken(HSSSymbol, "/", line, column));
     }
 
     return ret;
@@ -744,7 +744,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readSymbol()
 
     QSharedPointer<HSSToken> ret;
 
-    ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSymbol, d->currentChar, line, column));
+    ret = QSharedPointer<HSSToken>(new HSSToken(HSSSymbol, d->currentChar, line, column));
     this->readNextChar();
     return ret;
 }
@@ -768,18 +768,18 @@ QSharedPointer<HSSToken> HSSTokenizer::readDotChars()
             if (d->currentChar == '.')
             {
                 this->readNextChar();
-                ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSEllipsis, "...", line, column));
+                ret = QSharedPointer<HSSToken>(new HSSToken(HSSEllipsis, "...", line, column));
                 return ret;
             }
             else
             {
-                ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSDoubleDot, "..", line, column));
+                ret = QSharedPointer<HSSToken>(new HSSToken(HSSDoubleDot, "..", line, column));
                 return ret;
             }
         }
         else
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSDot, ".", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSDot, ".", line, column));
             return ret;
         }
     }
@@ -801,13 +801,13 @@ QSharedPointer<HSSToken> HSSTokenizer::readComparator()
         this->readNextChar();
         if (d->currentChar == '=')
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSEqualComparator, "==", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSEqualComparator, "==", line, column));
             this->readNextChar();
             return ret;
         }
         else
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSEqualSign, "=", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSEqualSign, "=", line, column));
             return ret;
         }
     }
@@ -816,13 +816,13 @@ QSharedPointer<HSSToken> HSSTokenizer::readComparator()
         this->readNextChar();
         if (d->currentChar == '=')
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBiggerOrEqualComparator, ">=", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBiggerOrEqualComparator, ">=", line, column));
             this->readNextChar();
             return ret;
         }
         else
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSBiggerComparator, ">", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSBiggerComparator, ">", line, column));
             return ret;
         }
     }
@@ -831,13 +831,13 @@ QSharedPointer<HSSToken> HSSTokenizer::readComparator()
         this->readNextChar();
         if (d->currentChar == '=')
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSmallerOrEqualComparator, "<=", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSSmallerOrEqualComparator, "<=", line, column));
             this->readNextChar();
             return ret;
         }
         else
         {
-            ret = QSharedPointer<HSSValueToken>(new HSSValueToken(HSSSmallerComparator, "<", line, column));
+            ret = QSharedPointer<HSSToken>(new HSSToken(HSSSmallerComparator, "<", line, column));
             return ret;
         }
     }

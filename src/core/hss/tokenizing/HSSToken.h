@@ -51,19 +51,30 @@ namespace AXR
     class AXR_API HSSToken
     {
     public:
-        static AXRString tokenStringRepresentation(HSSTokenType type);
+        static HSSString tokenStringRepresentation(HSSTokenType type);
 
-        HSSToken(HSSTokenType type, qint64 line, qint64 column);
+        HSSToken(HSSTokenType type, long long line, long long column);
+        HSSToken(HSSTokenType type, HSSString value, long long line, long long column);
+        HSSToken(HSSTokenType type, HSSUnit value, long long line, long long column);
         virtual ~HSSToken();
         bool isA(HSSTokenType otherType) const;
         HSSTokenType getType() const;
-        virtual AXRString toString();
+        virtual HSSString toString();
 
-        qint64 line;
-        qint64 column;
+        long long line;
+        long long column;
+        
+        HSSString getString();
+        HSSUnit getNumber();
+        bool equals(HSSTokenType otherType, HSSString otherValue);
+        bool equals(HSSTokenType otherType, HSSUnit otherValue);
+        bool isNumeric();
 
     protected:
         HSSTokenType type;
+        HSSString _value;
+        HSSUnit _number;
+        
     };
 }
 

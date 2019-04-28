@@ -81,7 +81,6 @@
 
 #include "HSSTokenType.h"
 #include "HSSToken.h"
-#include "HSSValueToken.h"
 #include "HSSStringToken.h"
 #include "HSSTokenizer.h"
 #include "HSSSelection.h"

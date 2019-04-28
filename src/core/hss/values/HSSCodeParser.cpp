@@ -232,7 +232,7 @@ bool HSSCodeParser::parseNext()
 
                     if (d->currentToken->isA(HSSIdentifier))
                     {
-                        AXRString theName = VALUE_TOKEN(d->currentToken)->getString();
+                        AXRString theName = d->currentToken->getString();
                         theObj->setName(theName);
                         
                         if (d->notifiesReceiver)
@@ -311,7 +311,7 @@ bool HSSCodeParser::parseNext()
         }
         case HSSSymbol:
         {
-            if (VALUE_TOKEN(d->currentToken)->equals(HSSSymbol, "*") || this->isCombinator())
+            if (d->currentToken->equals(HSSSymbol, "*") || this->isCombinator())
             {
                 QSharedPointer<HSSRule> theRule = this->readRule();
                 if (theRule)
@@ -330,7 +330,7 @@ bool HSSCodeParser::parseNext()
         case HSSBlockComment:
         case HSSLineComment:
         {
-            QSharedPointer<HSSCommentNode> theComment = HSSCommentNode::createComment(VALUE_TOKEN(d->currentToken)->getString(), d->controller);
+            QSharedPointer<HSSCommentNode> theComment = HSSCommentNode::createComment(d->currentToken->getString(), d->controller);
             d->receiver->receiveParserEvent(HSSParserEventComment, theComment);
             this->readNextToken();
             if (!this->atEndOfSource())
@@ -363,7 +363,7 @@ bool HSSCodeParser::parseNext()
 void HSSCodeParser::parseIdentifierStatement()
 {
     bool statementDone = false;
-    if (VALUE_TOKEN(d->currentToken)->getString() == "var")
+    if (d->currentToken->getString() == "var")
     {
         d->currentObjectContext.push(d->_containerContextObj);
         QSharedPointer<HSSVarDeclaration> varDecl = this->readVarDecl();
@@ -417,7 +417,7 @@ void HSSCodeParser::parseIdentifierStatement()
                 if (d->notifiesReceiver)
                 {
                     //notify the receiver
-                    d->receiver->receiveParserEvent(HSSParserEventVariableName, HSSObjectNameConstant::createConstant(VALUE_TOKEN(identifierToken)->getString(), d->controller));
+                    d->receiver->receiveParserEvent(HSSParserEventVariableName, HSSObjectNameConstant::createConstant(identifierToken->getString(), d->controller));
                 }
                 
                 this->readNextToken();
@@ -439,7 +439,7 @@ void HSSCodeParser::parseIdentifierStatement()
             else if (this->isComparison())
             {
                 QSharedPointer<HSSToken> identifierToken = d->currentToken;
-                QSharedPointer<HSSObjectNameConstant> objName = HSSObjectNameConstant::createConstant(VALUE_TOKEN(identifierToken)->getString(), d->controller);
+                QSharedPointer<HSSObjectNameConstant> objName = HSSObjectNameConstant::createConstant(identifierToken->getString(), d->controller);
                 if (d->notifiesReceiver)
                 {
                     //notify the receiver
@@ -474,7 +474,7 @@ QSharedPointer<HSSVarDeclaration> HSSCodeParser::readVarDecl()
     QSharedPointer<HSSVarDeclaration> errorState;
     
     //skip the "var"
-    if (VALUE_TOKEN(d->currentToken)->getString() != "var")
+    if (d->currentToken->getString() != "var")
         return errorState;
     
     if (d->notifiesReceiver)
@@ -496,8 +496,8 @@ QSharedPointer<HSSVarDeclaration> HSSCodeParser::readVarDecl()
     if (!d->currentToken->isA(HSSIdentifier))
         return errorState;
     
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     if (d->notifiesReceiver)
     {
         //notify the receiver
@@ -535,7 +535,7 @@ bool HSSCodeParser::isBoolean()
 {
     if (d->currentToken->isA(HSSIdentifier))
     {
-        if (VALUE_TOKEN(d->currentToken)->getString() == "true" || VALUE_TOKEN(d->currentToken)->getString() == "false")
+        if (d->currentToken->getString() == "true" || d->currentToken->getString() == "false")
         {
             return true;
         }
@@ -595,7 +595,7 @@ QSharedPointer<HSSBooleanConstant> HSSCodeParser::readBoolean()
         return QSharedPointer<HSSBooleanConstant>();
 
     bool boolValue = false;
-    if (VALUE_TOKEN(d->currentToken)->getString() == "true")
+    if (d->currentToken->getString() == "true")
         boolValue = true;
 
     QSharedPointer<HSSBooleanConstant> ret(new HSSBooleanConstant(boolValue, d->controller));
@@ -615,7 +615,7 @@ QSharedPointer<HSSBooleanConstant> HSSCodeParser::readBoolean()
 QSharedPointer<HSSAssignment> HSSCodeParser::readAssignment(QSharedPointer<HSSToken> identifier)
 {
     QSharedPointer<HSSPropertyPath> newPath(new HSSPropertyPath(d->controller));
-    AXRString varName = VALUE_TOKEN(identifier)->getString();
+    AXRString varName = identifier->getString();
     QSharedPointer<HSSPropertyPathNode> ppn(new HSSPropertyPathNode(HSSObjectNameConstant::createConstant(varName, d->controller), d->controller));
     newPath->add(ppn);
     return this->readAssignment(newPath);
@@ -663,7 +663,7 @@ const bool HSSCodeParser::isComparisonSign() const
 {
     if (d->currentToken->isA(HSSSymbol))
     {
-        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+        const char currentTokenChar = *(d->currentToken->getString()).data().c_str();
         switch (currentTokenChar)
         {
             case '&':
@@ -784,7 +784,7 @@ QSharedPointer<HSSRule> HSSCodeParser::readRule()
         if (d->notifiesReceiver)
         {
             //notify the receiver
-            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
         }
         this->readNextToken();
         return errorState;
@@ -900,7 +900,7 @@ QSharedPointer<HSSRule> HSSCodeParser::readRule()
             }
             case HSSSymbol:
             {
-                if (VALUE_TOKEN(d->currentToken)->getString() == "*")
+                if (d->currentToken->getString() == "*")
                 {
                     QSharedPointer<HSSRule> theRule = this->readRule();
                     if (theRule)
@@ -915,8 +915,8 @@ QSharedPointer<HSSRule> HSSCodeParser::readRule()
                 }
                 else
                 {
-                    AXRError("HSSParser", "Unexpected symbol " + VALUE_TOKEN(d->currentToken)->getString() + " while reading rule", d->file->sourceUrl(), d->line, d->column).raise();
-                    d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+                    AXRError("HSSParser", "Unexpected symbol " + d->currentToken->getString() + " while reading rule", d->file->sourceUrl(), d->line, d->column).raise();
+                    d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
                     this->readNextToken();
                     if (this->atEndOfSource())
                         return errorState;
@@ -1105,7 +1105,7 @@ QSharedPointer<HSSSimpleSelector> HSSCodeParser::readSimpleSelector()
             
         case HSSSymbol:
         {
-            const char currentTokenValue = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+            const char currentTokenValue = *(d->currentToken->getString()).data().c_str();
             switch (currentTokenValue)
             {
                 case '*':
@@ -1191,7 +1191,7 @@ QSharedPointer<HSSNameSelector> HSSCodeParser::readObjectSelector()
             this->skip(HSSObjectSign);
             if (d->currentToken->isA(HSSIdentifier))
             {
-                AXRString objtype = VALUE_TOKEN(d->currentToken)->getString();
+                AXRString objtype = d->currentToken->getString();
                 if (objtype == "this")
                 {
                     if (d->notifiesReceiver)
@@ -1296,7 +1296,7 @@ QSharedPointer<HSSFilter> HSSCodeParser::readFilter()
             if (this->atEndOfSource())
                 return errorState;
             
-            AXRString flagName = VALUE_TOKEN(d->currentToken)->getString();
+            AXRString flagName = d->currentToken->getString();
             QSharedPointer<HSSFlag> theFlag = QSharedPointer<HSSFlag>(new HSSFlag(d->controller));
             theFlag->setName(flagName);
             d->receiver->receiveParserEvent(HSSParserEventFlagName, HSSObjectNameConstant::createConstant(flagName, d->controller));
@@ -1305,7 +1305,7 @@ QSharedPointer<HSSFilter> HSSCodeParser::readFilter()
         }
         else if (d->currentToken->isA(HSSIdentifier))
         {
-            AXRString filterName = VALUE_TOKEN(d->currentToken)->getString();
+            AXRString filterName = d->currentToken->getString();
             QSharedPointer<HSSFilter> theFlag = HSSFilter::newFilterWithStringType(filterName, d->controller);
             d->receiver->receiveParserEvent(HSSParserEventFilterName, HSSObjectNameConstant::createConstant(filterName, d->controller));
             this->readNextToken();
@@ -1324,7 +1324,7 @@ QSharedPointer<HSSCombinator> HSSCodeParser::readCombinator()
     {
         case HSSSymbol:
         {
-            const char currentTokenValue = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+            const char currentTokenValue = *(d->currentToken->getString()).data().c_str();
             switch (currentTokenValue)
             {
                 case '=':
@@ -1382,7 +1382,7 @@ bool HSSCodeParser::isCombinator(QSharedPointer<HSSToken> token)
     {
         case HSSSymbol:
         {
-            const char currentTokenChar = *(VALUE_TOKEN(token).data()->getString()).data().c_str();
+            const char currentTokenChar = *(token.data())->getString().data().c_str();
             switch (currentTokenChar)
             {
                 case '=':
@@ -1510,7 +1510,7 @@ bool HSSCodeParser::isPropertyDefinition(bool * isShorthand)
                 {
                     if (peekToken->isA(HSSIdentifier))
                     {
-                        AXRString objtype = VALUE_TOKEN(peekToken)->getString();
+                        AXRString objtype = peekToken->getString();
                         if ((objtype == "this")
                             || (objtype == "super")
                             || (objtype == "parent")
@@ -1557,7 +1557,7 @@ bool HSSCodeParser::isPropertyDefinition(bool * isShorthand)
                                 peekToken = d->tokenizer->peekNextToken();
                                 if (peekToken->isA(HSSIdentifier))
                                 {
-                                    AXRString objtype = VALUE_TOKEN(peekToken)->getString();
+                                    AXRString objtype = peekToken->getString();
                                     if ((objtype == "this")
                                         || (objtype == "super")
                                         || (objtype == "parent")
@@ -1647,7 +1647,7 @@ QSharedPointer<HSSCombinator> HSSCodeParser::readSymbolCombinator()
      */
     QSharedPointer<HSSCombinator> errorState;
     QSharedPointer<HSSCombinator> ret;
-    const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+    const char currentTokenChar = *(d->currentToken->getString()).data().c_str();
     switch (currentTokenChar)
     {
         case '=':
@@ -1673,7 +1673,7 @@ QSharedPointer<HSSCombinator> HSSCodeParser::readSymbolCombinator()
 
 QSharedPointer<HSSNameSelector> HSSCodeParser::readNameSelector(bool isNegating)
 {
-    AXRString theValue = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString theValue = d->currentToken->getString();
     QSharedPointer<HSSNameSelector> ret = QSharedPointer<HSSNameSelector>(new HSSNameSelector(theValue, d->controller));
     ret->setNegating(isNegating);
     
@@ -1731,7 +1731,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
         else if (d->currentToken->isA(HSSIdentifier))
         {
             //alright, we've got a type, look it up
-            objtype = VALUE_TOKEN(d->currentToken)->getString();
+            objtype = d->currentToken->getString();
             d->receiver->receiveParserEvent(HSSParserEventObjectName, HSSObjectNameConstant::createConstant(objtype, d->controller));
             this->readNextToken();
             if (this->atEndOfSource())
@@ -1776,7 +1776,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
     {
         case HSSIdentifier:
         {
-            AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+            AXRString name = d->currentToken->getString();
             ret->setName(name);
             
             if (d->notifiesReceiver)
@@ -1876,7 +1876,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
                         if (d->notifiesReceiver)
                         {
                             //notify the receiver
-                            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+                            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
                         }
                         this->readNextToken();
                         continue;
@@ -2054,7 +2054,7 @@ bool HSSCodeParser::isObjectPath()
         peekToken = d->tokenizer->peekNextToken();
         if (peekToken->isA(HSSIdentifier))
         {
-            AXRString objtype = VALUE_TOKEN(peekToken)->getString();
+            AXRString objtype = peekToken->getString();
             if (
                 objtype == "this"
                 || objtype == "super"
@@ -2103,7 +2103,7 @@ QSharedPointer<HSSPropertyDefinition> HSSCodeParser::readPropertyDefinition(bool
                     while (!done)
                     {
                         done = true;
-                        AXRString propertyName = VALUE_TOKEN(d->currentToken)->getString();
+                        AXRString propertyName = d->currentToken->getString();
                         QSharedPointer<HSSPropertyPath> path(new HSSPropertyPath(d->controller));
                         path->add(propertyName);
                         
@@ -2142,7 +2142,7 @@ QSharedPointer<HSSPropertyDefinition> HSSCodeParser::readPropertyDefinition(bool
                                     AXRError("HSSCodeParser", "Unexpected token after dot in property expression", d->file->sourceUrl(), d->line, d->column).raise();
                                     continue;
                                 }
-                                AXRString prop = VALUE_TOKEN(d->currentToken)->getString();
+                                AXRString prop = d->currentToken->getString();
                                 path->add(prop);
                                 
                                 if (d->notifiesReceiver)
@@ -2415,8 +2415,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
     {
         case HSSNumber:
         {
-            QSharedPointer<HSSNumberConstant> numberConstant(new HSSNumberConstant(VALUE_TOKEN(d->currentToken)->getLong(), d->controller));
-            numberConstant->setOriginalStringRep(VALUE_TOKEN(d->currentToken)->getString());
+            QSharedPointer<HSSNumberConstant> numberConstant(new HSSNumberConstant(d->currentToken->getNumber(), d->controller));
+            numberConstant->setOriginalStringRep(d->currentToken->getString());
             QSharedPointer<HSSParserNode> ret = numberConstant;
             
             if (d->notifiesReceiver)
@@ -2438,8 +2438,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
             
         case HSSPercentageNumber:
         {
-            QSharedPointer<HSSPercentageConstant> percentageConstant(new HSSPercentageConstant(VALUE_TOKEN(d->currentToken)->getLong(), d->controller));
-            percentageConstant->setOriginalStringRep(VALUE_TOKEN(d->currentToken)->getString());
+            QSharedPointer<HSSPercentageConstant> percentageConstant(new HSSPercentageConstant(d->currentToken->getNumber(), d->controller));
+            percentageConstant->setOriginalStringRep(d->currentToken->getString());
             QSharedPointer<HSSParserNode> ret = percentageConstant;
             
             if (d->notifiesReceiver)
@@ -2462,7 +2462,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
         case HSSIdentifier:
         {
             //this is either a function, a keyword or an object name
-            AXRString valuestr = VALUE_TOKEN(d->currentToken)->getString();
+            AXRString valuestr = d->currentToken->getString();
             //check if it is a function
             QSharedPointer<HSSObject> objectContext = d->currentObjectContext.top();
             
@@ -2601,7 +2601,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
             }
             else
             {
-                HSSString symbStr = VALUE_TOKEN(d->currentToken)->getString();
+                HSSString symbStr = d->currentToken->getString();
                 if (symbStr != "+" && symbStr != "-")
                 {
                     AXRError("HSSParser", "Unexpected symbol", d->file->sourceUrl(), d->currentToken->line, d->currentToken->column).raise();
@@ -2616,7 +2616,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
                     AXRError("HSSParser", "Unexpected token", d->file->sourceUrl(), d->currentToken->line, d->currentToken->column).raise();
                     return errorState;
                 }
-                HSSUnit numValue = VALUE_TOKEN(d->currentToken)->getLong();
+                HSSUnit numValue = d->currentToken->getNumber();
                 if (symbStr == "-")
                 {
                     numValue *= -1;
@@ -2624,7 +2624,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
                 if (d->currentToken->isA(HSSNumber))
                 {
                     QSharedPointer<HSSNumberConstant> numberConstant(new HSSNumberConstant(numValue, d->controller));
-                    numberConstant->setOriginalStringRep(symbStr + VALUE_TOKEN(d->currentToken)->getString());
+                    numberConstant->setOriginalStringRep(symbStr + d->currentToken->getString());
                     QSharedPointer<HSSParserNode> ret = numberConstant;
                     
                     if (d->notifiesReceiver)
@@ -2646,7 +2646,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
                 else
                 {
                     QSharedPointer<HSSPercentageConstant> percentageConstant(new HSSPercentageConstant(numValue, d->controller));
-                    percentageConstant->setOriginalStringRep(symbStr + VALUE_TOKEN(d->currentToken)->getString());
+                    percentageConstant->setOriginalStringRep(symbStr + d->currentToken->getString());
                     QSharedPointer<HSSParserNode> ret = percentageConstant;
                     
                     if (d->notifiesReceiver)
@@ -2711,8 +2711,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
 QSharedPointer<HSSParserNode> HSSCodeParser::readIdentifierValue()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString valuestr = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString valuestr = d->currentToken->getString();
     QSharedPointer<HSSPropertyPath> ppath;
     if (this->isPropertyPath())
     {
@@ -2743,7 +2743,7 @@ const bool HSSCodeParser::isExpressionSign() const
 {
     if (d->currentToken->isA(HSSSymbol))
     {
-        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString().chardata());
+        const char currentTokenChar = *(d->currentToken->getString().chardata());
         switch (currentTokenChar)
         {
             case '+':
@@ -2767,7 +2767,7 @@ QSharedPointer<HSSExpression> HSSCodeParser::readExpression(AXRString propertyNa
     
     if (d->currentToken->isA(HSSSymbol))
     {
-        const char sign = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+        const char sign = *(d->currentToken->getString()).data().c_str();
         this->skip(HSSSymbol);
         
         this->skip(HSSWhitespace);
@@ -2831,14 +2831,14 @@ QSharedPointer<HSSPropertyPath> HSSCodeParser::readPropertyPath(bool firstNodeIs
         done = true;
         if (d->currentToken->isA(HSSIdentifier))
         {
-            QSharedPointer<HSSPropertyPathNode> ppn(new HSSPropertyPathNode(HSSPropertyNameConstant::createConstant(VALUE_TOKEN(d->currentToken)->getString(), d->controller), d->controller));
+            QSharedPointer<HSSPropertyPathNode> ppn(new HSSPropertyPathNode(HSSPropertyNameConstant::createConstant(d->currentToken->getString(), d->controller), d->controller));
             ppath->add(ppn);
             if (d->notifiesReceiver)
             {
                 if (firstNodeIsVariableName && isFirst)
                 {
                     //notify the receiver
-                    d->receiver->receiveParserEvent(HSSParserEventVariableName, HSSObjectNameConstant::createConstant(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+                    d->receiver->receiveParserEvent(HSSParserEventVariableName, HSSObjectNameConstant::createConstant(d->currentToken->getString(), d->controller));
                 }
                 else
                 {
@@ -2904,7 +2904,7 @@ QSharedPointer<HSSInstruction> HSSCodeParser::readInstruction(bool preferHex)
     //if it starts with a number, we are looking at a color instruction
     if (d->currentToken->isA(HSSHexNumber))
     {
-        currentval = VALUE_TOKEN(d->currentToken)->getString();
+        currentval = d->currentToken->getString();
         QSharedPointer<HSSInstruction> ret;
         switch (currentval.length())
         {
@@ -2976,7 +2976,7 @@ QSharedPointer<HSSInstruction> HSSCodeParser::readInstruction(bool preferHex)
     else if (d->currentToken->isA(HSSIdentifier))
     {
         QSharedPointer<HSSInstruction> ret;
-        currentval = VALUE_TOKEN(d->currentToken)->getString();
+        currentval = d->currentToken->getString();
         if (currentval == "new")
         {
             ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSNewInstruction, currentval, d->controller));
@@ -2999,9 +2999,9 @@ QSharedPointer<HSSInstruction> HSSCodeParser::readInstruction(bool preferHex)
                 this->skip(HSSWhitespace);
                 if (d->currentToken->isA(HSSNumber))
                 {
-                    HSSUnit number = VALUE_TOKEN(d->currentToken)->getLong();
+                    HSSUnit number = d->currentToken->getNumber();
                     QSharedPointer<HSSNumberConstant> numberConstant(new HSSNumberConstant(number, d->controller));
-                    numberConstant->setOriginalStringRep(VALUE_TOKEN(d->currentToken)->getString());
+                    numberConstant->setOriginalStringRep(d->currentToken->getString());
                     ret->setArgument(numberConstant);
                     if (d->notifiesReceiver)
                     {
@@ -3032,12 +3032,12 @@ QSharedPointer<HSSInstruction> HSSCodeParser::readInstruction(bool preferHex)
             
             if (d->currentToken->isA(HSSDoubleQuoteString) || d->currentToken->isA(HSSSingleQuoteString))
             {
-                AXRString theString = VALUE_TOKEN(d->currentToken)->getString();
+                AXRString theString = d->currentToken->getString();
                 ret = QSharedPointer<HSSInstruction>(new HSSInstruction(HSSImportInstruction, theString, d->controller));
             }
             else if (d->currentToken->isA(HSSIdentifier))
             {
-                AXRString instructionKw = VALUE_TOKEN(d->currentToken)->getString();
+                AXRString instructionKw = d->currentToken->getString();
                 if (instructionKw == "UIFramework")
                 {
                     AXRString url(HSSFRAMEWORK_PROTOCOL);
@@ -3356,7 +3356,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readAdditiveExpression()
     QSharedPointer<HSSParserNode> left = this->readMultiplicativeExpression();
     while (!this->atEndOfSource() && d->currentToken->isA(HSSSymbol))
     {
-        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+        const char currentTokenChar = *(d->currentToken->getString()).data().c_str();
         switch (currentTokenChar)
         {
             case '+':
@@ -3398,7 +3398,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readMultiplicativeExpression()
     while (!this->atEndOfSource() && d->currentToken->isA(HSSSymbol))
     {
         
-        const char currentTokenChar = *(VALUE_TOKEN(d->currentToken)->getString()).data().c_str();
+        const char currentTokenChar = *(d->currentToken->getString()).data().c_str();
         switch (currentTokenChar)
         {
             case '*':
@@ -3443,8 +3443,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readBaseExpression()
     {
         case HSSNumber:
         {
-            QSharedPointer<HSSNumberConstant> numberConstant(new HSSNumberConstant(VALUE_TOKEN(d->currentToken)->getLong(), d->controller));
-            numberConstant->setOriginalStringRep(VALUE_TOKEN(d->currentToken)->getString());
+            QSharedPointer<HSSNumberConstant> numberConstant(new HSSNumberConstant(d->currentToken->getNumber(), d->controller));
+            numberConstant->setOriginalStringRep(d->currentToken->getString());
             QSharedPointer<HSSParserNode> ret = numberConstant;
             
             if (d->notifiesReceiver)
@@ -3466,8 +3466,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readBaseExpression()
             
         case HSSPercentageNumber:
         {
-            QSharedPointer<HSSPercentageConstant> percentageConstant(new HSSPercentageConstant(VALUE_TOKEN(d->currentToken)->getLong(), d->controller));
-            percentageConstant->setOriginalStringRep(VALUE_TOKEN(d->currentToken)->getString());
+            QSharedPointer<HSSPercentageConstant> percentageConstant(new HSSPercentageConstant(d->currentToken->getNumber(), d->controller));
+            percentageConstant->setOriginalStringRep(d->currentToken->getString());
             QSharedPointer<HSSParserNode> ret = percentageConstant;
             
             if (d->notifiesReceiver)
@@ -3554,7 +3554,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUnaryExpression()
     QSharedPointer<HSSParserNode> errorState;
     
     QSharedPointer<HSSUnaryExpression> uExp;
-    HSSString sign = VALUE_TOKEN(d->currentToken)->getString();
+    HSSString sign = d->currentToken->getString();
     if (sign == "+")
     {
         uExp = QSharedPointer<HSSUnarySum>(new HSSUnarySum(d->controller));
@@ -3611,7 +3611,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlag()
 {
     QSharedPointer<HSSFlag> ret;
     
-    AXRString flagName = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString flagName = d->currentToken->getString();
     ret = QSharedPointer<HSSFlag>(new HSSFlag(d->controller));
     ret->setName(flagName);
     
@@ -3627,7 +3627,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFunction()
     if (d->currentToken->isA(HSSIdentifier))
     {
         //create new function
-        AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+        AXRString name = d->currentToken->getString();
         if (name == "ref")
         {
             return this->readRefFunction();
@@ -3755,7 +3755,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readRefFunction()
     }
     else
     {
-        AXRString firstValue = VALUE_TOKEN(d->currentToken)->getString();
+        AXRString firstValue = d->currentToken->getString();
         if (firstValue == "min"
             || firstValue == "max"
             || firstValue == "avg")
@@ -3818,7 +3818,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readRefFunction()
     }
     else
     {
-        if (!d->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(d->currentToken)->getString() != "of")
+        if (!d->currentToken->isA(HSSIdentifier) || d->currentToken->getString() != "of")
         {
             return errorState;
         }
@@ -3907,7 +3907,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readSelFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSFlagFunction> flagFunction = QSharedPointer<HSSFlagFunction>(new HSSFlagFunction(HSSFlagFunction::flagFunctionTypeFromString(name), d->controller));
     
     if (d->notifiesReceiver)
@@ -3936,7 +3936,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
     //first, we expect the name
     if (d->currentToken->isA(HSSIdentifier))
     {
-        AXRString flagName = VALUE_TOKEN(d->currentToken)->getString();
+        AXRString flagName = d->currentToken->getString();
         flagFunction->setName(flagName);
         
         if (d->notifiesReceiver)
@@ -3945,7 +3945,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
             d->receiver->receiveParserEvent(HSSParserEventFlagName, QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(flagName, d->controller)));
         }
     }
-    else if (d->currentToken->isA(HSSSymbol) && VALUE_TOKEN(d->currentToken)->getString() == "*")
+    else if (d->currentToken->isA(HSSSymbol) && d->currentToken->getString() == "*")
     {
         flagFunction->setName("*");
         
@@ -3971,7 +3971,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
     
     if (name == "replaceFlag" && d->currentToken->isA(HSSIdentifier))
     {
-        if (VALUE_TOKEN(d->currentToken)->getString() != "with")
+        if (d->currentToken->getString() != "with")
         {
             AXRError("HSSCodeParser", "Unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(d->currentToken->getType())).raise();
             return errorState;
@@ -3993,7 +3993,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
         
         if (d->currentToken->isA(HSSIdentifier))
         {
-            AXRString flagName = VALUE_TOKEN(d->currentToken)->getString();
+            AXRString flagName = d->currentToken->getString();
             flagFunction->setName2(flagName);
             if (d->notifiesReceiver)
             {
@@ -4046,7 +4046,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
     }
     else
     {
-        if (!d->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(d->currentToken)->getString() != "of")
+        if (!d->currentToken->isA(HSSIdentifier) || d->currentToken->getString() != "of")
         {
             AXRError("HSSCodeParser", "Unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(d->currentToken->getType())).raise();
             return errorState;
@@ -4087,7 +4087,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFlagFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readAttrFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSAttrFunction> attrFunction = QSharedPointer<HSSAttrFunction>(new HSSAttrFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4121,7 +4121,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readAttrFunction()
     }
     else
     {
-        attrFunction->setAttributeName(VALUE_TOKEN(d->currentToken)->getString());
+        attrFunction->setAttributeName(d->currentToken->getString());
     }
     
     this->readNextToken();
@@ -4153,7 +4153,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readAttrFunction()
     }
     else
     {
-        if (!d->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(d->currentToken)->getString() != "of")
+        if (!d->currentToken->isA(HSSIdentifier) || d->currentToken->getString() != "of")
         {
             AXRError("HSSCodeParser", "Unexpected token while reading attr function " + name).raise();
         }
@@ -4222,7 +4222,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readRoundFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readLogFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSLogFunction> logFunction = QSharedPointer<HSSLogFunction>(new HSSLogFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4277,8 +4277,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readLogFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readOverrideFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSOverrideFunction> overrideFunction = QSharedPointer<HSSOverrideFunction>(new HSSOverrideFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4382,8 +4382,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readOverrideFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readStartTimerFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSStartTimerFunction> startTimerFunction = QSharedPointer<HSSStartTimerFunction>(new HSSStartTimerFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4410,8 +4410,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readStartTimerFunction()
     
     if (d->currentToken->isA(HSSIdentifier))
     {
-        AXRString id = VALUE_TOKEN(d->currentToken)->getString();
         
+        AXRString id = d->currentToken->getString();
         if (d->notifiesReceiver)
         {
             //notify the receiver
@@ -4493,8 +4493,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readStartTimerFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readStopTimerFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSStopTimerFunction> stopTimerFunction = QSharedPointer<HSSStopTimerFunction>(new HSSStopTimerFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4521,7 +4521,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readStopTimerFunction()
     
     if (d->currentToken->isA(HSSIdentifier))
     {
-        AXRString id = VALUE_TOKEN(d->currentToken)->getString();
+        AXRString id = d->currentToken->getString();
         if (d->notifiesReceiver)
         {
             //notify the receiver
@@ -4562,8 +4562,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readStopTimerFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readToggleTimerFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSToggleTimerFunction> toggleTimerFunction = QSharedPointer<HSSToggleTimerFunction>(new HSSToggleTimerFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4590,7 +4590,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readToggleTimerFunction()
     
     if (d->currentToken->isA(HSSIdentifier))
     {
-        AXRString id = VALUE_TOKEN(d->currentToken)->getString();
+        AXRString id = d->currentToken->getString();
         if (d->notifiesReceiver)
         {
             //notify the receiver
@@ -4671,8 +4671,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readToggleTimerFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readInsertFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSInsertFunction> insertFunction = QSharedPointer<HSSInsertFunction>(new HSSInsertFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4729,7 +4729,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readInsertFunction()
     }
     else
     {
-        if (!d->currentToken->isA(HSSIdentifier) || VALUE_TOKEN(d->currentToken)->getString() != "of")
+        if (!d->currentToken->isA(HSSIdentifier) || d->currentToken->getString() != "of")
         {
             AXRError("HSSCodeParser", "Unexpected token while reading flagging function: " + HSSToken::tokenStringRepresentation(d->currentToken->getType())).raise();
             return errorState;
@@ -4777,8 +4777,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readIfFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
     
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSIfFunction> ifFunction = QSharedPointer<HSSIfFunction>(new HSSIfFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4864,7 +4864,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readIfFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readElseFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    HSSString tokenStr = VALUE_TOKEN(d->currentToken)->getString();
+    HSSString tokenStr = d->currentToken->getString();
     if (tokenStr == "else")
     {
         if (d->notifiesReceiver)
@@ -4922,7 +4922,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readElseFunction()
             }
             return elseFunction;
         }
-        else if (d->currentToken->isA(HSSIdentifier) && VALUE_TOKEN(d->currentToken)->getString() == "if")
+        else if (d->currentToken->isA(HSSIdentifier) && d->currentToken->getString() == "if")
         {
             QSharedPointer<HSSParserNode> elseFunc = this->readIfFunction();
             if (elseFunc && elseFunc->isA(HSSFunctionTypeIf))
@@ -4942,8 +4942,8 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUserDefinedFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
     
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
     
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSFunctionFunction> fFunction = QSharedPointer<HSSFunctionFunction>(new HSSFunctionFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -4978,7 +4978,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUserDefinedFunction()
             bool isValid = true;
             if (d->currentToken->isA(HSSIdentifier))
             {
-                HSSString tokenStr = VALUE_TOKEN(d->currentToken)->getString();
+                HSSString tokenStr = d->currentToken->getString();
                 AXRString name;
                 if (tokenStr == "var")
                 {
@@ -5001,7 +5001,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUserDefinedFunction()
                     if (!d->currentToken->isA(HSSIdentifier))
                         return errorState;
                     
-                    name = VALUE_TOKEN(d->currentToken)->getString();
+                    name = d->currentToken->getString();
                 }
                 else
                 {
@@ -5187,8 +5187,8 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
         if (d->currentToken->isA(HSSIdentifier))
         {
             //this is either a function, a keyword or an object name
-            AXRString valuestr = VALUE_TOKEN(d->currentToken)->getString();
             
+            AXRString valuestr = d->currentToken->getString();
             if (valuestr == "var")
             {
                 d->currentObjectContext.push(d->_containerContextObj);
@@ -5220,7 +5220,7 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
                     if (theFunc)
                     {
                         target->addValue(theFunc);
-                        if ((theFunc->isA(HSSFunctionTypeIf) || theFunc->isA(HSSFunctionTypeElseIf)) && d->currentToken->isA(HSSIdentifier) && VALUE_TOKEN(d->currentToken)->getString() == "else")
+                        if ((theFunc->isA(HSSFunctionTypeIf) || theFunc->isA(HSSFunctionTypeElseIf)) && d->currentToken->isA(HSSIdentifier) && d->currentToken->getString() == "else")
                         {
                             evalsDone = false;
                             continue;
@@ -5270,7 +5270,7 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
                     if (d->notifiesReceiver)
                     {
                         //notify the receiver
-                        d->receiver->receiveParserEvent(HSSParserEventVariableName, HSSObjectNameConstant::createConstant(VALUE_TOKEN(identifierToken)->getString(), d->controller));
+                        d->receiver->receiveParserEvent(HSSParserEventVariableName, HSSObjectNameConstant::createConstant(identifierToken->getString(), d->controller));
                     }
                     
                     this->readNextToken();
@@ -5290,7 +5290,7 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
                 else if (this->isComparison())
                 {
                     QSharedPointer<HSSToken> identifierToken = d->currentToken;
-                    QSharedPointer<HSSObjectNameConstant> objName = HSSObjectNameConstant::createConstant(VALUE_TOKEN(identifierToken)->getString(), d->controller);
+                    QSharedPointer<HSSObjectNameConstant> objName = HSSObjectNameConstant::createConstant(identifierToken->getString(), d->controller);
                     if (d->notifiesReceiver)
                     {
                         //notify the receiver
@@ -5355,7 +5355,7 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
 QSharedPointer<HSSParserNode> HSSCodeParser::readReturnFunction()
 {
     QSharedPointer<HSSFunctionCall> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString name = d->currentToken->getString();
     QSharedPointer<HSSReturnFunction> returnFunction = QSharedPointer<HSSReturnFunction>(new HSSReturnFunction(d->controller));
     
     if (d->notifiesReceiver)
@@ -5412,7 +5412,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readReturnFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readCustomFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    AXRString name = VALUE_TOKEN(d->currentToken)->getString();
+    AXRString name = d->currentToken->getString();
     this->readNextToken();
     if (atEndOfSource())
         return errorState;
@@ -5471,7 +5471,7 @@ void HSSCodeParser::updateCurrentToken(QSharedPointer<HSSToken> theToken)
 {
     if (theToken && (theToken->isA(HSSBlockComment) || theToken->isA(HSSLineComment)))
     {
-        d->receiver->receiveParserEvent(HSSParserEventComment, HSSCommentNode::createComment(VALUE_TOKEN(theToken)->getString(), d->controller));
+        d->receiver->receiveParserEvent(HSSParserEventComment, HSSCommentNode::createComment(theToken->getString(), d->controller));
         this->readNextToken();
     }
     else
@@ -5562,7 +5562,7 @@ void HSSCodeParser::skipInvalidToken()
             if (d->notifiesReceiver)
             {
                 //notify the receiver
-                d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+                d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
             }
             this->readNextToken();
         }
@@ -5572,7 +5572,7 @@ void HSSCodeParser::skipInvalidToken()
         if (d->notifiesReceiver)
         {
             //notify the receiver
-            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
         }
         this->readNextToken();
     }
@@ -5581,11 +5581,11 @@ void HSSCodeParser::skipInvalidToken()
 void HSSCodeParser::skipStringArgument()
 {
     //skip the %
-    if (d->currentToken->isA(HSSSymbol) && VALUE_TOKEN(d->currentToken)->getString() == "%") {
+    if (d->currentToken->isA(HSSSymbol) && d->currentToken->getString() == "%") {
         if (d->notifiesReceiver)
         {
             //notify the receiver
-            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
         }
         this->readNextToken();
         if (this->atEndOfSource())
@@ -5599,7 +5599,7 @@ void HSSCodeParser::skipStringArgument()
         if (d->notifiesReceiver)
         {
             //notify the receiver
-            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(VALUE_TOKEN(d->currentToken)->getString(), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventInvalid, HSSInvalidNode::createInvalidNode(d->currentToken->getString(), d->controller));
         }
         this->readNextToken();
         if (this->atEndOfSource())
@@ -5631,7 +5631,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readStringArgument()
     QSharedPointer<HSSParserNode> ret;
     
     //skip the %
-    if (d->currentToken->isA(HSSSymbol) && VALUE_TOKEN(d->currentToken)->getString() == "%") {
+    if (d->currentToken->isA(HSSSymbol) && d->currentToken->getString() == "%") {
         this->skip(HSSSymbol);
         if (this->atEndOfSource())
             return errorState;
@@ -5685,7 +5685,7 @@ void HSSCodeParser::skip(HSSTokenType type)
     {
         if (type == HSSWhitespace)
         {
-            QSharedPointer<HSSWhitespaceNode> theNode = HSSWhitespaceNode::createWhitespace(VALUE_TOKEN(d->currentToken)->getString(), d->controller);
+            QSharedPointer<HSSWhitespaceNode> theNode = HSSWhitespaceNode::createWhitespace(d->currentToken->getString(), d->controller);
             d->receiver->receiveParserEvent(HSSParserEventWhitespace, theNode);
             this->readNextToken();
             if (!this->atEndOfSource() && d->currentToken->isA(type))
@@ -5695,14 +5695,12 @@ void HSSCodeParser::skip(HSSTokenType type)
         }
         else if (type == HSSNumber)
         {
-            QSharedPointer<HSSValueToken> valueToken = VALUE_TOKEN(d->currentToken);
-            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol(HSSString::number(valueToken->getLong()), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol(HSSString::number(d->currentToken->getNumber()), d->controller));
             this->readNextToken();
         }
         else
         {
-            QSharedPointer<HSSValueToken> valueToken = VALUE_TOKEN(d->currentToken);
-            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol(valueToken->getString(), d->controller));
+            d->receiver->receiveParserEvent(HSSParserEventOther, HSSSymbolNode::createSymbol(d->currentToken->getString(), d->controller));
             this->readNextToken();
         }
     }

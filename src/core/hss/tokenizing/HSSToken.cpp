@@ -46,11 +46,30 @@
 
 using namespace AXR;
 
-HSSToken::HSSToken(HSSTokenType type, qint64 line, qint64 column)
+HSSToken::HSSToken(HSSTokenType type, long long line, long long column)
 {
     this->type = type;
     this->line = line;
     this->column = column;
+}
+
+HSSToken::HSSToken(HSSTokenType type, HSSString value, long long line, long long column)
+{
+    this->type = type;
+    this->line = line;
+    this->column = column;
+    this->_value = value;
+    if (this->isNumeric())
+    {
+        this->_number = value.toDouble();
+    }
+}
+HSSToken::HSSToken(HSSTokenType type, HSSUnit value, long long line, long long column)
+{
+    this->type = type;
+    this->line = line;
+    this->column = column;
+    this->_number = value;
 }
 
 HSSToken::~HSSToken()
@@ -65,12 +84,6 @@ bool HSSToken::isA(HSSTokenType otherType) const
 HSSTokenType HSSToken::getType() const
 {
     return this->type;
-}
-
-AXRString HSSToken::toString()
-{
-    AXRString tokenstr = HSSToken::tokenStringRepresentation(this->type);
-    return "HSSToken of type: " + tokenstr;
 }
 
 AXRString HSSToken::tokenStringRepresentation(HSSTokenType type)
@@ -104,4 +117,42 @@ AXRString HSSToken::tokenStringRepresentation(HSSTokenType type)
     }
 
     return types[type];
+}
+
+HSSString HSSToken::getString()
+{
+    return this->_value;
+}
+
+HSSUnit HSSToken::getNumber()
+{
+    return this->_number;
+}
+
+bool HSSToken::equals(HSSTokenType otherType, HSSString otherValue)
+{
+    return otherType == this->type && otherValue == this->_value;
+}
+
+bool HSSToken::equals(HSSTokenType otherType, HSSUnit otherValue)
+{
+    return otherType == this->type && otherValue == this->_number;
+}
+
+HSSString HSSToken::toString()
+{
+    HSSString tokenstr = this->tokenStringRepresentation(this->type);
+    if (this->isNumeric())
+    {
+        return HSSString::format("HSSToken of type: %s and value: %f", tokenstr.chardata(), this->_number);
+    }
+    else
+    {
+        return "HSSToken of type: " + tokenstr + " and value: " + this->_value;
+    }
+}
+
+bool HSSToken::isNumeric()
+{
+    return this->type == HSSNumber || this->type == HSSPercentageNumber;
 }
