@@ -104,7 +104,7 @@ namespace AXR
         HSSExpressionTypeDivision /**< A/B. */
     };
     /** @} */
-    
+
     /**
      *  @addtogroup typeEnums
      *  @{
@@ -483,7 +483,7 @@ namespace AXR
         HSSDirectionBottomToTop /**< From bottom to top. */
     };
     /** @} */
-    
+
     /**
      *  @addtogroup typeEnums
      *  @{
@@ -495,7 +495,7 @@ namespace AXR
         HSSStrokeTypeLine /**< Regular solid line. */
     };
     /** @} */
-    
+
     /**
      *  @addtogroup typeEnums
      *  @{
@@ -514,7 +514,7 @@ namespace AXR
         HSSPathCommandTypeAddEllipse /**< Adds an ellipse inside a rectangle. */
     };
     /** @} */
-    
+
     /**
      *  @addtogroup typeEnums
      *  @{
