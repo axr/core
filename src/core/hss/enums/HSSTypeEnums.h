@@ -315,25 +315,6 @@ namespace AXR
     /**
      *  @addtogroup typeEnums
      *  @{
-     *  @enum HSSValueType
-     *  The type of the value, to be able to determine the correct storage
-     *  of the data.
-     *
-     *  @todo is this a good design? and if so, aren't object definitions, object
-     *  names and functions missing?
-     */
-    enum AXR_API HSSValueType
-    {
-        HSSValueNumberInt, /**< Long Integer */
-        HSSValueNumberFloat, /**< HSSUnit */
-        HSSValueString, /**< AXRString */
-        HSSValueKeyword/**< AXRString */
-    };
-    /** @}*/
-
-    /**
-     *  @addtogroup typeEnums
-     *  @{
      *  @enum HSSObjectType
      *  The type of the object. Some types have specific sub-types that are
      *  specific to their kind, such as gradients or shapes. In those cases
