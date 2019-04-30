@@ -620,7 +620,7 @@ QSharedPointer<HSSToken> HSSTokenizer::readString()
         }
     }
 
-    strToken->setValue(this->extractCurrentTokenText());
+    strToken->setString(this->extractCurrentTokenText());
     return strToken;
 }
 
@@ -665,9 +665,9 @@ QSharedPointer<HSSStringToken> HSSTokenizer::readString(QSharedPointer<HSSString
     
     AXRString endStr = this->extractCurrentTokenText();
     QSharedPointer<HSSStringToken> endToken = QSharedPointer<HSSStringToken>(new HSSStringToken(strToken->getType(), strToken->line, strToken->column));
-    endToken->setValue(endStr);
+    endToken->setString(endStr);
     
-    strToken->setValue(currentStr + endStr);
+    strToken->setString(currentStr + endStr);
     
     return endToken;
 }

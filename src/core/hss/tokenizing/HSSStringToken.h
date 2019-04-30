@@ -57,7 +57,7 @@ namespace AXR
         HSSStringToken(HSSTokenType type, qint64 line, qint64 column);
         virtual ~HSSStringToken();
         void setValue(AXRString newValue);
-        AXRString getString();
+
         bool equals(HSSTokenType otherType, AXRString otherValue);
         AXRString toString();
         
@@ -70,7 +70,6 @@ namespace AXR
         const std::vector<size_t> & getIndexes() const;
 
     private:
-        AXRString stringValue;
         bool _hasArguments;
         std::vector<QSharedPointer<HSSParserNode> > _arguments;
         std::vector<size_t> _indexes;

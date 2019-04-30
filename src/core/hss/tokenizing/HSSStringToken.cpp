@@ -57,25 +57,15 @@ HSSStringToken::~HSSStringToken()
 {
 }
 
-void HSSStringToken::setValue(AXRString newValue)
-{
-    this->stringValue = newValue;
-}
-
-AXRString HSSStringToken::getString()
-{
-    return this->stringValue;
-}
-
 bool HSSStringToken::equals(HSSTokenType otherType, AXRString otherValue)
 {
-    return otherType == this->type && otherValue == this->stringValue;
+    return otherType == this->type && otherValue == this->_value;
 }
 
 AXRString HSSStringToken::toString()
 {
     HSSString tokenstr = this->tokenStringRepresentation(this->type);
-    return "HSSStringToken of type: " + tokenstr + " and value: " + this->stringValue;
+    return "HSSStringToken of type: " + tokenstr + " and value: " + this->_value;
 }
 
 void HSSStringToken::setHasArguments(bool newValue)

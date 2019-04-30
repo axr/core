@@ -124,6 +124,11 @@ HSSString HSSToken::getString()
     return this->_value;
 }
 
+void HSSToken::setString(HSSString newValue)
+{
+    this->_value = newValue;
+}
+
 HSSUnit HSSToken::getNumber()
 {
     return this->_number;

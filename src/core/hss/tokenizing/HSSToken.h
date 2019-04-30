@@ -65,6 +65,8 @@ namespace AXR
         long long column;
         
         HSSString getString();
+        void setString(HSSString newValue);
+
         HSSUnit getNumber();
         bool equals(HSSTokenType otherType, HSSString otherValue);
         bool equals(HSSTokenType otherType, HSSUnit otherValue);
