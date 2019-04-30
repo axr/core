@@ -365,9 +365,7 @@ void HSSCodeParser::parseIdentifierStatement()
     bool statementDone = false;
     if (d->currentToken->getString() == "var")
     {
-        d->currentObjectContext.push(d->_containerContextObj);
         QSharedPointer<HSSVarDeclaration> varDecl = this->readVarDecl();
-        d->currentObjectContext.pop();
 
         if (varDecl)
         {
@@ -646,9 +644,7 @@ QSharedPointer<HSSAssignment> HSSCodeParser::readAssignment(QSharedPointer<HSSPr
         return errorState;
 
     //read in strict mode: no value means syntax error
-    d->currentObjectContext.push(d->_containerContextObj);
     bool expressionValid = this->readVals(ret, "expression", true, true);
-    d->currentObjectContext.pop();
     if (!expressionValid)
         return errorState;
 
@@ -1714,7 +1710,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
             }
             else
             {
-                objtype = "container";
+                objtype = "value";
             }
         }
         else if (d->currentToken->isA(HSSIdentifier))
