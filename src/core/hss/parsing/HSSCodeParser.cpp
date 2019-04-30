@@ -1808,7 +1808,8 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
     d->currentContext.push_back(HSSParserContextObjectDefinition);
 
     //read the inner part of the block
-    d->currentObjectContext.push(ret->getObject());
+    QSharedPointer<HSSObject> theObj = ret->getObject();
+    d->currentObjectContext.push(theObj);
 
     while (!d->currentToken->isA(HSSBlockClose))
     {
@@ -1951,7 +1952,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
     }
 
     //reset the index of the shorthand properties
-    //    obj->shorthandReset(); //todo investigate this
+    theObj->shorthandReset();
     //out we are
     d->currentObjectContext.pop();
 
