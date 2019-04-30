@@ -830,7 +830,7 @@ QSharedPointer<HSSRule> HSSCodeParser::readRule()
 
     //now we're inside the block
     d->currentObjectContext.push(d->_containerContextObj);
-    d->currentContext.push_back(HSSParserContextBlock);
+    d->currentContext.push_back(HSSParserContextRule);
 
     //read the inner part of the block
     while (!this->atEndOfSource() && valid && !d->currentToken->isA(HSSBlockClose))
@@ -999,8 +999,6 @@ std::vector<QSharedPointer<HSSSelectorChain> > HSSCodeParser::readSelectorChains
         rootContext = true;
     }
 
-    //set the current context
-    d->currentContext.push_back(HSSParserContextSelectorChain);
     if(!rootContext){
         QSharedPointer<HSSCombinator> beginning_combinator = this->readCombinator();
         if (beginning_combinator)
@@ -1079,9 +1077,6 @@ std::vector<QSharedPointer<HSSSelectorChain> > HSSCodeParser::readSelectorChains
     {
         retvect.push_back(ret);
     }
-
-    //we're not in a selector anymore
-    d->currentContext.pop_back();
 
     return retvect;
 }
@@ -1371,12 +1366,6 @@ bool HSSCodeParser::isCombinator()
 
 bool HSSCodeParser::isCombinator(QSharedPointer<HSSToken> token)
 {
-    //are we in a context that accepts combinators?
-    HSSParserContext context = d->currentContext.back();
-    if (context == HSSParserContextExpression)
-    {
-        return false;
-    }
     //all combinators are symbols
     switch (token->getType())
     {
@@ -1820,7 +1809,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
         return errorState;
 
     //now we're inside the block
-    d->currentContext.push_back(HSSParserContextBlock);
+    d->currentContext.push_back(HSSParserContextObjectDefinition);
 
     //read the inner part of the block
     d->currentObjectContext.push(ret->getObject());
@@ -4836,7 +4825,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readIfFunction()
 
     //now we're inside the block
     d->currentObjectContext.push(d->_containerContextObj);
-    d->currentContext.push_back(HSSParserContextBlock);
+    d->currentContext.push_back(HSSParserContextEvaluables);
 
     //read the inner part of the block
     ifFunction->setReadEvaluables(true);
@@ -4898,7 +4887,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readElseFunction()
 
             //now we're inside the block
             d->currentObjectContext.push(d->_containerContextObj);
-            d->currentContext.push_back(HSSParserContextBlock);
+            d->currentContext.push_back(HSSParserContextEvaluables);
 
             //read the inner part of the block
             elseFunction->setReadEvaluables(true);
@@ -5065,7 +5054,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUserDefinedFunction()
 
     //now we're inside the block
     d->currentObjectContext.push(d->_containerContextObj);
-    d->currentContext.push_back(HSSParserContextBlock);
+    d->currentContext.push_back(HSSParserContextEvaluables);
 
     //read the inner part of the block
     bool evaluablesValid = this->readEvaluables(fFunction);

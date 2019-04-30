@@ -56,17 +56,16 @@ namespace AXR
      *  @addtogroup typeEnums
      *  @{
      *  @enum HSSParserContext
-     *  This is meant to identify the current parsing context, although it has not been
-     *  fully used yet, only in one or to places in the parser. This will probably useful
-     *  in the future for better error handling and stuff like that.
+     *  The parsing context determines wether selector chains that start with a combinator
+     *  get @this prepended automatically, wether rules can be read, etc
      */
     enum AXR_API HSSParserContext
     {
-        HSSParserContextRoot, /**< When we are at the base level of the document. */
-        HSSParserContextBlock, /**< When we are inside of a rule. */
-        HSSParserContextObjectDefinition, /**< When we are inside an object definition. */
-        HSSParserContextExpression, /**< When we are reading an expression. */
-        HSSParserContextSelectorChain /**< When we are reading a selector chain. */
+        HSSParserContextRoot, /**< When we are at the base level of the document (rules are allowed,selector chains starting with combinators are NOT prepended with @this). */
+        HSSParserContextRule, /**< When we are inside of a rule (rules are allowed, selector chains starting with combinators are prepended with @this). */
+        HSSParserContextContainer, /**< When we are inside of an object definition of type container (rules are allowed). */
+        HSSParserContextObjectDefinition, /**< When we are inside an object definition of other type (no rules allowed). */
+        HSSParserContextEvaluables /**< When we are inside a user defined function or other evaluable blocks (no selector chains allowed, no rules allowed). */
     };
     /** @} */
 
