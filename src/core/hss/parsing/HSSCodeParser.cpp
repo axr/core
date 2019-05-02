@@ -3687,6 +3687,10 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFunction()
         {
             return this->readReturnFunction();
         }
+        else if (name == "switch")
+        {
+            return this->readSwitchFunction();
+        }
         else if (d->controller->document()->isCustomFunction(name))
         {
             return this->readCustomFunction();
@@ -5390,6 +5394,208 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readReturnFunction()
     }
 
     return returnFunction;
+}
+
+QSharedPointer<HSSParserNode> HSSCodeParser::readSwitchFunction()
+{
+    QSharedPointer<HSSSwitchFunction> errorState;
+    
+    AXRString name = d->currentToken->getString();
+    
+    QSharedPointer<HSSSwitchFunction> switchFunction = QSharedPointer<HSSSwitchFunction>(new HSSSwitchFunction(d->controller));
+    
+    if (d->notifiesReceiver)
+    {
+        //notify the receiver
+        d->receiver->receiveParserEvent(HSSParserEventFunctionName, QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(name, d->controller)));
+    }
+    
+    this->readNextToken();
+    if (atEndOfSource())
+        return errorState;
+    
+    this->skip(HSSWhitespace);
+    if (atEndOfSource())
+        return errorState;
+    
+    this->skip(HSSParenthesisOpen);
+    if (atEndOfSource())
+        return errorState;
+    
+    this->skip(HSSWhitespace);
+    if (atEndOfSource())
+        return errorState;
+    
+    bool conditionValid = true;
+    QSharedPointer<HSSParserNode> conditionNode = this->readSingleVal("condition", conditionValid);
+    if (conditionNode && conditionValid)
+    {
+        switchFunction->addValue(conditionNode);
+    }
+    else
+    {
+        return errorState;
+    }
+    
+    //we expect the closing parenthesis here
+    this->skip(HSSParenthesisClose);
+    if (atEndOfSource())
+        return errorState;
+    
+    //skip any whitespace
+    this->skip(HSSWhitespace);
+    if (atEndOfSource())
+        return errorState;
+    
+    //we expect a block to open
+    this->skip(HSSBlockOpen);
+    if (atEndOfSource())
+        return errorState;
+    
+    //skip any whitespace
+    this->skip(HSSWhitespace);
+    if (atEndOfSource())
+        return errorState;
+    
+    if (!d->currentToken->isA(HSSIdentifier) ||
+        (d->currentToken->getString() != "case" && d->currentToken->getString() != "default")
+    )
+    {
+        AXRError("HSSCodeParser", "Expected case or default.", d->controller->document()->hssParser()->file()->sourceUrl(), d->currentToken->line, d->currentToken->column).raise();
+        return errorState;
+    }
+    bool casesDone = false;
+    while (!casesDone)
+    {
+        casesDone = true;
+        bool caseValid = true;
+        QSharedPointer<HSSCase> caseNode = this->readCase(caseValid);
+        if (caseNode && caseValid)
+        {
+            switchFunction->addCase(caseNode);
+        }
+        if (this->atEndOfSource())
+            return switchFunction;
+
+        //moar cases?
+        if (d->currentToken->isA(HSSIdentifier) &&
+            (d->currentToken->getString() == "case" || d->currentToken->getString() == "default")
+        )
+        {
+            casesDone = false;
+        }
+    }
+    //leave the block context
+    d->currentContext.pop_back();
+    
+    if (!this->atEndOfSource())
+    {
+        this->skip(HSSBlockClose);
+    }
+    if (!this->atEndOfSource())
+    {
+        //ignore all the whitespace after the block
+        this->skip(HSSWhitespace);
+    }
+    return switchFunction;
+}
+
+QSharedPointer<HSSCase> HSSCodeParser::readCase(bool & valid)
+{
+    QSharedPointer<HSSCase> errorState;
+
+    QSharedPointer<HSSCase> theCase = QSharedPointer<HSSCase>(new HSSCase(d->controller));
+    
+    bool casesDone = false;
+    while (!casesDone)
+    {
+        casesDone = true;
+
+        AXRString name = d->currentToken->getString();
+        if (d->notifiesReceiver)
+        {
+            //notify the receiver
+            d->receiver->receiveParserEvent(HSSParserEventFunctionName, QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(name, d->controller)));
+        }
+
+        this->readNextToken();
+        if (atEndOfSource())
+            return errorState;
+        
+        this->skip(HSSWhitespace);
+        if (atEndOfSource())
+            return errorState;
+        
+        if (name == "case")
+        {
+            bool caseValValid = true;
+            QSharedPointer<HSSParserNode> caseVal = this->readSingleVal("case", caseValValid);
+            if (!caseVal || !caseValValid)
+            {
+                return errorState;
+            }
+            
+            
+            theCase->addValue(caseVal);
+            if (atEndOfSource())
+                return errorState;
+
+            this->skip(HSSWhitespace);
+            if (atEndOfSource())
+                return errorState;
+        }
+
+        if (!d->currentToken->isA(HSSColon))
+        {
+            AXRError("HSSCodeParser", "Expected colon after the condition in the case", d->controller->document()->hssParser()->file()->sourceUrl(), d->currentToken->line, d->currentToken->column).raise();
+            return errorState;
+        }
+        
+        this->skip(HSSColon);
+        if (atEndOfSource())
+            return errorState;
+        this->skip(HSSWhitespace);
+        if (atEndOfSource())
+            return errorState;
+
+        if (d->currentToken->isA(HSSIdentifier) &&
+            (d->currentToken->getString() == "case" || d->currentToken->getString() == "default")
+        )
+        {
+            casesDone = false;
+        }
+    }
+
+    if (!d->currentToken->isA(HSSBlockOpen))
+    {
+        AXRError("HSSCodeParser", "Expected block open", d->controller->document()->hssParser()->file()->sourceUrl(), d->currentToken->line, d->currentToken->column).raise();
+        return errorState;
+    }
+    
+    this->skip(HSSBlockOpen);
+    if (atEndOfSource())
+        return errorState;
+    
+    this->skip(HSSWhitespace);
+    if (atEndOfSource())
+        return errorState;
+    
+    theCase->setReadEvaluables(true);
+    this->readEvaluables(theCase);
+    theCase->setReadEvaluables(false);
+
+    if (atEndOfSource())
+        return theCase;
+
+    this->skip(HSSBlockClose);
+    if (atEndOfSource())
+        return theCase;
+
+    this->skip(HSSWhitespace);
+    if (atEndOfSource())
+        return theCase;
+
+    return theCase;
 }
 
 QSharedPointer<HSSParserNode> HSSCodeParser::readCustomFunction()

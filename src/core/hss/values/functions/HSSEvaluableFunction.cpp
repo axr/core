@@ -134,6 +134,12 @@ bool HSSEvaluableFunction::evaluateEvaluables()
                         needsReturn = true;
                         break;
                     }
+                    case HSSFunctionTypeSwitch:
+                    {
+                        QSharedPointer<HSSSwitchFunction> switchFunc = qSharedPointerCast<HSSSwitchFunction>(evaluable);
+                        needsReturn = switchFunc->evaluateEvaluables();
+                        break;
+                    }
                     default:
                         theFunc->evaluate();
                         break;

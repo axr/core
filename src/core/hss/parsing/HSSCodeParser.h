@@ -74,6 +74,7 @@ namespace AXR
     class HSSArgument;
     class HSSAssignment;
     class HSSBooleanConstant;
+    class HSSCase;
     class HSSCodeParserPrivate;
     class HSSComparison;
     class HSSParserReceiver;
@@ -527,7 +528,15 @@ namespace AXR
          *  @return A shared pointer to the function node.
          */
         QSharedPointer<HSSParserNode> readReturnFunction();
+        
+        /**
+         *  Reads a switch block.
+         *  @return A shared pointer to the switch node.
+         */
+        QSharedPointer<HSSParserNode> readSwitchFunction();
 
+        QSharedPointer<HSSCase> readCase(bool & valid);
+        
         /**
          *  Reads a custom function.
          *  @return A shared pointer to the function node.

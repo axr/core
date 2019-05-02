@@ -272,6 +272,8 @@ namespace AXR
         HSSFunctionTypeIf, /**< Evaluates what is inside the block if the condition is true. */
         HSSFunctionTypeElseIf, /**< If the preceding if function had a falsy condition, evaluate its own. */
         HSSFunctionTypeElse, /**< If the preceding if function had a falsy condition, evaluate what is in the block. */
+        HSSFunctionTypeSwitch, /**< Evaluates a corresponding case block depending on the condition. */
+        HSSFunctionTypeCase, /**< Each case block of the switch. */
         HSSFunctionTypeFunction, /**< User defined functions. */
         HSSFunctionTypeCall, /**< What user defined function to call and with which arguments. */
         HSSFunctionTypeReturn, /**< Set the functions return value. */

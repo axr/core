@@ -167,6 +167,8 @@
 #include "HSSArgument.h"
 #include "HSSFunctionFunction.h"
 #include "HSSReturnFunction.h"
+#include "HSSCase.h"
+#include "HSSSwitchFunction.h"
 #include "HSSCustomFunction.h"
 
 #include "HSSTextEnums.h"
