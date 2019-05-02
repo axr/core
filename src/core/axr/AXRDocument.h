@@ -277,6 +277,22 @@ namespace AXR
         int windowHeight() const;
 
         void setWindowSize(int width, int height);
+        
+        /**
+         *  This allows to check if a string contains a function name
+         *  or not.
+         *  @param value        The identifier.
+         *  @return Wether the identifier is a function.
+         */
+        virtual bool isFunction(AXRString value);
+
+        /**
+         *  This allows to check if a string contains a reserved keyword
+         *  or not.
+         *  @param value        The identifier.
+         *  @return Wether the identifier is a function.
+         */
+        virtual bool isKeyword(AXRString value);
 
     private:
         AXRDocumentPrivate *const d;

@@ -89,11 +89,6 @@ AXRString HSSCircle::defaultObjectType(AXRString property)
     return HSSShape::defaultObjectType(property);
 }
 
-bool HSSCircle::isKeyword(AXRString value, AXRString property)
-{
-    return HSSShape::isKeyword(value, property);
-}
-
 void HSSCircle::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
     path->addEllipse(HSSRect(x, y, width, height));

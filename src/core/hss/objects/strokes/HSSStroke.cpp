@@ -132,23 +132,6 @@ AXRString HSSStroke::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSStroke::isKeyword(AXRString value, AXRString property)
-{
-    if ((value == "rounded" || value == "projected") && (property == "caps"))
-    {
-        return true;
-    }
-    else if ( value == "black" || value == "white" || value == "transparent")
-    {
-        if (property == "color")
-        {
-            return true;
-        }
-    }
-
-    return HSSAbstractStroke::isKeyword(value, property);
-}
-
 QSharedPointer<HSSObject> HSSStroke::getColor()
 {
     return this->getComputedValue("color");

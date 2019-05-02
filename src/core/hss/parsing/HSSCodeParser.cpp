@@ -2447,19 +2447,16 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readVal(AXRString propertyName, boo
 
         case HSSIdentifier:
         {
-            //this is either a function, a keyword or an object name
+            //this is either a function, a boolean, a keyword or an object name
             AXRString valuestr = d->currentToken->getString();
-            //check if it is a function
-            QSharedPointer<HSSObject> objectContext = d->currentObjectContext.top();
-
             if(this->isBoolean()){
                 return this->readBoolean();
             }
-            else if (objectContext->isFunction(valuestr, propertyName)) ///@todo: what to do if the property names give different functions?
+            else if (d->controller->document()->isFunction(valuestr))
             {
                 return this->readFunction();
             }
-            else if (objectContext->isKeyword(valuestr, propertyName)) ///@todo: what to do if the property names give different keywords?
+            else if (d->controller->document()->isKeyword(valuestr))
             {
                 QSharedPointer<HSSKeywordConstant> kwConstant = QSharedPointer<HSSKeywordConstant>(new HSSKeywordConstant(valuestr, d->controller));
                 if (d->notifiesReceiver)
@@ -5200,7 +5197,7 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
                 //check if it is a function
                 QSharedPointer<HSSObject> objectContext = d->currentObjectContext.top();
 
-                if (objectContext->isFunction(valuestr, ""))
+                if (d->controller->document()->isFunction(valuestr))
                 {
                     QSharedPointer<HSSParserNode> theFunc = this->readFunction();
                     if (theFunc)

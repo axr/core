@@ -134,34 +134,6 @@ AXRString HSSFont::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSFont::isKeyword(AXRString value, AXRString property)
-{
-    if (property == "weight")
-    {
-        if (
-                value == "regular"
-                || value == "normal"
-                || value == "bold"
-                || value == "medium"
-                || value == "thin"
-                || value == "light"
-                || value == "book"
-                || value == "black"
-                || value == "heavy"
-                || value == "ultralight"
-                || value == "semibold"
-                || value == "ultrabold"
-                || value == "ultraheavy"
-                )
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
-}
-
 HSSUnit HSSFont::getSize() const
 {
     return this->getComputedNumber("size");

@@ -85,7 +85,6 @@ namespace AXR
 
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Each shape object subclass implements its own drawing routines, creating the path as needed.

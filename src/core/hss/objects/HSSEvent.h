@@ -74,7 +74,6 @@ namespace AXR
         virtual ~HSSEvent();
         void setDefaults();
         AXRString defaultObjectType();
-        bool isKeyword(AXRString value, AXRString property);
         AXRString toString();
 
     private:

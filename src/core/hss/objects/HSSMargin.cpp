@@ -111,11 +111,6 @@ AXRString HSSMargin::defaultObjectType(AXRString property)
     return HSSObject::defaultObjectType(property);
 }
 
-bool HSSMargin::isKeyword(AXRString value, AXRString property)
-{
-    return false;
-}
-
 HSSUnit HSSMargin::getSize() const
 {
     return this->getComputedNumber("size");

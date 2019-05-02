@@ -282,46 +282,6 @@ HSSObject::~HSSObject()
 
 }
 
-bool HSSObject::isKeyword(AXRString value, AXRString property)
-{
-    return (value == "default" || value == "inherit" || value == "undefined");
-}
-
-bool HSSObject::isFunction(AXRString value, AXRString property)
-{
-    if (value == "min"
-            || value == "max"
-            || value == "floor"
-            || value == "ceil"
-            || value == "round"
-            || value == "ref"
-            || value == "sel"
-            || value == "flag"
-            || value == "unflag"
-            || value == "addFlag"
-            || value == "takeFlag"
-            || value == "replaceFlag"
-            || value == "attr"
-            || value == "log"
-            || value == "override"
-            || value == "startTimer"
-            || value == "stopTimer"
-            || value == "toggleTimer"
-            || value == "insert"
-            || value == "if"
-            || value == "else"
-            || value == "function"
-            || value == "return"
-            )
-    {
-        return true;
-    }
-    else
-    {
-        return this->getController()->document()->isCustomFunction(value);
-    }
-}
-
 AXRString HSSObject::toString()
 {
     if (this->isNamed())

@@ -126,27 +126,6 @@ AXRString HSSLinearGradient::defaultObjectType(AXRString property)
     //    }
 }
 
-bool HSSLinearGradient::isKeyword(AXRString value, AXRString property)
-{
-    if (value == "top" || value == "bottom")
-    {
-        if (property == "startX")
-        {
-            return true;
-        }
-    }
-    else if (value == "left" || value == "right")
-    {
-        if (property == "startY")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSGradient::isKeyword(value, property);
-}
-
 QSharedPointer<HSSParserNode> HSSLinearGradient::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
 {
     if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))

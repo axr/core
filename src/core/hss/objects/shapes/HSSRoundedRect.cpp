@@ -112,10 +112,6 @@ AXRString HSSRoundedRect::defaultObjectType(AXRString property)
     return HSSShape::defaultObjectType(property);
 }
 
-bool HSSRoundedRect::isKeyword(AXRString value, AXRString property)
-{
-    return HSSShape::isKeyword(value, property);
-}
 void HSSRoundedRect::stackCorners(QSharedPointer<HSSParserNode> parserNode)
 {
     this->stackLeft(parserNode);

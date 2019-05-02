@@ -85,7 +85,6 @@ namespace AXR
 
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  If the start color is transparent, we need to be able to find the next color that is not

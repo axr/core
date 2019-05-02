@@ -124,25 +124,6 @@ namespace AXR
          */
         virtual ~HSSObject();
         /**
-         *  All objects define their own keywords depending on each property, so you need
-         *  to call this method if you need to know wether an identifier is a keyword or not.
-         *  @param value        The identifier.
-         *  @param property     The property to which the identifier is being passed.
-         *  @return Wether the identifier is a keyword for the given property.
-         */
-        virtual bool isKeyword(AXRString value, AXRString property);
-        /**
-         *  All objects define their own functions depending on each property, so you need
-         *  to call this method if you need to know wether an identifier is a function name
-         *  or not.
-         *  @param value        The identifier.
-         *  @param property     The property to which the identifier is being passed.
-         *  @return Wether the identifier is a keyword for the given property.
-         *
-         *  @todo is this really needed?
-         */
-        virtual bool isFunction(AXRString value, AXRString property);
-        /**
          *  Each object overrides this method to print itself to text when needed.
          *  @return A textual representation of the object.
          */

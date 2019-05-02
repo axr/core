@@ -195,47 +195,6 @@ AXRString HSSContainer::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSContainer::isKeyword(AXRString value, AXRString property)
-{
-    if (property == "contentAlignX" || property == "contentAlignY")
-    {
-        if (value == "center"
-                || value == "middle"
-                || value == "top"
-                || value == "bottom"
-                || value == "left"
-                || value == "right"
-                || value == "even"
-                || value == "justify")
-        {
-            return true;
-        }
-    }
-    else if (property == "direction" || property == "wrapDirection")
-    {
-        if (value == "ltr"
-                || value == "rtl"
-                || value == "ttb"
-                || value == "btt")
-        {
-            return true;
-        }
-    }
-    else if (property == "textAlign")
-    {
-        if (value == "left"
-                || value == "right"
-                || value == "center"
-                || value == "justify")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSDisplayObject::isKeyword(value, property);
-}
-
 QSharedPointer<HSSParserNode> HSSContainer::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
 {
     if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))

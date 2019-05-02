@@ -234,69 +234,6 @@ AXRString HSSDisplayObject::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSDisplayObject::isKeyword(AXRString value, AXRString property)
-{
-    if (property == "anchorX"
-            || property == "anchorY"
-            || property == "alignX"
-            || property == "alignY"
-            || property == "lineAlign"
-            )
-    {
-        if (value == "top"
-                || value == "middle"
-                || value == "center"
-                || value == "bottom"
-                || value == "left"
-                || value == "right"
-                || value == "yes"
-                || value == "no"
-                )
-        {
-            return true;
-        }
-    }
-    else if (property == "background")
-    {
-        if (value == "black" || value == "white" || value == "transparent")
-        {
-            return true;
-        }
-    }
-    else if (property == "flow" || property == "visible" || property == "contained")
-    {
-        if (value == "yes" || value == "no")
-        {
-            return true;
-        }
-    }
-    else if (property == "width" || property == "height")
-    {
-        if (value == "content")
-        {
-            return true;
-        }
-    }
-
-    //    else if (property == "font") {
-    //        if (   value == "thin"
-    //            || value == "ultralight"
-    //            || value == "light"
-    //            || value == "normal"
-    //            || value == "medium"
-    //            || value == "semibold"
-    //            || value == "bold"
-    //            || value == "ultrabold"
-    //            || value == "heavy"
-    //            || value == "ultraheavy"){
-    //            return true;
-    //        }
-    //    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
-}
-
 QSharedPointer<HSSParserNode> HSSDisplayObject::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
 {
     if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))

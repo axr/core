@@ -146,41 +146,6 @@ AXRString HSSTextBlock::defaultObjectType()
     return "textBlock";
 }
 
-bool HSSTextBlock::isKeyword(AXRString value, AXRString property)
-{
-    if (property == "transform")
-    {
-        if (value == "lowercase"
-                || value == "uppercase"
-                || value == "capitalize"
-                || value == "humanize"
-                || value == "no")
-        {
-            return true;
-        }
-    }
-    else if (property == "textAlign")
-    {
-        if (value == "left"
-                || value == "right"
-                || value == "center"
-                || value == "justify")
-        {
-            return true;
-        }
-    }
-    else if (property == "direction" || property == "wrapDirection")
-    {
-        if (value == "ltr" || value == "rtl" || value == "ttb" || value == "btt")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSDisplayObject::isKeyword(value, property);
-}
-
 AXRString HSSTextBlock::toString()
 {
     return "Text block with content:\n" + this->getText();

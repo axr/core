@@ -78,7 +78,6 @@ namespace AXR
 
         virtual void setDefaults();
         virtual AXRString defaultObjectType();
-        virtual bool isKeyword(AXRString value, AXRString property);
         virtual AXRString toString();
 
         virtual void accept(HSSAbstractVisitor* visitor, HSSVisitorFilterFlags filterFlags);

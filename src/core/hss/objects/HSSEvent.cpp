@@ -187,12 +187,6 @@ AXRString HSSEvent::defaultObjectType()
     return "event";
 }
 
-bool HSSEvent::isKeyword(AXRString value, AXRString property)
-{
-    //if we reached this far, let the superclass handle it
-    return HSSDisplayObject::isKeyword(value, property);
-}
-
 AXRString HSSEvent::toString()
 {
     return "@event";

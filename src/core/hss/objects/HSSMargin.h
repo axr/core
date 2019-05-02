@@ -88,7 +88,6 @@ namespace AXR
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
         virtual AXRString defaultObjectType(AXRString property);
-        virtual bool isKeyword(AXRString value, AXRString property);
 
         /**
          *  Getter for the computed value of size.

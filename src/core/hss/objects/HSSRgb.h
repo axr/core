@@ -60,8 +60,6 @@ namespace AXR
     class AXR_API HSSRgb : public HSSObject
     {
     public:
-        //virtual bool isKeyword(AXRString value, AXRString property);
-
         friend class HSSParser;
 
         /**

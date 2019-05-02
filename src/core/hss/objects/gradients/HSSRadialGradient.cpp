@@ -129,27 +129,6 @@ AXRString HSSRadialGradient::defaultObjectType(AXRString property)
     //    }
 }
 
-bool HSSRadialGradient::isKeyword(AXRString value, AXRString property)
-{
-    if (value == "top" || value == "bottom")
-    {
-        if (property == "centerX")
-        {
-            return true;
-        }
-    }
-    else if (value == "left" || value == "right")
-    {
-        if (property == "centerY")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSGradient::isKeyword(value, property);
-}
-
 HSSUnit HSSRadialGradient::getCenterX() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("centerX");

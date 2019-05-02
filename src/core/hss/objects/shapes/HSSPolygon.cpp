@@ -113,20 +113,6 @@ AXRString HSSPolygon::defaultObjectType()
     return "polygon";
 }
 
-bool HSSPolygon::isKeyword(AXRString value, AXRString property)
-{
-    if (property == "angle")
-    {
-        if (value == "top" || value == "topRight" || value == "right" || value == "bottomRight" || value == "bottom" || value == "bottomLeft" || value == "left" || value == "topLeft")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSShape::isKeyword(value, property);
-}
-
 void HSSPolygon::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
     // The center point of the polygon

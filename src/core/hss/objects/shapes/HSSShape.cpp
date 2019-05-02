@@ -99,11 +99,6 @@ AXRString HSSShape::defaultObjectType(AXRString property)
     return HSSObject::defaultObjectType(property);
 }
 
-bool HSSShape::isKeyword(AXRString value, AXRString property)
-{
-    return HSSObject::isKeyword(value, property);
-}
-
 void HSSShape::createPath(QSharedPointer<HSSPath> & path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     path = QSharedPointer<HSSPath>(new HSSPath());

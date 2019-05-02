@@ -110,27 +110,6 @@ AXRString HSSAbstractStroke::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSAbstractStroke::isKeyword(AXRString value, AXRString property)
-{
-    if (property == "position")
-    {
-        if (value == "inside" || value == "center" || value == "outside")
-        {
-            return true;
-        }
-    }
-    else if (property == "segments")
-    {
-        if (value == "left" || value == "top" || value == "right" || value == "bottom" || value == "all")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
-}
-
 HSSUnit HSSAbstractStroke::getSize() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("size");

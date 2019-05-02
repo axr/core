@@ -79,7 +79,6 @@ namespace AXR
         virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual bool isKeyword(AXRString value, AXRString property);
         virtual void createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments);
 
         virtual void drawStrokes(std::list<QSharedPointer<HSSAbstractStroke> > strokes, HSSUnit width, HSSUnit height, HSSUnit offsetX, HSSUnit offsetY);

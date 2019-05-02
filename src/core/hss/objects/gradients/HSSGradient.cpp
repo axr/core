@@ -136,24 +136,6 @@ AXRString HSSGradient::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSGradient::isKeyword(AXRString value, AXRString property)
-{
-    if ((value == "inside" || value == "centered" || value == "outside") && (property == "position"))
-    {
-        return true;
-    }
-    else if ( value == "black" || value == "white" || value == "transparent")
-    {
-        if (property == "startColor" || property == "endColor" || property == "colorStops")
-        {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
-}
-
 QSharedPointer<HSSRgb> HSSGradient::getColorAfterFirst()
 {
     //first, look into the color stops to see if we find a suitable color

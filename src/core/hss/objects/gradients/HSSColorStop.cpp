@@ -127,25 +127,6 @@ AXRString HSSColorStop::defaultObjectType(AXRString property)
     }
 }
 
-bool HSSColorStop::isKeyword(AXRString value, AXRString property)
-{
-    if (value == "start" || value == "middle" || value == "end")
-    {
-        if (property == "position" || property == "balance")
-        {
-            return true;
-        }
-    }
-    else if (value == "transparent"){
-        if (property == "color" ) {
-            return true;
-        }
-    }
-
-    //if we reached this far, let the superclass handle it
-    return HSSObject::isKeyword(value, property);
-}
-
 QSharedPointer<HSSParserNode> HSSColorStop::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
 {
     if (propertyName == "position")

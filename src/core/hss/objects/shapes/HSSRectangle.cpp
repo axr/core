@@ -90,11 +90,6 @@ AXRString HSSRectangle::defaultObjectType(AXRString property)
     return HSSShape::defaultObjectType(property);
 }
 
-bool HSSRectangle::isKeyword(AXRString value, AXRString property)
-{
-    return HSSShape::isKeyword(value, property);
-}
-
 void HSSRectangle::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)
 {
     if(segments.size() > 0){

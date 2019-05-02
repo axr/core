@@ -805,3 +805,108 @@ bool AXRDocument::layoutChildDone() const
 {
     return d->currentLayoutTick >= d->currentLayoutChild + 1;
 }
+
+bool AXRDocument::isFunction(AXRString value)
+{
+    if (value == "min"
+        || value == "max"
+        || value == "floor"
+        || value == "ceil"
+        || value == "round"
+        || value == "ref"
+        || value == "sel"
+        || value == "flag"
+        || value == "unflag"
+        || value == "addFlag"
+        || value == "takeFlag"
+        || value == "replaceFlag"
+        || value == "attr"
+        || value == "log"
+        || value == "override"
+        || value == "startTimer"
+        || value == "stopTimer"
+        || value == "toggleTimer"
+        || value == "insert"
+        || value == "if"
+        || value == "else"
+        || value == "switch"
+        || value == "function"
+        || value == "return"
+        )
+    {
+        return true;
+    }
+    else
+    {
+        return this->isCustomFunction(value);
+    }
+}
+
+
+
+bool AXRDocument::isKeyword(AXRString value)
+{
+    if (value == "default"
+        || value == "null"
+        || value == "undefined"
+        || value == "true"
+        || value == "false"
+        || value == "yes"
+        || value == "no"
+        || value == "inherit"
+        || value == "content"
+        || value == "start"
+        || value == "middle"
+        || value == "center"
+        || value == "end"
+        || value == "left"
+        || value == "right"
+        || value == "top"
+        || value == "topLeft"
+        || value == "topRight"
+        || value == "bottom"
+        || value == "bottomLeft"
+        || value == "bottomRight"
+        || value == "all"
+        || value == "inside"
+        || value == "centered"
+        || value == "outside"
+        || value == "black"
+        || value == "white"
+        || value == "transparent"
+        || value == "even"
+        || value == "justify"
+        || value == "ltr"
+        || value == "rtl"
+        || value == "ttb"
+        || value == "bbt"
+        || value == "regular"
+        || value == "normal"
+        || value == "bold"
+        || value == "medium"
+        || value == "thin"
+        || value == "light"
+        || value == "book"
+        || value == "black"
+        || value == "heavy"
+        || value == "ultralight"
+        || value == "semibold"
+        || value == "ultrabold"
+        || value == "ultraheavy"
+        || value == "lowercase"
+        || value == "uppercase"
+        || value == "capitalize"
+        || value == "humanize"
+        || value == "rounded"
+        || value == "projected"
+        )
+    {
+        return true;
+    }
+    else
+    {
+        //return this->isCustomKeyword(value);
+    }
+    return false;
+    return (value == "default" || value == "inherit" || value == "undefined");
+}
