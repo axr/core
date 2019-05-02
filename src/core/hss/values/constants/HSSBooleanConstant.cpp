@@ -46,6 +46,11 @@
 
 using namespace AXR;
 
+QSharedPointer<HSSBooleanConstant> HSSBooleanConstant::boolean(bool value, AXRController * controller)
+{
+    return QSharedPointer<HSSBooleanConstant>(new HSSBooleanConstant(value, controller));
+}
+
 HSSBooleanConstant::HSSBooleanConstant(bool value, AXRController * controller)
 : HSSParserNode(HSSParserNodeTypeBooleanConstant, controller)
 {

@@ -56,6 +56,8 @@ namespace AXR
     class AXR_API HSSBooleanConstant : public HSSParserNode
     {
     public:
+        static QSharedPointer<HSSBooleanConstant> boolean(bool value, AXRController * controller);
+        
         /**
          *  Creates a new instance of a number constant node which holds the given value.
          *  @param value    A HSSUnit containing the value for the constant.
