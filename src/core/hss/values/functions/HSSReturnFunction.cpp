@@ -66,12 +66,16 @@ QSharedPointer<HSSFunction> HSSReturnFunction::clone() const
 QSharedPointer<HSSClonable> HSSReturnFunction::cloneImpl() const
 {
     QSharedPointer<HSSReturnFunction> clone = QSharedPointer<HSSReturnFunction>(new HSSReturnFunction(*this));
-    clone->addValue(this->_node);
+    if (this->_node)
+    {
+        clone->addValue(this->_node->clone());
+    }
     return clone;
 }
 
 HSSReturnFunction::~HSSReturnFunction()
 {
+    this->cleanTrackedObservers();
 }
 
 AXRString HSSReturnFunction::toString()
