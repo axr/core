@@ -183,16 +183,23 @@ AXRString HSSContainer::defaultObjectType()
     return "container";
 }
 
-AXRString HSSContainer::defaultObjectType(AXRString property)
+HSSString HSSContainer::defaultObjectType(AXRString property)
 {
-    if (property == "shape")
+    //property => objtype
+    static std::map<HSSString, HSSString> typeMap;
+    if (typeMap.empty())
     {
-        return "roundedRect";
+        typeMap["font"] = "font";
+        typeMap["stroke"] = "stroke";
+        typeMap["background"] = "rgb";
+        typeMap["shape"] = "roundedRect";
     }
-    else
+    
+    if (typeMap.count(property) > 0)
     {
-        return HSSDisplayObject::defaultObjectType(property);
+        return typeMap[property];
     }
+    return HSSDisplayObject::defaultObjectType(property);
 }
 
 QSharedPointer<HSSParserNode> HSSContainer::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)

@@ -544,16 +544,6 @@ namespace AXR
         QSharedPointer<HSSParserNode> readCustomFunction();
 
         /**
-         *  Removes the last element from the current object context.
-         */
-        void currentObjectContextRemoveLast();
-
-        /**
-         *  @return The size of the current object context stack.
-         */
-        size_t currentObjectContextSize() const;
-
-        /**
          *  Puts the given object at the top new current object context stack.
          *  @param theObject        A shared pointer to the object that should be made the new object context.
          */

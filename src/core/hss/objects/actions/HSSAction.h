@@ -76,7 +76,6 @@ namespace AXR
         //see HSSObject.h for documentation of these
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
 
         /**
          *  Allows you to check if this action is of the given type.

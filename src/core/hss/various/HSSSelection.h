@@ -112,8 +112,6 @@ namespace AXR
         
         //see HSSObject.h for documentation on this method
         virtual AXRString defaultObjectType();
-        //see HSSObject.h for documentation on this method
-        virtual AXRString defaultObjectType(AXRString property);
 
         /**
          *  Each object overrides this method to compare against another object

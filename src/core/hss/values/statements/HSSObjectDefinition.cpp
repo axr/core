@@ -302,6 +302,11 @@ const HSSString HSSObjectDefinition::type() const
     return this->_objType;
 }
 
+bool HSSObjectDefinition::hasType() const
+{
+    return this->_objType != "";
+}
+
 void HSSObjectDefinition::setName(HSSString newName)
 {
     this->_objName = newName;

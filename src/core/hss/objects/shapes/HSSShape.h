@@ -84,7 +84,6 @@ namespace AXR
         bool equalTo(QSharedPointer<HSSObject> otherObj);
 
         virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
 
         /**
          *  Each shape object subclass implements its own drawing routines, creating the path as needed.

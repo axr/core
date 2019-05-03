@@ -120,15 +120,6 @@ AXRString HSSRadialGradient::defaultObjectType()
     return "radialGradient";
 }
 
-AXRString HSSRadialGradient::defaultObjectType(AXRString property)
-{
-    //    if (property == "bla"){
-    //
-    //    } else {
-    return HSSGradient::defaultObjectType(property);
-    //    }
-}
-
 HSSUnit HSSRadialGradient::getCenterX() const
 {
     QSharedPointer<HSSObject> value = this->getComputedValue("centerX");

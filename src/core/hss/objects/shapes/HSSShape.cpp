@@ -94,11 +94,6 @@ AXRString HSSShape::defaultObjectType()
     return "HSSShape";
 }
 
-AXRString HSSShape::defaultObjectType(AXRString property)
-{
-    return HSSObject::defaultObjectType(property);
-}
-
 void HSSShape::createPath(QSharedPointer<HSSPath> & path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height)
 {
     path = QSharedPointer<HSSPath>(new HSSPath());

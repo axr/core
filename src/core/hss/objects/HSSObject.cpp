@@ -1059,6 +1059,10 @@ QSharedPointer<HSSObject> HSSObject::computeObject(QSharedPointer<HSSParserNode>
     if (parserNode->isA(HSSStatementTypeObjectDefinition))
     {
         QSharedPointer<HSSObjectDefinition> objdef = qSharedPointerCast<HSSObjectDefinition > (parserNode);
+        if (!objdef->hasType())
+        {
+            objdef->setType(this->defaultObjectType(propertyName));
+        }
         theObj = objdef->getObject();
         if (theObj)
         {

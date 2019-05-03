@@ -137,18 +137,6 @@ AXRString HSSRgb::defaultObjectType()
     return "rgb";
 }
 
-AXRString HSSRgb::defaultObjectType(AXRString property)
-{
-    if (property == "red" || property == "green" || property == "blue" || property == "alpha")
-    {
-        return "value";
-    }
-    else
-    {
-        return HSSObject::defaultObjectType(property);
-    }
-}
-
 QSharedPointer<HSSObject> HSSRgb::computeRed(QSharedPointer<HSSParserNode> parserNode)
 {
     return this->_computeChannelValue(parserNode);

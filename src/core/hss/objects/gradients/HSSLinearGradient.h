@@ -82,7 +82,6 @@ namespace AXR
         virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
         virtual QSharedPointer<HSSParserNode> getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName);
 
         //startX

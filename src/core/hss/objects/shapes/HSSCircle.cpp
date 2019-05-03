@@ -81,12 +81,7 @@ AXRString HSSCircle::toString()
 
 AXRString HSSCircle::defaultObjectType()
 {
-    return "HSSCircle";
-}
-
-AXRString HSSCircle::defaultObjectType(AXRString property)
-{
-    return HSSShape::defaultObjectType(property);
+    return "circle";
 }
 
 void HSSCircle::createPath(QSharedPointer<HSSPath> &path, HSSUnit x, HSSUnit y, HSSUnit width, HSSUnit height, std::list<QSharedPointer<HSSParserNode> > segments)

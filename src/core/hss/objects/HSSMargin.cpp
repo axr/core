@@ -106,11 +106,6 @@ AXRString HSSMargin::defaultObjectType()
     return "margin";
 }
 
-AXRString HSSMargin::defaultObjectType(AXRString property)
-{
-    return HSSObject::defaultObjectType(property);
-}
-
 HSSUnit HSSMargin::getSize() const
 {
     return this->getComputedNumber("size");

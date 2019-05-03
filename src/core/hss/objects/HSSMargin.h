@@ -87,7 +87,6 @@ namespace AXR
         virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
 
         /**
          *  Getter for the computed value of size.

@@ -117,15 +117,6 @@ AXRString HSSLinearGradient::defaultObjectType()
     return "linearGradient";
 }
 
-AXRString HSSLinearGradient::defaultObjectType(AXRString property)
-{
-    //    if (property == "bla"){
-    //
-    //    } else {
-    return HSSGradient::defaultObjectType(property);
-    //    }
-}
-
 QSharedPointer<HSSParserNode> HSSLinearGradient::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)
 {
     if (!parserNode || !parserNode->isA(HSSParserNodeTypePercentageConstant))

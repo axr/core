@@ -107,11 +107,6 @@ AXRString HSSRoundedRect::defaultObjectType()
     return "roundedRect";
 }
 
-AXRString HSSRoundedRect::defaultObjectType(AXRString property)
-{
-    return HSSShape::defaultObjectType(property);
-}
-
 void HSSRoundedRect::stackCorners(QSharedPointer<HSSParserNode> parserNode)
 {
     this->stackLeft(parserNode);

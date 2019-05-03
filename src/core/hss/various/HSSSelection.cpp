@@ -104,18 +104,6 @@ AXRString HSSSelection::defaultObjectType()
     return "selection";
 }
 
-AXRString HSSSelection::defaultObjectType(AXRString property)
-{
-    if (property == "values")
-    {
-        return "value";
-    }
-    else
-    {
-        return HSSObject::defaultObjectType(property);
-    }
-}
-
 bool HSSSelection::equalTo(QSharedPointer<HSSObject> otherObj)
 {
     //check wether pointers are the same

@@ -118,14 +118,6 @@ AXRString HSSStroke::defaultObjectType(AXRString property)
     {
         return "rgb";
     }
-    else if (property == "joins")
-    {
-        return "mitered";
-    }
-    else if (property == "caps")
-    {
-        return "mitered";
-    }
     else
     {
         return HSSAbstractStroke::defaultObjectType(property);

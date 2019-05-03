@@ -126,18 +126,6 @@ AXRString HSSValue::defaultObjectType()
     return "value";
 }
 
-AXRString HSSValue::defaultObjectType(AXRString property)
-{
-    if (property == "value")
-    {
-        return "request";
-    }
-    else
-    {
-        return HSSObject::defaultObjectType(property);
-    }
-}
-
 QSharedPointer<HSSParserNode> HSSValue::getValue() const
 {
     return this->value;

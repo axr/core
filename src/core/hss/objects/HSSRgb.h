@@ -107,7 +107,6 @@ namespace AXR
         virtual void setDefaults();
         virtual AXRString toString();
         virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
 
         QSharedPointer<HSSObject> computeRed(QSharedPointer<HSSParserNode> parserNode);
         void listenRed(QSharedPointer<HSSObject> theObj);

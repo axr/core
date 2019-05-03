@@ -91,7 +91,6 @@ namespace AXR
         bool equalTo(QSharedPointer<HSSObject> otherObj);
 
         virtual AXRString defaultObjectType();
-        virtual AXRString defaultObjectType(AXRString property);
 
         /**
          *  Getter for the definition object of value.

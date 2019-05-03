@@ -182,56 +182,22 @@ AXRString HSSDisplayObject::defaultObjectType()
     return "displayObject";
 }
 
-AXRString HSSDisplayObject::defaultObjectType(AXRString property)
+HSSString HSSDisplayObject::defaultObjectType(AXRString property)
 {
-    if (property == "margin")
+    //property => objtype
+    static std::map<HSSString, HSSString> typeMap;
+    if (typeMap.empty())
     {
-        return "margin";
+        typeMap["animation"] = "transition";
+        typeMap["margin"] = "margin";
+        typeMap["padding"] = "margin";
     }
-    else if (property == "padding")
+    
+    if (typeMap.count(property) > 0)
     {
-        return "margin";
+        return typeMap[property];
     }
-    else if (property == "stroke")
-    {
-        return "stroke";
-    }
-    else if (property == "background")
-    {
-        return "linearGradient";
-    }
-    else if (property == "content")
-    {
-        return "image";
-    }
-    else if (property == "transform")
-    {
-        return "rotate";
-    }
-    else if (property == "effects")
-    {
-        return "shadow";
-    }
-    else if (property == "animation")
-    {
-        return "transition";
-    }
-    else if (property == "on")
-    {
-        return "value";
-    }
-    else if (property == "mask")
-    {
-        return "image";
-    }
-    else if (property == "font")
-    {
-        return "font";
-    }
-    else
-    {
-        return HSSObject::defaultObjectType(property);
-    }
+    return HSSObject::defaultObjectType(property);
 }
 
 QSharedPointer<HSSParserNode> HSSDisplayObject::getPercentageExpression(QSharedPointer<HSSParserNode> parserNode, AXRString propertyName)

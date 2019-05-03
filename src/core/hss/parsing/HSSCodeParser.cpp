@@ -70,9 +70,7 @@ namespace AXR
         size_t line;
         size_t column;
         std::vector<HSSParserContext> currentContext;
-        std::stack<QSharedPointer<HSSObject> > currentObjectContext;
         AXRString _lastObjectType;
-        QSharedPointer<HSSContainer> _containerContextObj;
         bool notifiesReceiver;
         bool ignoreTokenReadCalls;
     };
@@ -84,7 +82,6 @@ HSSCodeParser::HSSCodeParser(HSSParserReceiver * receiver)
     QSharedPointer<HSSTokenizer> tokenizer = QSharedPointer<HSSTokenizer>(new HSSTokenizer());
     d->tokenizer = tokenizer;
     d->currentContext.push_back(HSSParserContextRoot);
-    d->_containerContextObj = QSharedPointer<HSSContainer>(new HSSContainer(NULL));
     d->receiver = receiver;
     d->ignoreTokenReadCalls = false;
 }
@@ -124,7 +121,6 @@ AXRController * HSSCodeParser::controller()
 void HSSCodeParser::setController(AXRController * controller)
 {
     d->controller = controller;
-    d->_containerContextObj->setController(controller);
 }
 
 bool HSSCodeParser::loadFile(QSharedPointer<AXRBuffer> file)
@@ -825,7 +821,6 @@ QSharedPointer<HSSRule> HSSCodeParser::readRule()
         return errorState;
 
     //now we're inside the block
-    d->currentObjectContext.push(d->_containerContextObj);
     d->currentContext.push_back(HSSParserContextRule);
 
     //read the inner part of the block
@@ -958,12 +953,8 @@ QSharedPointer<HSSRule> HSSCodeParser::readRule()
         //        }
     }
 
-    //reset the index of the shorthand properties
-    d->currentObjectContext.top()->shorthandReset();
-
     //leave the block context
     d->currentContext.pop_back();
-    d->currentObjectContext.pop();
 
     if (!this->atEndOfSource())
     {
@@ -1695,23 +1686,8 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
         //first we need to know what type of object it is
         if (d->currentToken->isA(HSSWhitespace) || d->currentToken->isA(HSSBlockOpen))
         {
-            //damn, we'll have to derive that from the context
-            if (d->currentObjectContext.size() > 0)
-            {
-                if (propertyName == "")
-                {
-                    objtype = d->currentObjectContext.top()->defaultObjectType();
-                }
-                else
-                {
-                    objtype = d->currentObjectContext.top()->defaultObjectType(propertyName);
-                }
-
-            }
-            else
-            {
-                objtype = "value";
-            }
+            //without type
+            objtype = "";
         }
         else if (d->currentToken->isA(HSSIdentifier))
         {
@@ -1724,7 +1700,7 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
         }
         else
         {
-            //Unexpected token while reading object definition
+            AXRError("HSSCodeParser", "Unexpected token while reading object definition", d->file->sourceUrl(), d->line, d->column).raise();
             return errorState;
         }
 
@@ -1808,9 +1784,6 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
     d->currentContext.push_back(HSSParserContextObjectDefinition);
 
     //read the inner part of the block
-    QSharedPointer<HSSObject> theObj = ret->getObject();
-    d->currentObjectContext.push(theObj);
-
     while (!d->currentToken->isA(HSSBlockClose))
     {
         switch (d->currentToken->getType())
@@ -1952,9 +1925,6 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
     }
 
     //reset the index of the shorthand properties
-    theObj->shorthandReset();
-    //out we are
-    d->currentObjectContext.pop();
 
     //we're out of the block, we expect a closing brace
     this->skip(HSSBlockClose);
@@ -2187,7 +2157,6 @@ QSharedPointer<HSSPropertyDefinition> HSSCodeParser::readPropertyDefinition(bool
                         if (this->atEndOfSource())
                             return errorState;
 
-                        d->currentObjectContext.top()->shorthandSkip(propertyName);
                     }
                     break;
                 }
@@ -2206,16 +2175,6 @@ QSharedPointer<HSSPropertyDefinition> HSSCodeParser::readPropertyDefinition(bool
 
         default:
         {
-            //we assume we are dealing with shorthand notation
-            //get the property name for the current value
-            QSharedPointer<HSSPropertyPath> path(new HSSPropertyPath(d->controller));
-            path->add(d->currentObjectContext.top()->getPropertyForCurrentValue());
-            propertyPaths.push_back(path);
-            //consume the property
-            bool hasNext = d->currentObjectContext.top()->shorthandNext();
-            //if it doesn't have next shorthand, it is invalid
-            if (!hasNext)
-                return errorState;
             break;
         }
     }
@@ -4822,7 +4781,6 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readIfFunction()
         return errorState;
 
     //now we're inside the block
-    d->currentObjectContext.push(d->_containerContextObj);
     d->currentContext.push_back(HSSParserContextEvaluables);
 
     //read the inner part of the block
@@ -4834,7 +4792,6 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readIfFunction()
 
     //leave the block context
     d->currentContext.pop_back();
-    d->currentObjectContext.pop();
 
     if (!this->atEndOfSource())
     {
@@ -4884,7 +4841,6 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readElseFunction()
                 return errorState;
 
             //now we're inside the block
-            d->currentObjectContext.push(d->_containerContextObj);
             d->currentContext.push_back(HSSParserContextEvaluables);
 
             //read the inner part of the block
@@ -4896,7 +4852,6 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readElseFunction()
 
             //leave the block context
             d->currentContext.pop_back();
-            d->currentObjectContext.pop();
 
             if (!this->atEndOfSource())
             {
@@ -5051,7 +5006,6 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUserDefinedFunction()
         return errorState;
 
     //now we're inside the block
-    d->currentObjectContext.push(d->_containerContextObj);
     d->currentContext.push_back(HSSParserContextEvaluables);
 
     //read the inner part of the block
@@ -5061,7 +5015,6 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readUserDefinedFunction()
 
     //leave the block context
     d->currentContext.pop_back();
-    d->currentObjectContext.pop();
 
     if (!this->atEndOfSource())
     {
@@ -5178,9 +5131,7 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
 
             if (valuestr == "var")
             {
-                d->currentObjectContext.push(d->_containerContextObj);
                 QSharedPointer<HSSVarDeclaration> varDecl = this->readVarDecl();
-                d->currentObjectContext.pop();
 
                 if (varDecl)
                 {
@@ -5199,8 +5150,6 @@ bool HSSCodeParser::readEvaluables(QSharedPointer<HSSParserNode> target)
             else
             {
                 //check if it is a function
-                QSharedPointer<HSSObject> objectContext = d->currentObjectContext.top();
-
                 if (d->controller->document()->isFunction(valuestr))
                 {
                     QSharedPointer<HSSParserNode> theFunc = this->readFunction();
@@ -5912,19 +5861,4 @@ void HSSCodeParser::skipUntilEndOfStatement()
     this->readNextToken();
     if (this->atEndOfSource()) return;
     this->skip(HSSWhitespace);
-}
-
-void HSSCodeParser::currentObjectContextRemoveLast()
-{
-    d->currentObjectContext.pop();
-}
-
-size_t HSSCodeParser::currentObjectContextSize() const
-{
-    return d->currentObjectContext.size();
-}
-
-void HSSCodeParser::currentObjectContextAdd(QSharedPointer<HSSObject> theObject)
-{
-    d->currentObjectContext.push(theObject);
 }

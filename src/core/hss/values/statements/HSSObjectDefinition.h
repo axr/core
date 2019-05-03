@@ -227,6 +227,7 @@ namespace AXR
         
         void setType(HSSString newType);
         const HSSString type() const;
+        bool hasType() const;
         void setName(HSSString newName);
         const HSSString name() const;
         QSharedPointer<HSSObject> getObject();
