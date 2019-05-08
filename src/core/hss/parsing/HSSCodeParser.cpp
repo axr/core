@@ -501,6 +501,10 @@ QSharedPointer<HSSVarDeclaration> HSSCodeParser::readVarDecl()
     }
 
     QSharedPointer<HSSVarDeclaration> ret(new HSSVarDeclaration(name, d->controller));
+    ret->setFile(d->file);
+    ret->setLine(d->line);
+    ret->setStartCol(d->column);
+    ret->setEndCol(d->column+name.length());
 
     QSharedPointer<HSSToken> theIdentifier = d->currentToken;
 
@@ -621,6 +625,11 @@ QSharedPointer<HSSAssignment> HSSCodeParser::readAssignment(QSharedPointer<HSSPr
 {
     QSharedPointer<HSSAssignment> errorState;
 
+    QSharedPointer<HSSAssignment> ret(new HSSAssignment(d->controller));
+    ret->setFile(d->file);
+    ret->setLine(d->line);
+    ret->setStartCol(d->column);
+
     if (atEndOfSource())
         return errorState;
 
@@ -628,7 +637,6 @@ QSharedPointer<HSSAssignment> HSSCodeParser::readAssignment(QSharedPointer<HSSPr
     if (atEndOfSource())
         return errorState;
 
-    QSharedPointer<HSSAssignment> ret(new HSSAssignment(d->controller));
     ret->setPropertyPath(thePath);
 
     if (!d->currentToken->isA(HSSEqualSign))
@@ -645,6 +653,8 @@ QSharedPointer<HSSAssignment> HSSCodeParser::readAssignment(QSharedPointer<HSSPr
     bool expressionValid = this->readVals(ret, "expression", true, true);
     if (!expressionValid)
         return errorState;
+
+    ret->setEndCol(d->column);
 
     if (atEndOfSource())
         return errorState;
@@ -727,7 +737,12 @@ QSharedPointer<HSSComparison> HSSCodeParser::readComparison(HSSString propertyNa
 
     HSSTokenType tokenType = d->currentToken->getType();
 
-    QSharedPointer<HSSComparison> theComp;
+    QSharedPointer<HSSComparison> ret = QSharedPointer<HSSComparison>(new HSSComparison(AXRHSSTokenTypeToComparisonType(tokenType), d->controller));
+    ret->setLeftNode(leftNode);
+    
+    ret->setFile(d->file);
+    ret->setLine(d->line);
+    ret->setStartCol(d->column);
 
     if (tokenType == HSSNegator)
     {
@@ -739,23 +754,21 @@ QSharedPointer<HSSComparison> HSSCodeParser::readComparison(HSSString propertyNa
         this->skip(tokenType);
     }
 
-
     if (this->atEndOfSource())
         return errorState;
     this->skip(HSSWhitespace);
     if (this->atEndOfSource())
         return errorState;
 
-    theComp = QSharedPointer<HSSComparison>(new HSSComparison(AXRHSSTokenTypeToComparisonType(tokenType), d->controller));
-    theComp->setLeftNode(leftNode);
-
     bool rightNodeValid = true;
     QSharedPointer<HSSParserNode> rightNode = this->readSingleVal(propertyName, rightNodeValid);
     if(!rightNodeValid)
         return errorState;
 
-    theComp->setRightNode(rightNode);
-    return theComp;
+    ret->setEndCol(d->column);
+
+    ret->setRightNode(rightNode);
+    return ret;
 }
 
 QSharedPointer<HSSRule> HSSCodeParser::readRule()
@@ -2761,6 +2774,9 @@ QSharedPointer<HSSPropertyPath> HSSCodeParser::readPropertyPath(bool firstNodeIs
     QSharedPointer<HSSPropertyPath> errorState;
 
     QSharedPointer<HSSPropertyPath> ppath(new HSSPropertyPath(d->controller));
+    ppath->setFile(d->file);
+    ppath->setLine(d->line);
+    ppath->setStartCol(d->column);
 
     bool isFirst = true;
 
@@ -2810,6 +2826,8 @@ QSharedPointer<HSSPropertyPath> HSSCodeParser::readPropertyPath(bool firstNodeIs
 
     if (ppath->size() == 0)
         return errorState;
+
+    ppath->setEndCol(d->column);
 
     if (atEndOfSource())
         return ppath;
@@ -3567,94 +3585,105 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFunction()
     {
         //create new function
         AXRString name = d->currentToken->getString();
+        QSharedPointer<HSSParserNode> ret;
+        long long line = d->line;
+        long long startCol = d->column;
         if (name == "ref")
         {
-            return this->readRefFunction();
+            ret = this->readRefFunction();
         }
         else if (name == "sel")
         {
-            return this->readSelFunction();
+            ret = this->readSelFunction();
         }
         else if (HSSFlag::isFlag(name))
         {
-            return this->readFlagFunction();
+            ret = this->readFlagFunction();
         }
         else if (name == "attr")
         {
-            return this->readAttrFunction();
+            ret = this->readAttrFunction();
         }
         else if (name == "min")
         {
-            return this->readMinFunction();
+            ret = this->readMinFunction();
         }
         else if (name == "max")
         {
-            return this->readMaxFunction();
+            ret = this->readMaxFunction();
         }
         else if (name == "ceil")
         {
-            return this->readCeilFunction();
+            ret = this->readCeilFunction();
         }
         else if (name == "floor")
         {
-            return this->readFloorFunction();
+            ret = this->readFloorFunction();
         }
         else if (name == "round")
         {
-            return this->readRoundFunction();
+            ret = this->readRoundFunction();
         }
         else if (name == "log")
         {
-            return this->readLogFunction();
+            ret = this->readLogFunction();
         }
         else if (name == "override")
         {
-            return this->readOverrideFunction();
+            ret = this->readOverrideFunction();
         }
         else if (name == "startTimer")
         {
-            return this->readStartTimerFunction();
+            ret = this->readStartTimerFunction();
         }
         else if (name == "stopTimer")
         {
-            return this->readStopTimerFunction();
+            ret = this->readStopTimerFunction();
         }
         else if (name == "toggleTimer")
         {
-            return this->readToggleTimerFunction();
+            ret = this->readToggleTimerFunction();
         }
         else if (name == "insert")
         {
-            return this->readInsertFunction();
+            ret = this->readInsertFunction();
         }
         else if (name == "if")
         {
-            return this->readIfFunction();
+            ret = this->readIfFunction();
         }
         else if (name == "else")
         {
-            return this->readElseFunction();
+            ret = this->readElseFunction();
         }
         else if (name == "function")
         {
-            return this->readUserDefinedFunction();
+            ret = this->readUserDefinedFunction();
         }
         else if (name == "return")
         {
-            return this->readReturnFunction();
+            ret = this->readReturnFunction();
         }
         else if (name == "switch")
         {
-            return this->readSwitchFunction();
+            ret = this->readSwitchFunction();
         }
         else if (d->controller->document()->isCustomFunction(name))
         {
-            return this->readCustomFunction();
+            ret = this->readCustomFunction();
         }
         else
         {
             return errorState;
         }
+        if (!ret)
+            return errorState;
+
+        ret->setFile(d->file);
+        ret->setLine(line);
+        ret->setStartCol(startCol);
+        ret->setEndCol(d->column);
+        return ret;
     }
     else
     {
@@ -3666,7 +3695,10 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readFunction()
 QSharedPointer<HSSParserNode> HSSCodeParser::readRefFunction()
 {
     QSharedPointer<HSSParserNode> errorState;
-    QSharedPointer<HSSRefFunction> refFunction = QSharedPointer<HSSRefFunction>(new HSSRefFunction(d->controller));
+    QSharedPointer<HSSRefFunction> ret = QSharedPointer<HSSRefFunction>(new HSSRefFunction(d->controller));
+    ret->setFile(d->file);
+    ret->setLine(d->line);
+    ret->setStartCol(d->column);
 
     if (d->notifiesReceiver)
     {
@@ -3703,7 +3735,7 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readRefFunction()
             || firstValue == "max"
             || firstValue == "avg")
         {
-            refFunction->setModifier(firstValue);
+            ret->setModifier(firstValue);
 
             if (d->notifiesReceiver)
             {
@@ -3726,13 +3758,13 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readRefFunction()
             }
             else
             {
-                refFunction->setPropertyPath(this->readPropertyPath());
+                ret->setPropertyPath(this->readPropertyPath());
             }
         }
         else
         {
             //just the property path
-            refFunction->setPropertyPath(this->readPropertyPath());
+            ret->setPropertyPath(this->readPropertyPath());
         }
     }
 
@@ -3796,8 +3828,9 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readRefFunction()
             return errorState;
     }
 
-    refFunction->setSelectorChains(selectorChains);
-    return refFunction;
+    ret->setSelectorChains(selectorChains);
+    ret->setEndCol(d->column);
+    return ret;
 }
 
 QSharedPointer<HSSParserNode> HSSCodeParser::readSelFunction()

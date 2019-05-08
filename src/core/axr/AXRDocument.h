@@ -57,6 +57,7 @@ namespace AXR
     class HSSDisplayObject;
     class AXRDocumentDelegate;
     class AXRDocumentPrivate;
+    class AXRExecutionFrame;
     class HSSAbstractValueChangedCallback;
     class HSSCodeParser;
     class HSSFunction;
@@ -194,6 +195,28 @@ namespace AXR
          */
         void registerCustomFunction(const AXRString &name, HSSAbstractValueChangedCallback* fn);
         void evaluateCustomFunction(const AXRString &name,  const QSharedPointer<HSSObject> theObj);
+
+        bool needsBreak() const;
+        void setNeedsBreak(bool value);
+        bool needsBreakOnLine(long long line);
+        bool needsBreakOnNextLine();
+        void addBreakpointOnLine(long long line);
+        void removeBreakpointOnLine(long long line);
+        bool executesSingleStep() const;
+        bool stepsIn() const;
+        void setStepsIn(bool value);
+        bool stepsOut() const;
+        void setStepsOut(bool value);
+        void setExecutesSingleStep(bool value);
+        void addStackFrame(AXRExecutionFrame newFrame);
+        void popStackFrame();
+        bool stackFrameHasNext();
+        void stackFrameGoToNext();
+        void resumeExecution();
+        void execute();
+        void moveToLine(long long line);
+        void moveToNextLine();
+        void cleanBreakpointDecorations();
 
         /**
          *  Getter for the render visitor

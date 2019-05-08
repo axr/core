@@ -216,6 +216,8 @@
 #include "HSSCascader.h"
 #include "HSSLayout.h"
 #include "HSSRenderer.h"
+#include "AXRExecutionFrame.h"
+#include "AXRExecutionPointer.h"
 #include "AXRDocument.h"
 #include "AXRDocumentDelegate.h"
 #include "AXRController.h"

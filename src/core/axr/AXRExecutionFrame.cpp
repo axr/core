@@ -41,30 +41,17 @@
  *
  ********************************************************************/
 
-#ifndef AXRDOCUMENTDELEGATE_H
-#define AXRDOCUMENTDELEGATE_H
+#include "axr.h"
+#include "AXRExecutionFrame.h"
 
-#include "AXRGlobal.h"
-#include "HSSDisplayObject.h"
+using namespace AXR;
 
-template <class T> class QSharedPointer;
-
-namespace AXR
+AXRExecutionFrame::AXRExecutionFrame()
 {
-    class HSSFunction;
-
-    class AXR_API AXRDocumentDelegate
-    {
-    public:
-        virtual void selectionChanged(QSharedPointer<HSSDisplayObject> theDO) = 0;
-        virtual void startTimer(AXRString timerName, HSSFunction * target, unsigned int ms, bool repeats) = 0;
-        virtual void startTimerOnce(HSSFunction * target, unsigned int ms) = 0;
-        virtual void stopTimer(AXRString timerName) = 0;
-        virtual bool hasTimer(AXRString timerName) = 0;
-        virtual void setNeedsDisplay(bool newValue) = 0;
-        virtual void moveToLine(long long line) = 0;
-        virtual void cleanBreakpointDecorations() = 0;
-    };
+    this->currentLine = 0;
 }
 
-#endif /* AXRDOCUMENTDELEGATE_H */
+AXRExecutionFrame::~AXRExecutionFrame()
+{
+    
+}

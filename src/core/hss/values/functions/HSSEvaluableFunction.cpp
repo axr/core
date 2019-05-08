@@ -76,121 +76,14 @@ bool HSSEvaluableFunction::equalTo(QSharedPointer<HSSParserNode> otherNode)
 
 bool HSSEvaluableFunction::evaluateEvaluables()
 {
-    bool needsReturn = false;
-    bool evaluateNextElseFunction = false;
-    std::vector<QSharedPointer<HSSParserNode> >::const_iterator it;
-    for (it = this->_evaluables.begin(); it != this->_evaluables.end(); ++it)
-    {
-        if (needsReturn)
-            break;
-
-        const QSharedPointer<HSSParserNode> & evaluable = *it;
-        switch (evaluable->getType()) {
-                
-            case HSSParserNodeTypeFunction:
-            {
-                QSharedPointer<HSSFunction> theFunc = qSharedPointerCast<HSSFunction>(evaluable);
-                switch (theFunc->getFunctionType())
-                {
-                    case HSSFunctionTypeIf:
-                    {
-                        QSharedPointer<HSSIfFunction> ifFunc = qSharedPointerCast<HSSIfFunction>(evaluable);
-                        if (ifFunc->evaluateCondition())
-                        {
-                            needsReturn = ifFunc->evaluateEvaluables();
-                        }
-                        else
-                        {
-                            evaluateNextElseFunction = true;
-                        }
-                        break;
-                    }
-                    case HSSFunctionTypeElseIf:
-                    {
-                        if (evaluateNextElseFunction)
-                        {
-                            QSharedPointer<HSSIfFunction> elIfFunc = qSharedPointerCast<HSSIfFunction>(evaluable);
-                            if (elIfFunc->evaluateCondition())
-                            {
-                                evaluateNextElseFunction = false;
-                                needsReturn = elIfFunc->evaluateEvaluables();
-                            }
-                        }
-                        break;
-                    }
-                    case HSSFunctionTypeElse:
-                    {
-                        if (evaluateNextElseFunction)
-                        {
-                            QSharedPointer<HSSIfFunction> elseFunc = qSharedPointerCast<HSSIfFunction>(evaluable);
-                            evaluateNextElseFunction = false;
-                            needsReturn = elseFunc->evaluateEvaluables();
-                        }
-                        break;
-                    }
-                    case HSSFunctionTypeReturn:
-                    {
-                        theFunc->evaluate();
-                        needsReturn = true;
-                        break;
-                    }
-                    case HSSFunctionTypeSwitch:
-                    {
-                        QSharedPointer<HSSSwitchFunction> switchFunc = qSharedPointerCast<HSSSwitchFunction>(evaluable);
-                        needsReturn = switchFunc->evaluateEvaluables();
-                        break;
-                    }
-                    default:
-                        theFunc->evaluate();
-                        break;
-                }
-                break;
-            }
-            case HSSParserNodeTypePropertyPath:
-            {
-                QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(evaluable);
-                ppath->evaluate();
-                break;
-            }
-            case HSSParserNodeTypeStatement:
-            {
-                switch (evaluable->getStatementType())
-                {
-                    case HSSStatementTypeVarDeclaration:
-                    {
-                        QSharedPointer<HSSVarDeclaration> varDecl = qSharedPointerCast<HSSVarDeclaration>(evaluable);
-                        if (varDecl->assignment())
-                        {
-                            this->setLocalVariable(varDecl->name(), varDecl->assignment()->evaluate());
-                        }
-                        else
-                        {
-                            this->setLocalVariable(varDecl->name(), QSharedPointer<AXR::HSSObject>(new HSSObject(HSSObjectTypeNull, this->getController())));
-                        }
-                        
-                        break;
-                    }
-                    case HSSStatementTypeAssignment:
-                    {
-                        QSharedPointer<HSSAssignment> theAsgmt = qSharedPointerCast<HSSAssignment>(evaluable);
-                        QSharedPointer<HSSPropertyPath> ppath = theAsgmt->propertyPath();
-                        ppath->evaluateSet(theAsgmt->evaluate());
-                        break;
-                    }
-                    default:
-                        break;
-                }
-                break;
-            }
-                
-            default:
-            {
-                AXRWarning("HSSEvaluableFunction", "Ignoring evaluable of unknown type").raise();
-                break;
-            }
-        }
-    }
-    return needsReturn;
+    AXRDocument * doc = this->getController()->document();
+    AXRExecutionFrame newFrame;
+    newFrame.evaluables = this->_evaluables;
+    newFrame.callee = this->shared_from_this();
+    newFrame.currentLine = this->getLine();
+    doc->addStackFrame(newFrame);
+    doc->resumeExecution();
+    return false;
 }
 
 void HSSEvaluableFunction::addEvaluable(QSharedPointer<HSSParserNode> parserNode)

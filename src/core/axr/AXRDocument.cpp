@@ -90,6 +90,14 @@ namespace AXR
         HSSRenderer* renderVisitor;
         
         AXRPlatform * platform;
+
+        bool needsBreak;
+        bool isExecuting;
+        bool executesSingleStep;
+        bool stepsIn;
+        std::stack< AXRExecutionFrame > stack;
+        std::stack< AXRExecutionPointer > executionStack;
+        std::map<long long, bool> breakpoints;
     };
 }
 
@@ -114,6 +122,10 @@ AXRDocument::AXRDocument()
     vm->addVisitor(d->renderVisitor);
     d->platform = new AXRPlatform();
     d->platform->setDocument(this);
+    d->needsBreak = false;
+    d->isExecuting = false;
+    d->executesSingleStep = false;
+    d->stepsIn = false;
 }
 
 AXRDocument::~AXRDocument()
@@ -321,6 +333,351 @@ void AXRDocument::evaluateCustomFunction(const AXRString &name, const QSharedPoi
     {
         d->customFunctions[name]->call("", "", theObj);
     }
+}
+
+bool AXRDocument::needsBreak() const
+{
+    return d->needsBreak;
+}
+
+void AXRDocument::setNeedsBreak(bool value)
+{
+    d->needsBreak = value;
+}
+
+bool AXRDocument::needsBreakOnLine(long long line)
+{
+    long long currentLine = d->stack.top().currentLine;
+    for (; currentLine <= line; ++currentLine)
+    {
+        if (d->breakpoints.count(currentLine) > 0) {
+            return d->breakpoints[currentLine];
+        }
+    }
+    return false;
+}
+
+bool AXRDocument::needsBreakOnNextLine()
+{
+    if (d->needsBreak)
+        return true;
+
+    if (this->stackFrameHasNext())
+    {
+        QSharedPointer<HSSParserNode> nextEvaluable = *(d->executionStack.top().iterator);
+        return this->needsBreakOnLine(nextEvaluable->getLine());
+    }
+    return false;
+}
+
+void AXRDocument::addBreakpointOnLine(long long line)
+{
+    d->breakpoints[line] = true;
+}
+
+void AXRDocument::removeBreakpointOnLine(long long line)
+{
+    d->breakpoints.erase(d->breakpoints.find(line), d->breakpoints.end());
+}
+
+void AXRDocument::setExecutesSingleStep(bool value)
+{
+    if (d->executionStack.size() > 0)
+    {
+        d->executionStack.top().executesSingleStep = value;
+    }
+}
+
+bool AXRDocument::executesSingleStep() const
+{
+    if (d->executionStack.size() > 0)
+    {
+        return d->executionStack.top().executesSingleStep;
+    }
+    return false;
+}
+
+void AXRDocument::setStepsIn(bool value)
+{
+    d->stepsIn = value;
+}
+
+bool AXRDocument::stepsIn() const
+{
+    return d->stepsIn;
+}
+
+void AXRDocument::setStepsOut(bool value)
+{
+    if (d->executionStack.size() > 0)
+    {
+        d->executionStack.top().stepsOut = value;
+    }
+}
+
+bool AXRDocument::stepsOut() const
+{
+    if (d->executionStack.size() > 0)
+    {
+        return d->executionStack.top().stepsOut;
+    }
+    return false;
+}
+
+void AXRDocument::addStackFrame(AXRExecutionFrame newFrame)
+{
+    d->stack.push(newFrame);
+    AXRExecutionPointer newPointer;
+    newPointer.iterator = d->stack.top().evaluables.begin();
+    d->executionStack.push(newPointer);
+}
+
+void AXRDocument::popStackFrame()
+{
+    d->stack.pop();
+    d->executionStack.pop();
+}
+
+bool AXRDocument::stackFrameHasNext()
+{
+    if (d->stack.size() > 0 && d->executionStack.size() > 0)
+    {
+        return d->executionStack.top().iterator != d->stack.top().evaluables.end();
+    }
+    return false;
+}
+
+void AXRDocument::stackFrameGoToNext()
+{
+    ++(d->executionStack.top().iterator);
+}
+
+void AXRDocument::resumeExecution()
+{
+    if (!d->isExecuting)
+    {
+        if (this->needsBreakOnNextLine())
+        {
+            d->needsBreak = true;
+            this->moveToNextLine();
+        }
+        else
+        {
+            this->execute();
+        }
+    }
+}
+
+void AXRDocument::execute()
+{
+    d->isExecuting = true;
+    bool needsReturn = false;
+    bool evaluateNextElseFunction = false;
+
+    while (d->stack.size() > 0)
+    {
+        if (needsReturn)
+            break;
+        
+        const AXRExecutionPointer & execPtr = d->executionStack.top();
+        
+        if (execPtr.isPaused)
+        {
+            d->executionStack.top().isPaused = false;
+            break;
+        }
+        
+        if (this->stackFrameHasNext())
+        {
+            const QSharedPointer<HSSParserNode> & evaluable = *(execPtr.iterator);
+            
+            long long theLine = evaluable->getLine();
+            if (this->needsBreakOnLine(theLine))
+            {
+                d->stack.top().currentLine = theLine+1;
+                d->needsBreak = true;
+                this->moveToLine(theLine);
+                break;
+            }
+
+            this->stackFrameGoToNext();
+            if (this->executesSingleStep())
+            {
+                if (this->stackFrameHasNext())
+                {
+                    d->executionStack.top().isPaused = true;
+                    this->setExecutesSingleStep(false);
+                }
+            }
+
+            switch (evaluable->getType())
+            {
+                case HSSParserNodeTypeFunction:
+                {
+                    QSharedPointer<HSSFunction> theFunc = qSharedPointerCast<HSSFunction>(evaluable);
+                    switch (theFunc->getFunctionType())
+                    {
+                        case HSSFunctionTypeIf:
+                        {
+                            QSharedPointer<HSSIfFunction> ifFunc = qSharedPointerCast<HSSIfFunction>(evaluable);
+                            if (ifFunc->evaluateCondition())
+                            {
+                                needsReturn = ifFunc->evaluateEvaluables();
+                            }
+                            else
+                            {
+                                evaluateNextElseFunction = true;
+                            }
+                            break;
+                        }
+                        case HSSFunctionTypeElseIf:
+                        {
+                            if (evaluateNextElseFunction)
+                            {
+                                QSharedPointer<HSSIfFunction> elIfFunc = qSharedPointerCast<HSSIfFunction>(evaluable);
+                                if (elIfFunc->evaluateCondition())
+                                {
+                                    evaluateNextElseFunction = false;
+                                    needsReturn = elIfFunc->evaluateEvaluables();
+                                }
+                            }
+                            break;
+                        }
+                        case HSSFunctionTypeElse:
+                        {
+                            if (evaluateNextElseFunction)
+                            {
+                                QSharedPointer<HSSIfFunction> elseFunc = qSharedPointerCast<HSSIfFunction>(evaluable);
+                                evaluateNextElseFunction = false;
+                                needsReturn = elseFunc->evaluateEvaluables();
+                            }
+                            break;
+                        }
+                        case HSSFunctionTypeReturn:
+                        {
+                            theFunc->evaluate();
+                            needsReturn = true;
+                            break;
+                        }
+                        case HSSFunctionTypeSwitch:
+                        {
+                            QSharedPointer<HSSSwitchFunction> switchFunc = qSharedPointerCast<HSSSwitchFunction>(evaluable);
+                            needsReturn = switchFunc->evaluateEvaluables();
+                            break;
+                        }
+                        default:
+                            theFunc->evaluate();
+                            break;
+                    }
+                    break;
+                }
+                case HSSParserNodeTypePropertyPath:
+                {
+                    QSharedPointer<HSSPropertyPath> ppath = qSharedPointerCast<HSSPropertyPath>(evaluable);
+                    ppath->evaluate();
+                    break;
+                }
+                case HSSParserNodeTypeStatement:
+                {
+                    switch (evaluable->getStatementType())
+                    {
+                        case HSSStatementTypeVarDeclaration:
+                        {
+                            QSharedPointer<HSSVarDeclaration> varDecl = qSharedPointerCast<HSSVarDeclaration>(evaluable);
+                            if (varDecl->assignment())
+                            {
+                                evaluable->getParentNode()->setLocalVariable(varDecl->name(), varDecl->assignment()->evaluate());
+                            }
+                            else
+                            {
+                                evaluable->getParentNode()->setLocalVariable(varDecl->name(), QSharedPointer<AXR::HSSObject>(new HSSObject(HSSObjectTypeNull, this->controller().data())));
+                            }
+                            
+                            break;
+                        }
+                        case HSSStatementTypeAssignment:
+                        {
+                            QSharedPointer<HSSAssignment> theAsgmt = qSharedPointerCast<HSSAssignment>(evaluable);
+                            QSharedPointer<HSSPropertyPath> ppath = theAsgmt->propertyPath();
+                            ppath->evaluateSet(theAsgmt->evaluate());
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                    
+                default:
+                {
+                    AXRWarning("HSSEvaluableFunction", "Ignoring evaluable of unknown type").raise();
+                    break;
+                }
+            }
+        }
+        
+        if (this->stepsIn())
+        {
+            this->setStepsIn(false);
+            if (this->stackFrameHasNext())
+            {
+                d->executionStack.top().isPaused = true;
+            }
+            else
+            {
+                this->setStepsOut(true);
+            }
+        }
+
+        if (!this->stackFrameHasNext())
+        {
+            if (this->executesSingleStep())
+            {
+                this->setExecutesSingleStep(false);
+                this->setStepsOut(true);
+            }
+            
+            if (this->stepsOut())
+            {
+                this->setStepsOut(false);
+
+                this->popStackFrame();
+                
+                if (this->stackFrameHasNext())
+                {
+                    d->executionStack.top().isPaused = true;
+                }
+                else
+                {
+                    this->setStepsOut(true);
+                }
+            }
+            else
+            {
+                this->popStackFrame();
+            }
+        }
+    }
+    d->isExecuting = false;
+}
+
+void AXRDocument::moveToLine(long long line)
+{
+    d->delegate->moveToLine(line);
+}
+
+void AXRDocument::moveToNextLine()
+{
+    if (this->stackFrameHasNext())
+    {
+        QSharedPointer<HSSParserNode> nextEvaluable = *(d->executionStack.top().iterator);
+        this->moveToLine(nextEvaluable->getLine());
+    }
+}
+
+void AXRDocument::cleanBreakpointDecorations()
+{
+    d->delegate->cleanBreakpointDecorations();
 }
 
 HSSRenderer * AXRDocument::getRenderVisitor() const

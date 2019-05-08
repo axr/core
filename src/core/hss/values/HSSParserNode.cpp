@@ -103,6 +103,10 @@ HSSParserNode::HSSParserNode(HSSParserNodeType type, AXRController * controller)
     this->controller = controller;
     this->_hostProperty = "";
     this->_specificity = 0.0;
+    this->_line = 0;
+    this->_startCol = 0;
+    this->_endCol = 0;
+    this->_representedInSource = false;
 }
 
 //doesn't clone any part of the node tree, nor the observers array
@@ -114,6 +118,11 @@ HSSParserNode::HSSParserNode(const HSSParserNode &orig)
     this->controller = orig.controller;
     this->_hostProperty = orig._hostProperty;
     this->_specificity = orig._specificity;
+    this->_file = orig._file;
+    this->_line = orig._line;
+    this->_startCol = orig._startCol;
+    this->_endCol = orig._endCol;
+    this->_representedInSource = orig._representedInSource;
 }
 
 QSharedPointer<HSSParserNode> HSSParserNode::clone() const
@@ -152,6 +161,52 @@ bool HSSParserNode::equalTo(QSharedPointer<HSSParserNode> otherNode)
     //check wether the same amount of child nodes
     if (this->_childNodes.size() != otherNode->_childNodes.size()) return false;
     return true;
+}
+
+void HSSParserNode::setFile(QSharedPointer<AXRBuffer> file)
+{
+    this->_representedInSource = true;
+    this->_file = file;
+}
+
+QSharedPointer<AXRBuffer> HSSParserNode::getFile() const
+{
+    return this->_file;
+}
+
+void HSSParserNode::setLine(long long line)
+{
+    this->_line = line;
+}
+
+long long HSSParserNode::getLine() const
+{
+    return this->_line;
+}
+
+long long HSSParserNode::getStartCol() const
+{
+    return this->_startCol;
+}
+
+void HSSParserNode::setStartCol(long long column)
+{
+    this->_startCol = column;
+}
+
+long long HSSParserNode::getEndCol() const
+{
+    return this->_endCol;
+}
+
+void HSSParserNode::setEndCol(long long column)
+{
+    this->_endCol = column;
+}
+
+bool HSSParserNode::representedInSource() const
+{
+    return this->_representedInSource;
 }
 
 bool HSSParserNode::isA(HSSParserNodeType otherType) const

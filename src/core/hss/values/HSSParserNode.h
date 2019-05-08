@@ -44,6 +44,7 @@
 #ifndef HSSPARSERNODE_H
 #define HSSPARSERNODE_H
 
+#include "AXRBuffer.h"
 #include "HSSClonable.h"
 #include "HSSObservable.h"
 #include "HSSTypeEnums.h"
@@ -127,6 +128,16 @@ namespace AXR
          *  @return Wether the node is equal to the given one.
          */
         virtual bool equalTo(QSharedPointer<HSSParserNode> otherNode);
+        
+        void setFile(QSharedPointer<AXRBuffer> file);
+        QSharedPointer<AXRBuffer> getFile() const;
+        void setLine(long long line);
+        long long getLine() const;
+        long long getStartCol() const;
+        void setStartCol(long long column);
+        long long getEndCol() const;
+        void setEndCol(long long column);
+        bool representedInSource() const;
 
         /**
          *  Call this to know if a parser node is of the given type.
@@ -271,8 +282,8 @@ namespace AXR
         /**
          *  Creates a new instance of a parser node. This class shouldn't be called directly,
          *  but by the subclasses.
-         *  @param  type    The HSSActionType that this action corresponds to. Usually set
-         *                  from within a subclass' constructor method.
+         *  @param  type        The parser node type that this value corresponds to. Usually set
+         *                      from within a subclass' constructor method.
          *
          *  @todo There is no destructor on this class.
          */
@@ -295,6 +306,12 @@ namespace AXR
         HSSUnit _specificity;
 
         QWeakPointer<HSSParserNode> ptr;
+
+        QSharedPointer<AXRBuffer> _file;
+        long long _line;
+        long long _startCol;
+        long long _endCol;
+        bool _representedInSource;
     };
 }
 
