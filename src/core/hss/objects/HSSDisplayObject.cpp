@@ -442,12 +442,6 @@ void HSSDisplayObject::setRuleStatus(QSharedPointer<HSSRule> rule, HSSRuleState 
         }
     }
 
-    if (!found)
-    {
-        this->rulesAdd(rule, newValue);
-        changed = true;
-    }
-
     if (changed)
     {
         this->setNeedsRereadRules(true);
