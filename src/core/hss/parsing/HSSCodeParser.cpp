@@ -1698,8 +1698,20 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
         //first we need to know what type of object it is
         if (d->currentToken->isA(HSSWhitespace) || d->currentToken->isA(HSSBlockOpen))
         {
-            //without type
-            objtype = "";
+            HSSParserContext currentContext = d->currentContext.back();
+            if (
+                currentContext == HSSParserContextEvaluables
+                || currentContext == HSSParserContextRoot
+                )
+            {
+                objtype = "value";
+            }
+            else
+            {
+                //the type will be assigned depending on the property
+                objtype = "";
+            }
+
         }
         else if (d->currentToken->isA(HSSIdentifier))
         {
