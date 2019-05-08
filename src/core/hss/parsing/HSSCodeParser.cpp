@@ -96,6 +96,8 @@ void HSSCodeParser::reset()
     d->tokenizer->reset();
     d->hasLoadedFile = false;
     d->file.clear();
+    d->currentContext.clear();
+    d->currentContext.push_back(HSSParserContextRoot);
 }
 
 bool HSSCodeParser::isFileLoaded() const
@@ -1673,9 +1675,6 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
     AXRString objtype;
     QSharedPointer<HSSObjectDefinition> ret;
 
-    //set the current context
-    d->currentContext.push_back(HSSParserContextObjectDefinition);
-
     //we either deal with a @ or an & symbol
     if (d->currentToken->isA(HSSObjectSign))
     {
@@ -1928,8 +1927,6 @@ QSharedPointer<HSSObjectDefinition> HSSCodeParser::readObjectDefinition(AXRStrin
 
     //we're out of the block, we expect a closing brace
     this->skip(HSSBlockClose);
-    //leave the block context
-    d->currentContext.pop_back();
     //leave the object definition context
     d->currentContext.pop_back();
     d->_lastObjectType = objtype;
@@ -5405,6 +5402,9 @@ QSharedPointer<HSSParserNode> HSSCodeParser::readSwitchFunction()
     this->skip(HSSWhitespace);
     if (atEndOfSource())
         return errorState;
+    
+    //now we're inside the block
+    d->currentContext.push_back(HSSParserContextEvaluables);
     
     if (!d->currentToken->isA(HSSIdentifier) ||
         (d->currentToken->getString() != "case" && d->currentToken->getString() != "default")
